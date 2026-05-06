@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Priority 7: Make Hotels.com the Most Rewarding Way to Book a Hotel</title>
+  <style>
+    :root {
+      --hcom-red: #c8102e;
+      --hcom-red-light: #f9e8eb;
+      --hcom-red-muted: #e8596a;
+      --gold: #d4a017;
+      --gold-light: #fdf6e3;
+      --blue: #1a3a5c;
+      --blue-mid: #2c5f8a;
+      --blue-light: #e8f2f9;
+      --gray-50: #f8f9fa;
+      --gray-100: #f0f2f5;
+      --gray-200: #e4e7ec;
+      --gray-400: #9aa5b4;
+      --gray-600: #4b5563;
+      --gray-800: #1f2937;
+      --white: #ffffff;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.10), 0 2px 4px rgba(0,0,0,0.06);
+      --shadow-lg: 0 10px 30px rgba(0,0,0,0.12), 0 4px 8px rgba(0,0,0,0.06);
+      --radius: 12px;
+      --radius-sm: 8px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--gray-50);
+      color: var(--gray-800);
+      min-height: 100vh;
+    }
+
+    /* ── Top banner ── */
+    .top-banner {
+      background: var(--blue);
+      color: var(--white);
+      padding: 10px 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 13px;
+      letter-spacing: 0.02em;
+    }
+    .top-banner .breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      opacity: 0.75;
+    }
+    .top-banner .breadcrumb span { font-weight: 500; }
+    .top-banner .breadcrumb .sep { opacity: 0.5; }
+    .top-banner .current { opacity: 1; font-weight: 600; }
+
+    /* ── Hero section ── */
+    .hero {
+      background: linear-gradient(135deg, var(--hcom-red) 0%, #9b0d20 100%);
+      color: var(--white);
+      padding: 52px 32px 44px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -60px; right: -60px;
+      width: 240px; height: 240px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.06);
+    }
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: -80px; left: -40px;
+      width: 300px; height: 300px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.04);
+    }
+    .hero .priority-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255,255,255,0.18);
+      border: 1px solid rgba(255,255,255,0.28);
+      border-radius: 20px;
+      padding: 5px 14px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+    .hero h1 {
+      font-size: clamp(22px, 4vw, 34px);
+      font-weight: 700;
+      line-height: 1.25;
+      max-width: 680px;
+      margin: 0 auto 16px;
+    }
+    .hero .subtitle {
+      font-size: 14px;
+      opacity: 0.8;
+      max-width: 520px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+    .hero .reward-icon {
+      font-size: 44px;
+      margin-bottom: 16px;
+      display: block;
+    }
+
+    /* ── Connector from hero to objectives ── */
+    .connector {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px 0 4px;
+    }
+    .connector-line {
+      width: 2px;
+      height: 28px;
+      background: linear-gradient(to bottom, var(--hcom-red), var(--gray-200));
+    }
+    .connector-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--gray-400);
+      background: var(--gray-50);
+      padding: 4px 12px;
+      border-radius: 20px;
+      border: 1px solid var(--gray-200);
+      margin: 6px 0;
+    }
+
+    /* ── Main content ── */
+    .main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 8px 24px 64px;
+    }
+
+    /* ── Objectives grid ── */
+    .objectives-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-top: 8px;
+    }
+    @media (max-width: 900px) {
+      .objectives-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ── Objective card ── */
+    .objective-card {
+      background: var(--white);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-md);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      border: 1px solid var(--gray-200);
+      transition: box-shadow 0.2s;
+    }
+    .objective-card:hover { box-shadow: var(--shadow-lg); }
+
+    .obj-header {
+      padding: 22px 22px 16px;
+      border-bottom: 2px solid var(--hcom-red);
+      background: linear-gradient(135deg, var(--hcom-red-light) 0%, var(--white) 100%);
+    }
+    .obj-number {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--hcom-red);
+      margin-bottom: 8px;
+    }
+    .obj-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--gray-800);
+      line-height: 1.4;
+    }
+
+    /* ── Card sections ── */
+    .card-section {
+      padding: 18px 22px;
+      flex: 1;
+    }
+    .card-section + .card-section {
+      border-top: 1px solid var(--gray-100);
+    }
+
+    .section-label {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+    .section-label .dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .dot-problems { background: var(--gold); }
+    .dot-opportunities { background: var(--blue-mid); }
+    .label-problems { color: var(--gold); }
+    .label-opportunities { color: var(--blue-mid); }
+
+    /* ── Empty state chips ── */
+    .empty-slots {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .slot {
+      border-radius: var(--radius-sm);
+      padding: 10px 14px;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border: 1.5px dashed;
+      color: var(--gray-400);
+      line-height: 1.4;
+    }
+    .slot-problems {
+      background: var(--gold-light);
+      border-color: rgba(212,160,23,0.35);
+    }
+    .slot-opportunities {
+      background: var(--blue-light);
+      border-color: rgba(44,95,138,0.25);
+    }
+    .slot-icon { font-size: 14px; opacity: 0.6; }
+    .slot-text { font-style: italic; }
+
+    /* ── Add button ── */
+    .add-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      margin-top: 10px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      background: none;
+      padding: 0;
+      border-radius: 4px;
+    }
+    .add-btn-problems { color: var(--gold); }
+    .add-btn-opportunities { color: var(--blue-mid); }
+    .add-btn:hover { text-decoration: underline; }
+
+    /* ── Footer ── */
+    .page-footer {
+      margin-top: 56px;
+      padding: 24px;
+      border-top: 1px solid var(--gray-200);
+      text-align: center;
+      font-size: 12px;
+      color: var(--gray-400);
+    }
+    .page-footer a { color: var(--hcom-red); text-decoration: none; }
+    .page-footer a:hover { text-decoration: underline; }
+
+    /* ── Legend ── */
+    .legend {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 24px;
+      flex-wrap: wrap;
+      margin: 24px 0 0;
+      font-size: 12px;
+      color: var(--gray-600);
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-weight: 500;
+    }
+    .legend-swatch {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Breadcrumb -->
+  <div class="top-banner">
+    <div class="breadcrumb">
+      <span>Top 10 Priorities</span>
+      <span class="sep">›</span>
+      <span class="current">Priority 7</span>
+    </div>
+  </div>
+
+  <!-- Hero -->
+  <div class="hero">
+    <span class="reward-icon">🏆</span>
+    <div class="priority-badge">⭐ Priority 7 of 10</div>
+    <h1>Make Hotels.com the Most Rewarding Way to Book a Hotel</h1>
+    <p class="subtitle">Three strategic objectives ladder up to this priority. Each objective maps to specific customer problems and business opportunities.</p>
+  </div>
+
+  <!-- Connector -->
+  <div class="connector">
+    <div class="connector-line"></div>
+    <div class="connector-label">Strategic Objectives</div>
+  </div>
+
+  <!-- Main content -->
+  <div class="main">
+    <div class="objectives-grid">
+
+      <!-- Objective 1 -->
+      <div class="objective-card">
+        <div class="obj-header">
+          <div class="obj-number">Objective 1</div>
+          <div class="obj-title">Be the best place to plan and book business trips</div>
+        </div>
+
+        <div class="card-section">
+          <div class="section-label">
+            <span class="dot dot-problems"></span>
+            <span class="label-problems">Customer Problems</span>
+          </div>
+          <div class="empty-slots">
+            <div class="slot slot-problems">
+              <span class="slot-icon">＋</span>
+              <span class="slot-text">No customer problems added yet</span>
+            </div>
+          </div>
+          <button class="add-btn add-btn-problems">＋ Add problem</button>
+        </div>
+
+        <div class="card-section">
+          <div class="section-label">
+            <span class="dot dot-opportunities"></span>
+            <span class="label-opportunities">Opportunities &amp; Requirements</span>
+          </div>
+          <div class="empty-slots">
+            <div class="slot slot-opportunities">
+              <span class="slot-icon">＋</span>
+              <span class="slot-text">No opportunities provided yet</span>
+            </div>
+          </div>
+          <button class="add-btn add-btn-opportunities">＋ Add opportunity</button>
+        </div>
+      </div>
+
+      <!-- Objective 2 -->
+      <div class="objective-card">
+        <div class="obj-header">
+          <div class="obj-number">Objective 2</div>
+          <div class="obj-title">Create stickiness through flexibility, add-ons and servicing for frequent last-minute travelers</div>
+        </div>
+
+        <div class="card-section">
+          <div class="section-label">
+            <span class="dot dot-problems"></span>
+            <span class="label-problems">Customer Problems</span>
+          </div>
+          <div class="empty-slots">
+            <div class="slot slot-problems">
+              <span class="slot-icon">＋</span>
+              <span class="slot-text">No customer problems added yet</span>
+            </div>
+          </div>
+          <button class="add-btn add-btn-problems">＋ Add problem</button>
+        </div>
+
+        <div class="card-section">
+          <div class="section-label">
+            <span class="dot dot-opportunities"></span>
+            <span class="label-opportunities">Opportunities &amp; Requirements</span>
+          </div>
+          <div class="empty-slots">
+            <div class="slot slot-opportunities">
+              <span class="slot-icon">＋</span>
+              <span class="slot-text">No opportunities provided yet</span>
+            </div>
+          </div>
+          <button class="add-btn add-btn-opportunities">＋ Add opportunity</button>
+        </div>
+      </div>
+
+      <!-- Objective 3 -->
+      <div class="objective-card">
+        <div class="obj-header">
+          <div class="obj-number">Objective 3</div>
+          <div class="obj-title">Use rewards to bridge business and leisure travel and create rewards flywheel</div>
+        </div>
+
+        <div class="card-section">
+          <div class="section-label">
+            <span class="dot dot-problems"></span>
+            <span class="label-problems">Customer Problems</span>
+          </div>
+          <div class="empty-slots">
+            <div class="slot slot-problems">
+              <span class="slot-icon">＋</span>
+              <span class="slot-text">No customer problems added yet</span>
+            </div>
+          </div>
+          <button class="add-btn add-btn-problems">＋ Add problem</button>
+        </div>
+
+        <div class="card-section">
+          <div class="section-label">
+            <span class="dot dot-opportunities"></span>
+            <span class="label-opportunities">Opportunities &amp; Requirements</span>
+          </div>
+          <div class="empty-slots">
+            <div class="slot slot-opportunities">
+              <span class="slot-icon">＋</span>
+              <span class="slot-text">No opportunities provided yet</span>
+            </div>
+          </div>
+          <button class="add-btn add-btn-opportunities">＋ Add opportunity</button>
+        </div>
+      </div>
+
+    </div><!-- /objectives-grid -->
+
+    <div class="legend">
+      <div class="legend-item"><span class="legend-swatch" style="background:var(--gold)"></span> Customer Problems — what travelers are struggling with</div>
+      <div class="legend-item"><span class="legend-swatch" style="background:var(--blue-mid)"></span> Opportunities &amp; Requirements — what partners bring</div>
+    </div>
+
+    <div class="page-footer">
+      Hotels.com · Priority 7 · Last updated May 2026 · <a href="/">All Priorities</a>
+    </div>
+
+  </div><!-- /main -->
+
+</body>
+</html>
