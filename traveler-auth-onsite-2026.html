@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HCOM Priority 7 — Traveler Auth Onsite Brief</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reset.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/black.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Inter+Tight:wght@600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --hcom-red: #D63A2F;
+      --hcom-red-light: #FF5A4E;
+      --hcom-gold: #F5A623;
+      --hcom-dark: #0F0F14;
+      --hcom-panel: #1A1A26;
+      --hcom-panel-light: #22223A;
+      --hcom-border: #2E2E4A;
+      --text-primary: #FFFFFF;
+      --text-secondary: #A8A8C4;
+      --text-muted: #6A6A88;
+    }
+
+    .reveal {
+      font-family: 'Inter', sans-serif;
+    }
+
+    .reveal .slides {
+      text-align: left;
+    }
+
+    .reveal h1, .reveal h2, .reveal h3 {
+      font-family: 'Inter Tight', sans-serif;
+      text-transform: none;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+    }
+
+    .reveal .slides section {
+      background: var(--hcom-dark);
+      padding: 0;
+      height: 100%;
+      box-sizing: border-box;
+    }
+
+    /* ── Slide layout helpers ── */
+    .slide-inner {
+      padding: 52px 64px;
+      height: 100%;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .eyebrow {
+      font-size: 0.65em;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--hcom-red);
+      margin-bottom: 10px;
+    }
+
+    .slide-title {
+      font-size: 1.15em;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin: 0 0 24px 0;
+      line-height: 1.2;
+    }
+
+    .slide-rule {
+      height: 2px;
+      background: var(--hcom-border);
+      margin: 0 0 28px 0;
+      flex-shrink: 0;
+    }
+
+    .slide-rule.accent {
+      background: linear-gradient(90deg, var(--hcom-red) 0%, var(--hcom-border) 40%);
+    }
+
+    /* ── Title slide ── */
+    .title-slide {
+      background: linear-gradient(135deg, #0F0F14 60%, #1A0A0A 100%) !important;
+      justify-content: flex-end;
+      padding-bottom: 64px;
+    }
+
+    .title-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--hcom-red);
+      color: white;
+      font-size: 0.55em;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 6px 14px;
+      border-radius: 4px;
+      margin-bottom: 20px;
+    }
+
+    .title-headline {
+      font-size: 1.8em;
+      font-weight: 800;
+      line-height: 1.1;
+      color: var(--text-primary);
+      margin: 0 0 16px 0;
+    }
+
+    .title-subtitle {
+      font-size: 0.75em;
+      color: var(--text-secondary);
+      margin: 0 0 40px 0;
+      font-weight: 400;
+    }
+
+    .title-meta {
+      font-size: 0.58em;
+      color: var(--text-muted);
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+
+    .title-meta span {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .title-meta span::before {
+      content: '';
+      width: 4px;
+      height: 4px;
+      background: var(--hcom-red);
+      border-radius: 50%;
+    }
+
+    /* ── Three-col layout for objectives overview ── */
+    .cols-3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 16px;
+      flex: 1;
+    }
+
+    .cols-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      flex: 1;
+    }
+
+    /* ── Cards ── */
+    .card {
+      background: var(--hcom-panel);
+      border: 1px solid var(--hcom-border);
+      border-radius: 8px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card.accent-top {
+      border-top: 3px solid var(--hcom-red);
+    }
+
+    .card.gold-top {
+      border-top: 3px solid var(--hcom-gold);
+    }
+
+    .card-num {
+      font-size: 1.6em;
+      font-weight: 800;
+      color: var(--hcom-red);
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+
+    .card-label {
+      font-size: 0.62em;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      margin-bottom: 10px;
+    }
+
+    .card-title {
+      font-size: 0.72em;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin: 0 0 10px 0;
+      line-height: 1.3;
+    }
+
+    .card-body {
+      font-size: 0.6em;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      flex: 1;
+    }
+
+    /* ── Objective slides ── */
+    .obj-layout {
+      display: grid;
+      grid-template-columns: 5fr 4fr;
+      gap: 20px;
+      flex: 1;
+    }
+
+    .obj-left {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .obj-right {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .problem-box {
+      background: var(--hcom-panel);
+      border-left: 3px solid var(--hcom-red);
+      border-radius: 0 6px 6px 0;
+      padding: 14px 16px;
+    }
+
+    .problem-box .label {
+      font-size: 0.55em;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--hcom-red);
+      margin-bottom: 6px;
+    }
+
+    .problem-box .text {
+      font-size: 0.62em;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    .solution-box {
+      background: var(--hcom-panel);
+      border-left: 3px solid var(--hcom-gold);
+      border-radius: 0 6px 6px 0;
+      padding: 14px 16px;
+    }
+
+    .solution-box .label {
+      font-size: 0.55em;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--hcom-gold);
+      margin-bottom: 6px;
+    }
+
+    .solution-box .text {
+      font-size: 0.62em;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    .product-panel {
+      background: var(--hcom-panel);
+      border: 1px solid var(--hcom-border);
+      border-radius: 8px;
+      padding: 16px;
+    }
+
+    .product-panel .period-label {
+      font-size: 0.55em;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--hcom-gold);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .product-panel .period-label::before {
+      content: '';
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--hcom-gold);
+      flex-shrink: 0;
+    }
+
+    .product-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .product-list li {
+      font-size: 0.6em;
+      color: var(--text-secondary);
+      padding: 4px 0;
+      padding-left: 14px;
+      position: relative;
+      line-height: 1.4;
+    }
+
+    .product-list li::before {
+      content: '→';
+      position: absolute;
+      left: 0;
+      color: var(--hcom-red);
+      font-size: 0.85em;
+    }
+
+    .product-list li strong {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    /* ── Big bets slide ── */
+    .bets-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 16px;
+      flex: 1;
+    }
+
+    .bet-card {
+      background: var(--hcom-panel);
+      border: 1px solid var(--hcom-border);
+      border-radius: 8px;
+      padding: 24px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .bet-icon {
+      font-size: 1.6em;
+      line-height: 1;
+    }
+
+    .bet-headline {
+      font-size: 0.72em;
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1.2;
+    }
+
+    .bet-body {
+      font-size: 0.58em;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      flex: 1;
+    }
+
+    .bet-not-doing {
+      font-size: 0.52em;
+      color: var(--text-muted);
+      border-top: 1px solid var(--hcom-border);
+      padding-top: 10px;
+      line-height: 1.5;
+    }
+
+    .bet-not-doing span {
+      color: var(--text-muted);
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 0.9em;
+      letter-spacing: 0.06em;
+    }
+
+    /* ── Auth/identity slide ── */
+    .auth-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      flex: 1;
+    }
+
+    .auth-left {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .auth-right {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .obj-auth-card {
+      background: var(--hcom-panel);
+      border: 1px solid var(--hcom-border);
+      border-radius: 8px;
+      padding: 14px 16px;
+    }
+
+    .obj-auth-card .obj-name {
+      font-size: 0.55em;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--hcom-red);
+      margin-bottom: 8px;
+    }
+
+    .obj-auth-card ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .obj-auth-card ul li {
+      font-size: 0.6em;
+      color: var(--text-secondary);
+      padding: 3px 0;
+      padding-left: 14px;
+      position: relative;
+      line-height: 1.4;
+    }
+
+    .obj-auth-card ul li::before {
+      content: '·';
+      position: absolute;
+      left: 4px;
+      color: var(--hcom-gold);
+    }
+
+    .auth-insight {
+      background: linear-gradient(135deg, #1A0F0A, #1A1A26);
+      border: 1px solid var(--hcom-red);
+      border-radius: 8px;
+      padding: 18px;
+    }
+
+    .auth-insight .label {
+      font-size: 0.55em;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--hcom-red);
+      margin-bottom: 10px;
+    }
+
+    .auth-insight .text {
+      font-size: 0.64em;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    /* ── Timeline slide ── */
+    .timeline-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      flex: 1;
+    }
+
+    .quarter-card {
+      background: var(--hcom-panel);
+      border: 1px solid var(--hcom-border);
+      border-radius: 8px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .quarter-card.active {
+      border-color: var(--hcom-red);
+    }
+
+    .quarter-label {
+      font-size: 0.6em;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--hcom-red);
+      margin-bottom: 4px;
+    }
+
+    .quarter-theme {
+      font-size: 0.72em;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 12px;
+      line-height: 1.2;
+    }
+
+    .quarter-items {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      flex: 1;
+    }
+
+    .quarter-items li {
+      font-size: 0.56em;
+      color: var(--text-secondary);
+      padding: 3px 0;
+      padding-left: 12px;
+      position: relative;
+      line-height: 1.4;
+    }
+
+    .quarter-items li::before {
+      content: '→';
+      position: absolute;
+      left: 0;
+      color: var(--hcom-red);
+      font-size: 0.85em;
+    }
+
+    /* ── Customer slide ── */
+    .customer-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      flex: 1;
+    }
+
+    .persona-box {
+      background: var(--hcom-panel);
+      border: 1px solid var(--hcom-border);
+      border-radius: 8px;
+      padding: 20px;
+    }
+
+    .persona-title {
+      font-size: 0.78em;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 12px;
+    }
+
+    .persona-trait {
+      font-size: 0.6em;
+      color: var(--text-secondary);
+      padding: 6px 0;
+      padding-left: 16px;
+      position: relative;
+      line-height: 1.5;
+      border-bottom: 1px solid var(--hcom-border);
+    }
+
+    .persona-trait:last-child {
+      border-bottom: none;
+    }
+
+    .persona-trait::before {
+      content: '';
+      position: absolute;
+      left: 4px;
+      top: 12px;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--hcom-red);
+    }
+
+    .not-doing-box {
+      background: var(--hcom-panel-light);
+      border: 1px solid var(--hcom-border);
+      border-radius: 8px;
+      padding: 20px;
+    }
+
+    .not-doing-title {
+      font-size: 0.62em;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+    }
+
+    .not-doing-item {
+      font-size: 0.58em;
+      color: var(--text-muted);
+      padding: 5px 0;
+      padding-left: 16px;
+      position: relative;
+      line-height: 1.5;
+    }
+
+    .not-doing-item::before {
+      content: '✕';
+      position: absolute;
+      left: 0;
+      color: var(--text-muted);
+      font-size: 0.8em;
+    }
+
+    /* ── Closing slide ── */
+    .close-slide {
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+
+    .close-headline {
+      font-size: 1.6em;
+      font-weight: 800;
+      color: var(--text-primary);
+      line-height: 1.15;
+      margin-bottom: 20px;
+    }
+
+    .close-sub {
+      font-size: 0.72em;
+      color: var(--text-secondary);
+      max-width: 640px;
+      margin: 0 auto 32px;
+      line-height: 1.6;
+    }
+
+    .marketable-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      max-width: 580px;
+      margin: 0 auto;
+      text-align: left;
+    }
+
+    .marketable-item {
+      background: var(--hcom-panel);
+      border: 1px solid var(--hcom-border);
+      border-left: 3px solid var(--hcom-red);
+      border-radius: 0 6px 6px 0;
+      padding: 10px 16px;
+      font-size: 0.62em;
+      color: var(--text-secondary);
+      line-height: 1.4;
+    }
+
+    .marketable-item strong {
+      color: var(--text-primary);
+      display: block;
+      font-size: 1.05em;
+      margin-bottom: 2px;
+    }
+
+    /* Reveal overrides */
+    .reveal .slides > section {
+      padding: 0;
+    }
+
+    .reveal .progress {
+      height: 3px;
+      color: var(--hcom-red);
+    }
+
+    .reveal .controls {
+      color: var(--hcom-red);
+    }
+
+    .slide-number-badge {
+      position: absolute;
+      top: 20px;
+      right: 28px;
+      font-size: 0.45em;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+  </style>
+</head>
+<body>
+<div class="reveal">
+  <div class="slides">
+
+    <!-- ── Slide 1: Title ── -->
+    <section>
+      <div class="slide-inner title-slide">
+        <div class="title-badge">Priority 7 · Hotels.com</div>
+        <h1 class="title-headline">Make Hotels.com the Most<br/>Rewarding Way to Book a Hotel</h1>
+        <p class="title-subtitle">
+          15-minute context brief for the Traveler Authentication Onsite
+        </p>
+        <div class="title-meta">
+          <span>June 2026</span>
+          <span>Engineering · PAX · XD · Product</span>
+          <span>Forming the 2027 Vision</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Slide 2: The Customer ── -->
+    <section>
+      <div class="slide-inner">
+        <div class="slide-number-badge">2 / 8</div>
+        <div class="eyebrow">The Customer</div>
+        <h2 class="slide-title">We're building for the Savvy Trip Taker</h2>
+        <div class="slide-rule accent"></div>
+        <div class="customer-layout">
+          <div class="persona-box">
+            <div class="persona-title">Who they are</div>
+            <div class="persona-trait">Frequent traveler — business and leisure blend in the same life and often the same trips</div>
+            <div class="persona-trait">Books transportation directly; assembles trips across platforms to maximize value</div>
+            <div class="persona-trait"><strong>2027 focus: Business self-bookers</strong> — convenience and flexibility within budget, consolidating spend for status and rewards</div>
+            <div class="persona-trait">Loyalty is the connective thread — business rewards fund leisure stays</div>
+          </div>
+          <div>
+            <div class="persona-box" style="margin-bottom: 12px;">
+              <div class="persona-title" style="font-size: 0.7em; color: var(--text-secondary);">The gap today</div>
+              <div class="persona-trait">Generic OTA experiences regardless of trip intent</div>
+              <div class="persona-trait">Rigid cancel/change policies; no business-grade tools</div>
+              <div class="persona-trait">Loyalty that feels abstract, slow to unlock, or hard to use across business and personal travel</div>
+            </div>
+            <div class="not-doing-box">
+              <div class="not-doing-title">Deliberately not our customer</div>
+              <div class="not-doing-item">Wide-appeal, general-population OTA shoppers</div>
+              <div class="not-doing-item">Enterprise / managed travel (no policy engines, approval chains)</div>
+              <div class="not-doing-item">Vacation rental focus — Vrbo owns that</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Slide 3: Three Objectives Overview ── -->
+    <section>
+      <div class="slide-inner">
+        <div class="slide-number-badge">3 / 8</div>
+        <div class="eyebrow">Strategy Overview</div>
+        <h2 class="slide-title">Three objectives. One connected experience.</h2>
+        <div class="slide-rule accent"></div>
+        <div class="cols-3">
+          <div class="card accent-top">
+            <div class="card-num">01</div>
+            <div class="card-label">Objective 1</div>
+            <div class="card-title">Be the simplest place to plan, book, and service business trips</div>
+            <div class="card-body">
+              TMC-grade tools — expense management, one-tap rebook, invoice receipts, map-based booking, arranger controls — all in the same account as leisure.
+            </div>
+          </div>
+          <div class="card accent-top">
+            <div class="card-num">02</div>
+            <div class="card-label">Objective 2</div>
+            <div class="card-title">Create sticky flexibility for frequent last-minute travelers</div>
+            <div class="card-body">
+              Biz Rates gated by verified identity. Third-party CFAR. EG-underwritten synthetic flexibility. The most cancel-friendly inventory for business traveler needs.
+            </div>
+          </div>
+          <div class="card accent-top">
+            <div class="card-num">03</div>
+            <div class="card-label">Objective 3</div>
+            <div class="card-title">Use rewards to bridge business and leisure — the flywheel</div>
+            <div class="card-body">
+              Hotels.comCash as a real currency: earn, burn, gift, pool, save. 10-for-1 restored via paid premium tier. Business trips fund leisure stays.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Slide 4: Objective 1 ── -->
+    <section>
+      <div class="slide-inner">
+        <div class="slide-number-badge">4 / 8</div>
+        <div class="eyebrow">Objective 1</div>
+        <h2 class="slide-title">Win business travel — expert tools in one account</h2>
+        <div class="slide-rule accent"></div>
+        <div class="obj-layout">
+          <div class="obj-left">
+            <div class="problem-box">
+              <div class="label">Customer problem</div>
+              <div class="text">Small-scale business travelers lack the bespoke tools TMCs offer. Shopping, booking, and servicing is complicated and cumbersome. Hotel content is overwhelming and generic regardless of trip intent.</div>
+            </div>
+            <div class="solution-box">
+              <div class="label">Solution by 2027</div>
+              <div class="text">Hotels.com delivers rich, trip-specific expertise that makes decisions easy. One account spans self-bookers, arrangers, and multi-hotel trips. Expert Q&amp;A, map-based booking, one-tap rebook, and invoice-grade receipts.</div>
+            </div>
+            <div class="card" style="flex: 1;">
+              <div class="card-label">Illustrative capabilities</div>
+              <ul class="product-list">
+                <li><strong>Self-bookers:</strong> Expense tools, map booking, one-tap rebook, preferred biz card</li>
+                <li><strong>Arrangers:</strong> Roster management, book/edit for others, shared payments, pooled rewards</li>
+                <li><strong>Multi-hotel travelers:</strong> Plan, price-optimize, book multi-city swings in one flow</li>
+                <li><strong>Hotel expertise:</strong> Compare side-by-side, Property Expert Q&amp;A, curated content by trip type</li>
+              </ul>
+            </div>
+          </div>
+          <div class="obj-right">
+            <div class="product-panel">
+              <div class="period-label">H2 2026 — In flight</div>
+              <ul class="product-list">
+                <li><strong>HBT Self Booker MLP</strong> — Walk phase; business traveler experience validating</li>
+                <li><strong>Identify Business Travelers</strong> — ML-based trip-type classification live</li>
+                <li><strong>HCOM Home Improvements Ph 1</strong> — Segment-aware UBT home experience</li>
+                <li><strong>Comms: HBT Expensing</strong> — Thin-slice expense communication</li>
+                <li><strong>Become the Hotel Expert</strong> — Content pipeline for Q&amp;A and comparison (Crawl)</li>
+              </ul>
+            </div>
+            <div class="product-panel">
+              <div class="period-label">H1 2027 — On horizon</div>
+              <ul class="product-list">
+                <li><strong>Self Booker Extended Experience</strong> — Full biz toolkit: map booking, price alerts, expense automation</li>
+                <li><strong>Create Travel Arranger Persona MLP</strong> — Roster management, shared payments, duty-of-care foundations</li>
+                <li><strong>Hotel Expert Walk</strong> — Expert Q&amp;A on SRP/PDP, reasons to book/skip surfacing</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Slide 5: Objective 2 ── -->
+    <section>
+      <div class="slide-inner">
+        <div class="slide-number-badge">5 / 8</div>
+        <div class="eyebrow">Objective 2</div>
+        <h2 class="slide-title">More flexibility than anywhere — especially for last-minute bookings</h2>
+        <div class="slide-rule accent"></div>
+        <div class="obj-layout">
+          <div class="obj-left">
+            <div class="problem-box">
+              <div class="label">Customer problem</div>
+              <div class="text">Frequent business travelers can't find offers and policies that match their needs — especially in last-minute scenarios where non-refundable rates are the only option.</div>
+            </div>
+            <div class="solution-box">
+              <div class="label">Three-layer solution</div>
+              <div class="text">
+                <strong style="color: var(--text-primary);">Biz Rates</strong> — flexible policies from hotels, gated to verified business customers.<br/><br/>
+                <strong style="color: var(--text-primary);">3rd-Party CFAR</strong> — Hotels.com bundles "Cancel For Any Reason" insurance with non-refundable rates, creating synthetic flexibility.<br/><br/>
+                <strong style="color: var(--text-primary);">EG-Underwritten</strong> — Hotels.com takes on the risk directly when cancellation likelihood is low or resale probability is high.
+              </div>
+            </div>
+          </div>
+          <div class="obj-right">
+            <div class="product-panel">
+              <div class="period-label">H2 2026 — In flight</div>
+              <ul class="product-list">
+                <li><strong>Deliver for Flexibility &amp; Stickiness</strong> — Waves 1–2; Biz Rates and CFAR Pilot live on HCOM</li>
+                <li><strong>Integrate Add-On Services</strong> — InsurTech assurance products bundled at checkout</li>
+                <li><strong>Provide Dedicated Service Solutions</strong> — Customer-tier-aware servicing (Crawl/Walk)</li>
+                <li><strong>Save Your Way 2026</strong> — Flexible savings mechanics launching</li>
+                <li><strong>MoR Shift</strong> — 100% Merchant of Record enables direct cancel/change ownership</li>
+              </ul>
+            </div>
+            <div class="product-panel">
+              <div class="period-label">H1 2027 — On horizon</div>
+              <ul class="product-list">
+                <li><strong>Multi-Hotel Shopping</strong> — Plan, price-optimize, and book multi-city trips in one checkout; first of its kind for an OTA</li>
+                <li><strong>Flexibility &amp; Stickiness Waves 3–4</strong> — Price-drop cancel/rebook automation, change (not just cancel/rebook) experience</li>
+                <li><strong>CFAR at Scale</strong> — Expanding synthetic flexibility across more rate types and markets</li>
+              </ul>
+            </div>
+            <div class="card" style="border-top: 3px solid var(--hcom-gold);">
+              <div class="card-label">The big bet</div>
+              <div class="card-body">No other hotel OTA combines Biz Rates + 3rd-party CFAR + EG underwriting in one product. This is a category-defining flexibility stack — not just features.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Slide 6: Objective 3 ── -->
+    <section>
+      <div class="slide-inner">
+        <div class="slide-number-badge">6 / 8</div>
+        <div class="eyebrow">Objective 3</div>
+        <h2 class="slide-title">Hotels.comCash — a real currency, not a points program</h2>
+        <div class="slide-rule accent"></div>
+        <div class="obj-layout">
+          <div class="obj-left">
+            <div class="problem-box">
+              <div class="label">Customer problem</div>
+              <div class="text">Travelers don't feel meaningfully rewarded for booking with Hotels.com. The value of loyalty is unclear, slow to unlock, or too small to influence behavior — disconnected across business and leisure.</div>
+            </div>
+            <div class="solution-box">
+              <div class="label">The currency vision</div>
+              <div class="text">
+                By end of 2026: Hotels.comCash in all markets — earn, burn, refund, gift, save, pool, and 'Save Your Way' across business or leisure.<br/><br/>
+                In the US + UK: Paid premium tier restores 10-for-1 with business-useful benefits — CFAR, travel insurance, price-drop protection, no expiry.<br/><br/>
+                Status tier matching, progressive benefits that never expire (à la Genius), and co-brand credit card in H1 2027.
+              </div>
+            </div>
+          </div>
+          <div class="obj-right">
+            <div class="product-panel">
+              <div class="period-label">H2 2026 — In flight</div>
+              <ul class="product-list">
+                <li><strong>Redesign Hotels.comCash</strong> — Architecture Crawl; full earn/burn/gift/pool foundations</li>
+                <li><strong>Hcom 10 to 100 UK</strong> — 10-for-1 value restored in the UK market</li>
+                <li><strong>HCOM Rewards Optimization RoW</strong> — Rest-of-world loyalty mechanics improving</li>
+                <li><strong>Save Your Way 2026</strong> — Flexible saving mechanics launching</li>
+                <li><strong>Member-Led Messaging Improvements</strong> — Loyalty-aware comms engine</li>
+                <li><strong>Hcom Gift Cards</strong> — Gift card modernization starting</li>
+              </ul>
+            </div>
+            <div class="product-panel">
+              <div class="period-label">H1 2027 — On horizon</div>
+              <ul class="product-list">
+                <li><strong>Hotels.comCash Walk A</strong> — Tier restructuring and paid premium tier (10-for-1 restored in US)</li>
+                <li><strong>VIPa 2.0 Phase 1</strong> — Status tier matching with partner programs (e.g., Hertz President's Circle)</li>
+                <li><strong>Hotels.com Partnerships</strong> — Earn ecosystem beyond travel: co-brand card, partner connectors</li>
+                <li><strong>Save Your Way HBT Evolution</strong> — Business-specific savings mechanics</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Slide 7: Authentication as the Foundation ── -->
+    <section>
+      <div class="slide-inner">
+        <div class="slide-number-badge">7 / 8</div>
+        <div class="eyebrow">Why This Matters for Your Onsite</div>
+        <h2 class="slide-title">Authentication is the foundation every objective runs on</h2>
+        <div class="slide-rule accent"></div>
+        <div class="auth-layout">
+          <div class="auth-left">
+            <div class="obj-auth-card">
+              <div class="obj-name">Objective 1 — Business Travel</div>
+              <ul>
+                <li>Business traveler detection requires a reliable, stable identity — ML signals only improve with logged-in context</li>
+                <li>Single account spanning business + leisure personas depends on a unified identity model</li>
+                <li>Arranger experience requires linked identities with permission scopes (book for, view, expense on behalf of)</li>
+                <li>Multi-hotel trip management: one identity across a multi-leg itinerary</li>
+              </ul>
+            </div>
+            <div class="obj-auth-card">
+              <div class="obj-name">Objective 2 — Flexibility</div>
+              <ul>
+                <li>Biz Rates are gated to verified business customers — identity is the access control mechanism</li>
+                <li>CFAR claims and MoR ownership require reliable identity for dispute resolution and fraud prevention</li>
+                <li>Price-drop cancel/rebook automation only works with persistent, logged-in sessions</li>
+              </ul>
+            </div>
+            <div class="obj-auth-card">
+              <div class="obj-name">Objective 3 — Rewards</div>
+              <ul>
+                <li>Hotels.comCash earn/burn attribution is identity-anchored at every transaction</li>
+                <li>Pooling requires group identity — household, team, or travel party linked to a single account</li>
+                <li>Paid tier enrollment, status tier matching, and partner loyalty linking all start with a strong identity layer</li>
+                <li>Gift and transfer flows require trust — verified sender/recipient identity</li>
+              </ul>
+            </div>
+          </div>
+          <div class="auth-right">
+            <div class="auth-insight">
+              <div class="label">The strategic framing</div>
+              <div class="text">
+                Identity &amp; Profiles is explicitly called out as a critical shared platform dependency across all three P7 objectives. The Jira roadmap runs from Q2 2026 through Q1 2027 with continuous Identity team involvement.<br/><br/>
+                <strong style="color: var(--text-primary);">Business traveler identification starts now (Q2 2026).</strong> The arranger identity model starts Q2 2027. Group identity for pooling starts Q3 2027.<br/><br/>
+                Every login experience decision your team makes in this onsite will cascade directly into whether these products ship on time, with the right experience, or have to be redesigned mid-flight.<br/><br/>
+                <strong style="color: var(--text-primary);">Your 2027 traveler login vision isn't a dependency of this strategy. It IS this strategy's foundation.</strong>
+              </div>
+            </div>
+            <div class="card" style="border-top: 3px solid var(--hcom-gold);">
+              <div class="card-label">Questions your onsite should answer</div>
+              <div class="card-body">
+                <ul class="product-list" style="margin: 0;">
+                  <li>What does a "verified business traveler" mean in the identity layer?</li>
+                  <li>How does the arranger permission model attach to existing identity infrastructure?</li>
+                  <li>What's the login experience for pooling — household vs team vs travel party?</li>
+                  <li>How does premium tier status flow into the authenticated session?</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Slide 8: The Timeline ── -->
+    <section>
+      <div class="slide-inner">
+        <div class="slide-number-badge">8 / 8</div>
+        <div class="eyebrow">The Roadmap</div>
+        <h2 class="slide-title">H2 2026 → H1 2027: six quarters, three waves</h2>
+        <div class="slide-rule accent"></div>
+        <div class="timeline-grid">
+          <div class="quarter-card active">
+            <div class="quarter-label">Q2 2026 — Now</div>
+            <div class="quarter-theme">Foundation</div>
+            <ul class="quarter-items">
+              <li>Brand refresh landing</li>
+              <li>Pay Later + Autopay infrastructure</li>
+              <li>Business traveler identification starts</li>
+              <li>10:100 UK loyalty program</li>
+              <li>HCOM Home improvements</li>
+            </ul>
+          </div>
+          <div class="quarter-card">
+            <div class="quarter-label">Q3 2026</div>
+            <div class="quarter-theme">Currency</div>
+            <ul class="quarter-items">
+              <li>Hotels.comCash architecture begins</li>
+              <li>HBT Self Booker Walk phase</li>
+              <li>VR differentiation Waves 1–2</li>
+              <li>Save Your Way 2026 launching</li>
+              <li>HBT expensing comms thin slice</li>
+            </ul>
+          </div>
+          <div class="quarter-card">
+            <div class="quarter-label">Q4 2026</div>
+            <div class="quarter-theme">Acceleration</div>
+            <ul class="quarter-items">
+              <li>HCC Crawl completing</li>
+              <li>Self Booker MLP validating</li>
+              <li>Flexibility Waves 1–2 live (Biz Rates, CFAR)</li>
+              <li>Hotel expertise content pipeline</li>
+              <li>Gift Cards starting</li>
+            </ul>
+          </div>
+          <div class="quarter-card">
+            <div class="quarter-label">Q1 2027</div>
+            <div class="quarter-theme">Loyalty 2.0</div>
+            <ul class="quarter-items">
+              <li>HCC Walk A: paid tier + tier restructure</li>
+              <li>10-for-1 restored (US) via premium tier</li>
+              <li>Partnerships pipeline opening</li>
+              <li>Self Booker Extended Experience</li>
+              <li>Multi-Hotel Shopping Crawl</li>
+              <li>VIPa 2.0 Phase 1</li>
+            </ul>
+          </div>
+        </div>
+        <div style="margin-top: 16px; background: var(--hcom-panel); border: 1px solid var(--hcom-border); border-radius: 8px; padding: 14px 18px; font-size: 0.58em; color: var(--text-secondary); line-height: 1.5;">
+          <strong style="color: var(--text-primary);">Key risk to flag:</strong> Hotels.comCash architecture (Q3 2026 start) is blocked on loyalty decision rights resolution by end of Q2. If unresolved, 6 downstream milestones — including the paid tier and partnerships — slip by one full quarter. Identity platform prioritization is the other critical dependency: HCOM use cases must not be treated as secondary behind Expedia brand work.
+        </div>
+      </div>
+    </section>
+
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+<script>
+  Reveal.initialize({
+    hash: true,
+    slideNumber: false,
+    controls: true,
+    progress: true,
+    center: false,
+    transition: 'fade',
+    transitionSpeed: 'fast',
+    backgroundTransition: 'none',
+    width: 1280,
+    height: 720,
+    margin: 0,
+    minScale: 0.2,
+    maxScale: 2.0,
+    keyboard: {
+      // Arrow keys and space already work by default
+    }
+  });
+</script>
+</body>
+</html>
