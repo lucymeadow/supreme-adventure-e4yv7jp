@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Builder — VR Differentiation, PRD to Production | Lucy Meadow</title>
+<meta name="description" content="How one PM took Hotels.com's Vacation Rental differentiation from PRD to a live production A/B — filling a resourcing gap by taking on the product, design, and developer roles across the full product development lifecycle.">
+<style>
+  :root {
+    --navy: #171c38;
+    --teal: #00a3b5;
+    --blue: #3d78f2;
+    --purple: #784cc7;
+    --amber: #d99e14;
+    --green: #2ea673;
+    --coral: #e56152;
+    --dark: #1e2129;
+    --subtle: #808899;
+    --bg: #f5f7fa;
+    --white: #ffffff;
+    --border: #dce0e8;
+    --shadow: 0 2px 8px rgba(0,0,0,0.06);
+    --shadow-lg: 0 12px 32px rgba(23,28,56,0.12);
+    --hcom-red: #c8102e;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--dark); line-height: 1.6; }
+  a { color: inherit; }
+
+  /* ── Top bar ── */
+  .top-bar { background: var(--navy); padding: 14px 40px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
+  .top-bar-left h1 { color: #fff; font-size: 16px; font-weight: 700; letter-spacing: 0.01em; }
+  .top-bar-left .sub { color: #9a9fb8; font-size: 11px; margin-top: 2px; }
+  .top-bar-nav { display: flex; gap: 20px; flex-wrap: wrap; align-items: center; }
+  .top-bar-nav a { color: #9a9fb8; text-decoration: none; font-size: 12.5px; font-weight: 500; transition: color .15s; }
+  .top-bar-nav a:hover { color: #fff; }
+  .top-bar-nav a.back { color: #fff; border: 1px solid rgba(255,255,255,0.25); border-radius: 20px; padding: 5px 13px; }
+  .top-bar-nav a.back:hover { background: rgba(255,255,255,0.1); }
+  @media (max-width: 720px) { .top-bar-nav a:not(.back) { display: none; } }
+
+  /* ── Hero ── */
+  .hero {
+    background: radial-gradient(1200px 400px at 80% -10%, rgba(0,163,181,0.35), transparent 60%),
+                linear-gradient(135deg, var(--navy) 0%, #2a1c4a 60%, var(--hcom-red) 150%);
+    color: #fff; padding: 66px 48px 60px; position: relative; overflow: hidden;
+  }
+  .hero::before { content: ''; position: absolute; top: -120px; right: -100px; width: 380px; height: 380px; border-radius: 50%; background: rgba(255,255,255,0.04); }
+  .hero-inner { max-width: 1080px; margin: 0 auto; position: relative; }
+  .eyebrow { display: inline-flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.22); border-radius: 20px; padding: 5px 15px; font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 20px; }
+  .eyebrow .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--teal); box-shadow: 0 0 0 4px rgba(0,163,181,0.25); }
+  .hero h2 { font-size: clamp(28px, 4.4vw, 48px); font-weight: 800; line-height: 1.1; max-width: 900px; margin-bottom: 20px; letter-spacing: -0.02em; }
+  .hero h2 .accent { background: linear-gradient(90deg, var(--teal), #6fd8e4); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+  .hero p { font-size: 16px; opacity: 0.88; max-width: 720px; line-height: 1.7; }
+  .hero .roles { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 24px; }
+  .hero .role-chip { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; padding: 8px 15px; font-size: 13px; font-weight: 700; letter-spacing: 0.01em; }
+  .hero .role-chip span { opacity: 0.6; font-weight: 500; }
+
+  /* ── Stats strip ── */
+  .stats { max-width: 1080px; margin: -28px auto 0; padding: 0 48px; position: relative; z-index: 5; }
+  .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+  @media (max-width: 760px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } }
+  .stat { background: var(--white); border: 1px solid var(--border); border-radius: 12px; padding: 18px 20px; box-shadow: var(--shadow); }
+  .stat .num { font-size: 28px; font-weight: 800; color: var(--navy); line-height: 1; letter-spacing: -0.02em; }
+  .stat .lbl { font-size: 11px; font-weight: 600; color: var(--subtle); text-transform: uppercase; letter-spacing: 0.05em; margin-top: 7px; }
+
+  /* ── Content ── */
+  .content { max-width: 1080px; margin: 0 auto; padding: 50px 48px 90px; }
+  @media (max-width: 680px) { .hero, .stats, .content { padding-left: 22px; padding-right: 22px; } }
+
+  .block { margin-bottom: 56px; scroll-margin-top: 72px; }
+  .block-head { display: flex; align-items: baseline; gap: 14px; margin-bottom: 8px; }
+  .block-head .kicker { font-size: 11px; font-weight: 800; letter-spacing: 0.09em; text-transform: uppercase; color: #fff; padding: 4px 10px; border-radius: 5px; background: var(--teal); }
+  .block h3 { font-size: 23px; font-weight: 800; color: var(--navy); letter-spacing: -0.01em; }
+  .block .lead { font-size: 15px; color: #4a5160; margin: 6px 0 24px; max-width: 780px; line-height: 1.7; }
+
+  /* ── Thesis / gap callout ── */
+  .gap { background: linear-gradient(135deg, #fff 0%, #f0f4fb 100%); border: 1px solid var(--border); border-left: 5px solid var(--hcom-red); border-radius: 14px; padding: 30px 32px; box-shadow: var(--shadow); }
+  .gap h3 { font-size: 20px; color: var(--navy); font-weight: 800; margin-bottom: 12px; }
+  .gap p { font-size: 15px; color: #3f4655; line-height: 1.75; margin-bottom: 12px; }
+  .gap p:last-child { margin-bottom: 0; }
+  .gap strong { color: var(--navy); }
+
+  /* ── Role columns ── */
+  .roles-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+  @media (max-width: 860px) { .roles-grid { grid-template-columns: 1fr; } }
+  .role { background: var(--white); border: 1px solid var(--border); border-radius: 14px; padding: 24px 22px; box-shadow: var(--shadow); position: relative; overflow: hidden; }
+  .role::after { content: ''; position: absolute; left: 0; top: 0; height: 100%; width: 4px; background: var(--accent); }
+  .role .role-label { display: inline-flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); margin-bottom: 6px; }
+  .role h4 { font-size: 17px; font-weight: 800; color: var(--navy); margin-bottom: 14px; letter-spacing: -0.01em; }
+  .role ul { list-style: none; }
+  .role li { font-size: 13.5px; color: #444b5a; line-height: 1.5; padding: 8px 0 8px 22px; position: relative; border-top: 1px solid #eef1f6; }
+  .role li:first-child { border-top: none; }
+  .role li::before { content: ''; position: absolute; left: 2px; top: 15px; width: 7px; height: 7px; border-radius: 2px; background: var(--accent); }
+  .role li strong { color: var(--navy); font-weight: 700; }
+
+  /* ── Timeline ── */
+  .timeline { position: relative; margin-left: 6px; padding-left: 30px; }
+  .timeline::before { content: ''; position: absolute; left: 6px; top: 6px; bottom: 6px; width: 2px; background: linear-gradient(var(--teal), var(--purple), var(--hcom-red)); }
+  .tl-item { position: relative; padding: 0 0 26px; }
+  .tl-item:last-child { padding-bottom: 0; }
+  .tl-item::before { content: ''; position: absolute; left: -30px; top: 3px; width: 14px; height: 14px; border-radius: 50%; background: var(--white); border: 3px solid var(--accent, var(--teal)); }
+  .tl-date { font-size: 11.5px; font-weight: 800; color: var(--accent, var(--teal)); text-transform: uppercase; letter-spacing: 0.05em; }
+  .tl-item h5 { font-size: 15px; font-weight: 700; color: var(--navy); margin: 3px 0 5px; }
+  .tl-item p { font-size: 13.5px; color: #4a5160; line-height: 1.6; max-width: 760px; }
+  .tl-item p a { color: var(--blue); text-decoration: none; font-weight: 600; }
+  .tl-item p a:hover { text-decoration: underline; }
+  .tl-role { display: inline-block; font-size: 10px; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; padding: 2px 8px; border-radius: 20px; margin-left: 8px; vertical-align: middle; }
+  .r-prod { background: rgba(120,76,199,0.12); color: var(--purple); }
+  .r-design { background: rgba(0,163,181,0.12); color: #0a7c8a; }
+  .r-dev { background: rgba(61,120,242,0.12); color: var(--blue); }
+
+  /* ── Shipped panel ── */
+  .shipped { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 22px; align-items: stretch; }
+  @media (max-width: 820px) { .shipped { grid-template-columns: 1fr; } }
+  .shipped-copy { background: var(--white); border: 1px solid var(--border); border-radius: 14px; padding: 26px 26px; box-shadow: var(--shadow); }
+  .shipped-copy p { font-size: 14px; color: #3f4655; line-height: 1.7; margin-bottom: 14px; }
+  .shipped-copy p:last-child { margin-bottom: 0; }
+  .shipped-copy code { background: #eef1f6; border-radius: 4px; padding: 1px 6px; font-size: 12.5px; font-family: 'SF Mono', ui-monospace, Menlo, monospace; color: var(--navy); }
+  .beforeafter { background: var(--navy); border-radius: 14px; padding: 26px; color: #fff; display: flex; flex-direction: column; justify-content: center; gap: 16px; }
+  .ba-row { display: flex; align-items: center; gap: 14px; }
+  .ba-tag { font-size: 10px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; opacity: 0.6; width: 62px; }
+  .ba-pill { background: rgba(255,255,255,0.1); border: 1px dashed rgba(255,255,255,0.35); border-radius: 8px; padding: 10px 16px; font-size: 15px; font-weight: 600; }
+  .ba-pill.after { background: rgba(0,163,181,0.28); border: 1px solid var(--teal); font-weight: 700; }
+  .ba-arrow { text-align: center; opacity: 0.5; font-size: 18px; }
+
+  /* ── Results ── */
+  .results-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 18px; }
+  @media (max-width: 760px) { .results-grid { grid-template-columns: 1fr; } }
+  .result { background: var(--white); border: 1px solid var(--border); border-radius: 12px; padding: 22px 22px; box-shadow: var(--shadow); }
+  .result .big { font-size: 30px; font-weight: 800; color: var(--navy); letter-spacing: -0.02em; line-height: 1; }
+  .result .big.good { color: var(--green); }
+  .result .rlbl { font-size: 12.5px; font-weight: 700; color: var(--navy); margin-top: 10px; }
+  .result .rsub { font-size: 12px; color: var(--subtle); margin-top: 3px; line-height: 1.5; }
+  .readout-note { font-size: 13px; color: #4a5160; background: rgba(46,166,115,0.08); border: 1px solid rgba(46,166,115,0.25); border-radius: 10px; padding: 14px 18px; line-height: 1.65; }
+  .readout-note strong { color: #1d7a52; }
+
+  /* ── Artifacts ── */
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  @media (max-width: 860px) { .grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 560px) { .grid { grid-template-columns: 1fr; } }
+  .card { display: flex; flex-direction: column; background: var(--white); border: 1px solid var(--border); border-radius: 12px; padding: 18px 18px 16px; text-decoration: none; color: inherit; box-shadow: var(--shadow); transition: transform .16s ease, box-shadow .16s ease, border-color .16s ease; position: relative; overflow: hidden; }
+  .card::after { content: ''; position: absolute; left: 0; top: 0; height: 100%; width: 4px; background: var(--accent, var(--blue)); opacity: 0.85; }
+  .card:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); border-color: #c4ccd9; }
+  .card-top { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; }
+  .tag { font-size: 10px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; padding: 3px 9px; border-radius: 20px; background: #eef1f6; color: #5a6273; }
+  .tag.merged { background: rgba(120,76,199,0.12); color: var(--purple); }
+  .tag.merged::before { content: '✓ '; }
+  .tag.live { background: rgba(46,166,115,0.12); color: #1d7a52; }
+  .tag.live::before { content: '● '; font-size: 8px; vertical-align: middle; }
+  .card h4 { font-size: 14.5px; font-weight: 700; color: var(--navy); line-height: 1.3; margin-bottom: 7px; }
+  .card p { font-size: 12.5px; color: #4a5160; line-height: 1.5; flex-grow: 1; }
+  .card-foot { display: flex; align-items: center; gap: 6px; margin-top: 12px; font-size: 12px; font-weight: 700; color: var(--accent, var(--blue)); }
+  .card-foot .arrow { transition: transform .16s ease; }
+  .card:hover .card-foot .arrow { transform: translateX(3px); }
+
+  /* ── Footer ── */
+  .footer { border-top: 1px solid var(--border); background: var(--white); padding: 30px 48px; }
+  .footer-inner { max-width: 1080px; margin: 0 auto; font-size: 12.5px; color: var(--subtle); line-height: 1.7; }
+  .footer-inner strong { color: var(--dark); }
+  .footer a { color: var(--blue); text-decoration: none; }
+  .footer a:hover { text-decoration: underline; }
+
+  @media print {
+    .top-bar, .hero::before { display: none; }
+    .card:hover { transform: none; box-shadow: var(--shadow); }
+  }
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <div class="top-bar-left">
+    <h1>The Builder</h1>
+    <div class="sub">VR Differentiation · PRD to production</div>
+  </div>
+  <nav class="top-bar-nav">
+    <a href="#gap">The gap</a>
+    <a href="#roles">Three roles</a>
+    <a href="#timeline">The arc</a>
+    <a href="#results">Results</a>
+    <a class="back" href="../showcase/">&larr; Portfolio</a>
+  </nav>
+</div>
+
+<header class="hero">
+  <div class="hero-inner">
+    <span class="eyebrow"><span class="dot"></span> Builder spotlight</span>
+    <h2>One PM took VR differentiation from <span class="accent">PRD to a live production A/B</span> — playing product, design, and developer.</h2>
+    <p>When engineering capacity couldn't be secured for Wave 1 of the Vacation Rental differentiation work, I didn't wait for the roadmap. I picked up every job in the product development lifecycle, wrote and shipped the code myself, and ran a real production experiment through to a clean 14-day readout.</p>
+    <div class="roles">
+      <div class="role-chip">Product <span>· PRD, scope, experiment design</span></div>
+      <div class="role-chip">Design <span>· pattern, naming, localization</span></div>
+      <div class="role-chip">Developer <span>· server-side code, tests, canary</span></div>
+    </div>
+  </div>
+</header>
+
+<section class="stats">
+  <div class="stats-grid">
+    <div class="stat"><div class="num">3</div><div class="lbl">Lifecycle roles, one person</div></div>
+    <div class="stat"><div class="num">3</div><div class="lbl">Production PRs merged</div></div>
+    <div class="stat"><div class="num">50/50</div><div class="lbl">Live production A/B</div></div>
+    <div class="stat"><div class="num">0</div><div class="lbl">Detectable harm (p=1.0)</div></div>
+  </div>
+</section>
+
+<main class="content">
+
+  <!-- ── The gap ── -->
+  <section class="block" id="gap">
+    <div class="gap">
+      <h3>The resourcing gap I filled</h3>
+      <p>Hotels.com presents vacation rentals in a way that's visually indistinguishable from hotels. VR is only <strong>3.8% of orders</strong> but generates a disproportionate share of customer confusion, price surprises, and mistrust. The <strong>Differentiated VR PRD</strong> laid out a five-wave fix, starting with clarity: clearly label non-hotel inventory before the click.</p>
+      <p>Wave 1 was ready to learn from — but there was no engineering team allocated to it, and the design partner's time was limited. The work could have sat in a backlog waiting for a quarter to free up capacity.</p>
+      <p>Instead, I treated it as a <strong>Builder problem</strong>: confirm I had the access, learn the systems, and ship a real Test-and-Learn myself. That meant being the PM, the designer, and the developer — one person carrying a change from a strategy document all the way into production traffic on Hotels.com.</p>
+    </div>
+  </section>
+
+  <!-- ── Three roles ── -->
+  <section class="block" id="roles">
+    <div class="block-head"><span class="kicker">01</span><h3>Three job descriptions, one builder</h3></div>
+    <p class="lead">The product development lifecycle usually splits across a PM, a designer, and one or more engineers. On this Test-and-Learn, I held all three — and the AI-empowered workflow made that leverage possible.</p>
+    <div class="roles-grid">
+
+      <div class="role" style="--accent: var(--purple)">
+        <div class="role-label">Product Manager</div>
+        <h4>Framed the problem and the experiment</h4>
+        <ul>
+          <li>Authored the <strong>Differentiated VR PRD</strong> — five delivery waves, target users, functional requirements, and guardrails</li>
+          <li>Resolved <strong>all six open questions</strong> into documented decisions (visual approach, VR visibility, data thresholds, naming)</li>
+          <li>Scoped the Wave 1 Test-and-Learn and registered the <strong>EGTnL experiment</strong> — hypothesis, metrics, entity, and sizing</li>
+          <li>Ran an <strong>analytics peer review</strong> with HCOM Analytics and rebuilt the metric set to a do-no-harm frame</li>
+          <li>Sequenced the TnL ahead of the differentiation <strong>epic</strong> and owned the go-live decision</li>
+        </ul>
+      </div>
+
+      <div class="role" style="--accent: var(--teal)">
+        <div class="role-label">Product Designer</div>
+        <h4>Set the pattern and the language</h4>
+        <ul>
+          <li>Wrote the <strong>Wave 1 Design Brief</strong> — design principles, conceptual model, and four end-to-end user flows</li>
+          <li>Chose a <strong>lightweight pill label</strong> over a card redesign: identify before the click, within the existing layout</li>
+          <li>Aligned the <strong>naming decision</strong> (<code>Entire {type}</code> &rarr; <code>Vacation rental</code>) with XD design partner Janice Yeung</li>
+          <li>Caught and fixed a <strong>localization casing defect</strong> (sentence case per EG guidelines) before translations fired</li>
+          <li>Built the interactive <a href="../hcomvrdiff.html">VR differentiation prototype</a> and staged Figma control/treatment visuals</li>
+        </ul>
+      </div>
+
+      <div class="role" style="--accent: var(--blue)">
+        <div class="role-label">Software Engineer</div>
+        <h4>Wrote, tested, and shipped the code</h4>
+        <ul>
+          <li>Traced the SRP label across three repos and found the real source: <strong>server-side in EALS</strong> (Kotlin)</li>
+          <li>Pivoted from a client-side approach to a <strong>server-driven implementation</strong> after architecture review</li>
+          <li>Wrote the experiment-gated adapter + a <strong>13-type property allowlist</strong>, with Cypress + Jest test coverage</li>
+          <li>Shipped <strong>three merged PRs</strong> (feature + en_US + non-en_US localization) through CODEOWNERS review and the merge queue</li>
+          <li>Verified end-to-end with Playwright probes, an <strong>independent clean-room agent</strong>, and a production canary</li>
+        </ul>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── What shipped ── -->
+  <section class="block" id="shipped">
+    <div class="block-head"><span class="kicker">02</span><h3>What actually shipped</h3></div>
+    <p class="lead">A production Test-and-Learn that swaps the SRP card descriptor for vacation-rental property types, gated behind an experiment flag and localized for every point of sale.</p>
+    <div class="shipped">
+      <div class="shipped-copy">
+        <p>The change lives <strong>server-side in <code>experience-api-lodging-search</code></strong>, the source of truth for the search results card. A new <code>VacationRentalPropertyTypeOverrideExperiment</code> helper and a 13-type structure allowlist decide when to override the descriptor — so hotels, resorts, and aparthotels are never mislabeled.</p>
+        <p>It shipped as three merged PRs: the <strong>feature</strong>, the <strong>en_US string</strong>, and <strong>BabelPrime translations</strong> across 30+ locale bundles (UK English correctly reads <code>Holiday rental</code>, German <code>Ferienunterkunft</code>).</p>
+        <p>Brand safety moved off-code into the experiment's targeting rules, matching the EG-preferred pattern — so the same adapter is safe for every brand that consumes EALS.</p>
+      </div>
+      <div class="beforeafter">
+        <div class="ba-row"><span class="ba-tag">Control</span><span class="ba-pill">Entire apartment</span></div>
+        <div class="ba-arrow">&darr;</div>
+        <div class="ba-row"><span class="ba-tag">Treatment</span><span class="ba-pill after">Vacation rental</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── The arc ── -->
+  <section class="block" id="timeline">
+    <div class="block-head"><span class="kicker">03</span><h3>PRD to production, the full arc</h3></div>
+    <p class="lead">Roughly fourteen weeks from a strategy document to a balanced production A/B with a clean readout — carried by one person across every stage.</p>
+    <div class="timeline">
+
+      <div class="tl-item" style="--accent: var(--purple)">
+        <div class="tl-date">Mar 11, 2026</div>
+        <h5>PRD authored<span class="tl-role r-prod">Product</span></h5>
+        <p>Differentiated VR on Hotels.com — five waves, target users, functional requirements, and hotel-first brand guardrails.</p>
+      </div>
+
+      <div class="tl-item" style="--accent: var(--teal)">
+        <div class="tl-date">Mar 24, 2026</div>
+        <h5>Design brief + decisions<span class="tl-role r-design">Design</span></h5>
+        <p>Wave 1 design brief, the pill-label pattern, and all six open questions resolved into documented decisions.</p>
+      </div>
+
+      <div class="tl-item" style="--accent: var(--blue)">
+        <div class="tl-date">Apr 30, 2026</div>
+        <h5>Contributor path + code trace<span class="tl-role r-dev">Developer</span></h5>
+        <p>Confirmed write access with no engineering sponsor, then traced the descriptor to its real home in server-side EALS.</p>
+      </div>
+
+      <div class="tl-item" style="--accent: var(--blue)">
+        <div class="tl-date">May 18–29, 2026</div>
+        <h5>Feature + localization PRs merged<span class="tl-role r-dev">Developer</span></h5>
+        <p>Pivoted to a server-driven design after review, then merged the feature and localization PRs with full test coverage and CODEOWNERS approval.</p>
+      </div>
+
+      <div class="tl-item" style="--accent: var(--teal)">
+        <div class="tl-date">Jun 2, 2026</div>
+        <h5>Clean-room verification + peer review<span class="tl-role r-design">Design</span><span class="tl-role r-prod">Product</span></h5>
+        <p>An independent agent replicated the result from docs alone (green on all 8 checks); analytics peer review tightened the experiment metrics.</p>
+      </div>
+
+      <div class="tl-item" style="--accent: var(--hcom-red)">
+        <div class="tl-date">Jun 9, 2026</div>
+        <h5>Live 50/50 production A/B<span class="tl-role r-prod">Product</span></h5>
+        <p>Ramped the experiment to a real 50/50 do-no-harm test on Hotels.com with circuit-breaker guardrails — the first time real travelers saw the new label.</p>
+      </div>
+
+      <div class="tl-item" style="--accent: var(--green)">
+        <div class="tl-date">Jun 23, 2026</div>
+        <h5>14-day readout: no harm<span class="tl-role r-prod">Product</span></h5>
+        <p>Balanced exposures across both arms, ramp at 100%, conversion flat, every confidence interval straddling zero. Left running to full sizing to gate the epic.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── Results ── -->
+  <section class="block" id="results">
+    <div class="block-head"><span class="kicker">04</span><h3>The readout</h3></div>
+    <p class="lead">The experiment was framed as a do-no-harm guardrail test: prove the clearer label doesn't hurt conversion before the wider epic invests in it. It did exactly that.</p>
+    <div class="results-grid">
+      <div class="result">
+        <div class="big">50/50</div>
+        <div class="rlbl">Balanced exposures</div>
+        <div class="rsub">Traffic split evenly across control and treatment, with targeting gating cleanly to Hotels.com.</div>
+      </div>
+      <div class="result">
+        <div class="big good">Flat</div>
+        <div class="rlbl">Conversion, both arms</div>
+        <div class="rsub">Conversion held even across control and treatment; sequential p-value 1.0000, uplift within noise.</div>
+      </div>
+      <div class="result">
+        <div class="big">100%</div>
+        <div class="rlbl">Ramp reached, no issues</div>
+        <div class="rsub">Circuit breaker held "No Issues" the entire window; funnel metrics flat across the board.</div>
+      </div>
+    </div>
+    <div class="readout-note"><strong>Verdict: no detectable harm.</strong> Every captured metric was flat and every confidence interval straddled zero, clearing the clearer "Vacation rental" label to inform Wave 1 and the wider differentiation epic — delivered by one person, end to end, without a dedicated engineering team.</div>
+  </section>
+
+  <!-- ── Artifacts ── -->
+  <section class="block" id="artifacts">
+    <div class="block-head"><span class="kicker">05</span><h3>The evidence</h3></div>
+    <p class="lead">The one public artifact is the prototype below. The full trail — PRD, merged production code, the registered experiment, and the readout — lives in Expedia Group's internal product portfolio.</p>
+    <div class="grid">
+
+      <a class="card" style="--accent: var(--teal)" href="../hcomvrdiff.html">
+        <div class="card-top"><span class="tag live">Live prototype</span><span class="date">Mar 2026</span></div>
+        <h4>VR Differentiation Prototype</h4>
+        <p>Interactive prototype exploring how VR should look and feel differently from hotels.</p>
+        <div class="card-foot">Open prototype <span class="arrow">&rarr;</span></div>
+      </a>
+
+      <div class="card" style="--accent: var(--purple)">
+        <div class="card-top"><span class="tag">Internal</span><span class="date">Mar 2026</span></div>
+        <h4>Differentiated VR PRD</h4>
+        <p>The five-wave product requirements document behind the whole effort, authored end to end.</p>
+      </div>
+
+      <div class="card" style="--accent: var(--blue)">
+        <div class="card-top"><span class="tag merged">Merged</span><span class="date">May–Jun 2026</span></div>
+        <h4>Production code, three PRs</h4>
+        <p>Experiment-gated override plus a 13-type allowlist in the server-side lodging search service, with test coverage and full localization — reviewed and merged.</p>
+      </div>
+
+      <div class="card" style="--accent: var(--hcom-red)">
+        <div class="card-top"><span class="tag">Internal</span><span class="date">Jun 2026</span></div>
+        <h4>Live experiment + readout</h4>
+        <p>A registered do-no-harm A/B on Hotels.com and a 14-day readout closeout, gating the wider differentiation epic.</p>
+      </div>
+
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <strong>The Builder — VR Differentiation, PRD to production.</strong> Built and shipped by Lucy Meadow, Hotels.com, spring 2026.<br>
+    Product, design, and engineering carried by one person with an AI-empowered workflow. Part of the <a href="../showcase/">Product Portfolio showcase</a>.<br>
+    This is a public summary. Specific production metrics and internal artifacts are kept in Expedia Group's internal portfolio.
+  </div>
+</footer>
+
+</body>
+</html>
