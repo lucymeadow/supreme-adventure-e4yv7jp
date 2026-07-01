@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lucy Meadow — Product Portfolio Showcase</title>
+<meta name="description" content="Six months of AI-accelerated product work for Hotels.com and Expedia Group: prototypes, strategy, tooling, and analysis, in one view.">
+<style>
+  :root {
+    --navy: #171c38;
+    --teal: #00a3b5;
+    --blue: #3d78f2;
+    --purple: #784cc7;
+    --amber: #d99e14;
+    --green: #2ea673;
+    --coral: #e56152;
+    --dark: #1e2129;
+    --subtle: #808899;
+    --bg: #f5f7fa;
+    --white: #ffffff;
+    --border: #dce0e8;
+    --shadow: 0 2px 8px rgba(0,0,0,0.06);
+    --shadow-lg: 0 12px 32px rgba(23,28,56,0.12);
+    --hcom-red: #c8102e;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--dark); line-height: 1.6; }
+  a { color: inherit; }
+
+  /* ── Top bar ── */
+  .top-bar { background: var(--navy); padding: 14px 40px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
+  .top-bar-left h1 { color: #fff; font-size: 16px; font-weight: 700; letter-spacing: 0.01em; }
+  .top-bar-left .sub { color: #9a9fb8; font-size: 11px; margin-top: 2px; }
+  .top-bar-nav { display: flex; gap: 20px; flex-wrap: wrap; }
+  .top-bar-nav a { color: #9a9fb8; text-decoration: none; font-size: 12.5px; font-weight: 500; transition: color .15s; }
+  .top-bar-nav a:hover { color: #fff; }
+  @media (max-width: 720px) { .top-bar-nav { display: none; } }
+
+  /* ── Hero ── */
+  .hero {
+    background: radial-gradient(1200px 400px at 80% -10%, rgba(0,163,181,0.35), transparent 60%),
+                linear-gradient(135deg, var(--navy) 0%, #2a1c4a 60%, var(--hcom-red) 140%);
+    color: #fff; padding: 64px 48px 56px; position: relative; overflow: hidden;
+  }
+  .hero::before { content: ''; position: absolute; top: -120px; right: -100px; width: 380px; height: 380px; border-radius: 50%; background: rgba(255,255,255,0.04); }
+  .hero-inner { max-width: 1180px; margin: 0 auto; position: relative; }
+  .eyebrow { display: inline-flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.22); border-radius: 20px; padding: 5px 15px; font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 20px; }
+  .eyebrow .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--teal); box-shadow: 0 0 0 4px rgba(0,163,181,0.25); }
+  .hero h2 { font-size: clamp(28px, 4.2vw, 46px); font-weight: 800; line-height: 1.12; max-width: 880px; margin-bottom: 18px; letter-spacing: -0.02em; }
+  .hero h2 .accent { background: linear-gradient(90deg, var(--teal), #6fd8e4); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+  .hero p { font-size: 15.5px; opacity: 0.86; max-width: 680px; line-height: 1.7; }
+
+  /* ── Stats strip ── */
+  .stats { max-width: 1180px; margin: -28px auto 0; padding: 0 48px; position: relative; z-index: 5; }
+  .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+  @media (max-width: 760px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } }
+  .stat { background: var(--white); border: 1px solid var(--border); border-radius: 12px; padding: 18px 20px; box-shadow: var(--shadow); }
+  .stat .num { font-size: 30px; font-weight: 800; color: var(--navy); line-height: 1; letter-spacing: -0.02em; }
+  .stat .lbl { font-size: 11px; font-weight: 600; color: var(--subtle); text-transform: uppercase; letter-spacing: 0.05em; margin-top: 7px; }
+
+  /* ── Content ── */
+  .content { max-width: 1180px; margin: 0 auto; padding: 48px 48px 90px; }
+  @media (max-width: 680px) { .hero, .stats, .content { padding-left: 22px; padding-right: 22px; } }
+
+  /* ── Section ── */
+  .section { margin-bottom: 52px; scroll-margin-top: 70px; }
+  .section-head { display: flex; align-items: baseline; gap: 14px; margin-bottom: 6px; }
+  .section-head .kicker { font-size: 11px; font-weight: 800; letter-spacing: 0.09em; text-transform: uppercase; color: #fff; padding: 4px 10px; border-radius: 5px; }
+  .section h3 { font-size: 21px; font-weight: 800; color: var(--navy); letter-spacing: -0.01em; }
+  .section .section-desc { font-size: 13.5px; color: var(--subtle); margin: 4px 0 22px; max-width: 720px; }
+
+  .k-gui { background: var(--purple); }
+  .k-p7 { background: var(--hcom-red); }
+  .k-svc { background: var(--teal); }
+  .k-tool { background: var(--blue); }
+  .k-analysis { background: var(--amber); }
+
+  /* ── Card grid ── */
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+  @media (max-width: 980px) { .grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 640px) { .grid { grid-template-columns: 1fr; } }
+
+  .card { display: flex; flex-direction: column; background: var(--white); border: 1px solid var(--border); border-radius: 12px; padding: 20px 20px 18px; text-decoration: none; color: inherit; box-shadow: var(--shadow); transition: transform .16s ease, box-shadow .16s ease, border-color .16s ease; position: relative; overflow: hidden; }
+  .card::after { content: ''; position: absolute; left: 0; top: 0; height: 100%; width: 4px; background: var(--accent, var(--blue)); opacity: 0.85; }
+  .card:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); border-color: #c4ccd9; }
+  .card-top { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
+  .tag { font-size: 10px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; padding: 3px 9px; border-radius: 20px; background: #eef1f6; color: #5a6273; }
+  .tag.live { background: rgba(46,166,115,0.12); color: #1d7a52; }
+  .tag.live::before { content: '● '; font-size: 8px; vertical-align: middle; }
+  .tag.external { background: rgba(120,76,199,0.1); color: var(--purple); }
+  .date { margin-left: auto; font-size: 11px; font-weight: 600; color: var(--subtle); white-space: nowrap; }
+  .card h4 { font-size: 15.5px; font-weight: 700; color: var(--navy); line-height: 1.3; margin-bottom: 8px; }
+  .card p { font-size: 13px; color: #4a5160; line-height: 1.55; flex-grow: 1; }
+  .card-foot { display: flex; align-items: center; gap: 6px; margin-top: 14px; font-size: 12.5px; font-weight: 700; color: var(--accent, var(--blue)); }
+  .card-foot .arrow { transition: transform .16s ease; }
+  .card:hover .card-foot .arrow { transform: translateX(3px); }
+  .sublinks { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+  .sublink { font-size: 11px; font-weight: 600; color: var(--purple); text-decoration: none; background: rgba(120,76,199,0.08); border: 1px solid rgba(120,76,199,0.18); border-radius: 5px; padding: 3px 8px; }
+  .sublink:hover { background: rgba(120,76,199,0.16); }
+
+  /* ── Footer ── */
+  .footer { border-top: 1px solid var(--border); background: var(--white); padding: 30px 48px; }
+  .footer-inner { max-width: 1180px; margin: 0 auto; font-size: 12.5px; color: var(--subtle); line-height: 1.7; }
+  .footer-inner strong { color: var(--dark); }
+  .footer a { color: var(--blue); text-decoration: none; }
+  .footer a:hover { text-decoration: underline; }
+
+  @media print {
+    .top-bar, .hero::before { display: none; }
+    .card:hover { transform: none; box-shadow: var(--shadow); }
+    .grid { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <div class="top-bar-left">
+    <h1>Lucy Meadow — Product Portfolio</h1>
+    <div class="sub">AI-accelerated product work · Jan–Jun 2026</div>
+  </div>
+  <nav class="top-bar-nav">
+    <a href="#gui">Gen UI</a>
+    <a href="#priority7">Priority 7</a>
+    <a href="#servicing">Servicing &amp; Pricing</a>
+    <a href="#tooling">Tooling</a>
+    <a href="#analysis">Analysis</a>
+  </nav>
+</div>
+
+<header class="hero">
+  <div class="hero-inner">
+    <span class="eyebrow"><span class="dot"></span> Six months in one view</span>
+    <h2>Making Hotels.com the most rewarding way to book — <span class="accent">prototyped, analyzed, and shipped fast.</span></h2>
+    <p>A single home for the product work I've built since January 2026: generative-UI prototypes, Priority 7 strategy, servicing and pricing proposals, delivery tooling, and the analyses behind the decisions. Every card links to a live page.</p>
+  </div>
+</header>
+
+<section class="stats">
+  <div class="stats-grid">
+    <div class="stat"><div class="num">23</div><div class="lbl">Published artifacts</div></div>
+    <div class="stat"><div class="num">5</div><div class="lbl">Work themes</div></div>
+    <div class="stat"><div class="num">5</div><div class="lbl">Interactive tools &amp; prototypes</div></div>
+    <div class="stat"><div class="num">6</div><div class="lbl">Months, solo + AI</div></div>
+  </div>
+</section>
+
+<main class="content">
+
+  <!-- ── Generative UI ── -->
+  <section class="section" id="gui">
+    <div class="section-head"><span class="kicker k-gui">01</span><h3>Generative UI &amp; Personalization</h3></div>
+    <p class="section-desc">Prototypes proving that personalization at scale comes from one component driven by structured JSON — and that a small AI-empowered team can build it in weeks, not quarters.</p>
+    <div class="grid">
+
+      <a class="card" style="--accent: var(--purple)" href="https://hcom-generative-ui-prototype.eg-internal.ghpages.expedia.biz/ai-showcase/">
+        <div class="card-top"><span class="tag live">Live prototype</span><span class="tag external">Product Day</span><span class="date">Feb–Apr 2026</span></div>
+        <h4>Generative UI Home</h4>
+        <p>A personalized, context-aware app home powered by Generative UI — one component renders infinite variants from structured JSON inputs, adapting to trip type, journey stage, and loyalty.</p>
+        <div class="sublinks">
+          <a class="sublink" href="https://hcom-generative-ui-prototype.eg-internal.ghpages.expedia.biz/hotel-hopping/">Hotel Hopping demo</a>
+          <a class="sublink" href="https://hcom-generative-ui-prototype.eg-internal.ghpages.expedia.biz/app-strategy/">App Strategy</a>
+        </div>
+        <div class="card-foot">Open showcase <span class="arrow">&rarr;</span></div>
+      </a>
+
+      <a class="card" style="--accent: var(--purple)" href="../hcomvrdiff.html">
+        <div class="card-top"><span class="tag live">Live prototype</span><span class="date">Mar 2026</span></div>
+        <h4>VR Differentiation Prototype</h4>
+        <p>Interactive prototype exploring how Hotels.com differentiates vacation rentals — self check-in with lockbox codes and host-quality signals that set VR apart from hotels.</p>
+        <div class="card-foot">Open prototype <span class="arrow">&rarr;</span></div>
+      </a>
+
+      <a class="card" style="--accent: var(--purple)" href="https://lmeadow_expedia.github.io/merchandise-platform-orchestrator-concept/">
+        <div class="card-top"><span class="tag live">Live prototype</span><span class="tag external">External</span><span class="date">Mar 2026</span></div>
+        <h4>Merch Platform Orchestrator</h4>
+        <p>A concept for orchestrating merchandising decisions across the platform — coordinating tiles, offers, and placements from a single control surface.</p>
+        <div class="card-foot">Open concept <span class="arrow">&rarr;</span></div>
+      </a>
+
+    </div>
+  </section>
+
+  <!-- ── Priority 7 ── -->
+  <section class="section" id="priority7">
+    <div class="section-head"><span class="kicker k-p7">02</span><h3>Priority 7 — Make Hotels.com the Most Rewarding</h3></div>
+    <p class="section-desc">The strategy, its coverage against delivery, and the work to organize around it.</p>
+    <div class="grid">
+
+      <a class="card" style="--accent: var(--hcom-red)" href="../make-hotels-the-most-rewarding/">
+        <div class="card-top"><span class="tag">Briefing</span><span class="date">May 2026</span></div>
+        <h4>Make Hotels.com the Most Rewarding</h4>
+        <p>The Priority 7 strategy on a page — objectives, early solution perspectives, and how each maps to delivery milestones in Jira, with coverage gaps made visible.</p>
+        <div class="card-foot">Open briefing <span class="arrow">&rarr;</span></div>
+      </a>
+
+      <a class="card" style="--accent: var(--hcom-red)" href="../priority-7-coverage.html">
+        <div class="card-top"><span class="tag">Analysis</span><span class="date">Apr 2026</span></div>
+        <h4>Priority 7 Coverage Analysis</h4>
+        <p>Maps the Priority 7 paper against the current milestone inventory to assess coverage of customer problems and proposed solutions — surfacing where capabilities have no milestone yet.</p>
+        <div class="card-foot">Open analysis <span class="arrow">&rarr;</span></div>
+      </a>
+
+      <a class="card" style="--accent: var(--hcom-red)" href="../priority-7-top10-overlap.html">
+        <div class="card-top"><span class="tag">Analysis</span><span class="date">Apr 2026</span></div>
+        <h4>P7 vs Top 10 Overlap Audit</h4>
+        <p>Audits where Priority 7 overlaps with the other nine EG Top 10 priorities, synced from Jira — clarifying shared bets and ownership seams.</p>
+        <div class="card-foot">Open audit <span class="arrow">&rarr;</span></div>
+      </a>
+
+      <a class="card" style="--accent: var(--hcom-red)" href="../priority-7/objective-2/">
+        <div class="card-top"><span class="tag">Plan</span><span class="date">Apr 2026</span></div>
+        <h4>Priority 7 — Objective 2</h4>
+        <p>PO setup for Objective 2 (MLSTN1-5604): validating assumptions and establishing tracking for milestones owned by other teams.</p>
+        <div class="card-foot">Open plan <span class="arrow">&rarr;</span></div>
+      </a>
+
+      <a class="card" style="--accent: var(--hcom-red)" href="../traveler-auth-onsite-2026.html">
+        <div class="card-top"><span class="tag">Briefing</span><span class="date">Jun 2026</span></div>
+        <h4>Traveler Authentication Onsite</h4>
+        <p>Context-setting for the traveler authentication onsite — the Priority 7 strategy, its objectives, and why identity is the foundation for everything else.</p>
+        <div class="card-foot">Open briefing <span class="arrow">&rarr;</span></div>
+      </a>
+
+    </div>
+  </section>
+
+  <!-- ── Servicing & Pricing ── -->
+  <section class="section" id="servicing">
+    <div class="section-head"><span class="kicker k-svc">03</span><h3>Servicing, Pricing &amp; Partnerships</h3></div>
+    <p class="section-desc">Where HCOM differentiates on service and price, and the partnerships needed to deliver it.</p>
+    <div class="grid">
+
+      <a class="card" style="--accent: var(--teal)" href="../hcom-servicing/">
+        <div class="card-top"><span class="tag">Analysis</span><span class="date">Jun 2026</span></div>
+        <h4>HCOM Servicing — Requirement Landing Map</h4>
+        <p>Where each HCOM servicing requirement lands across teams, updated after the 2026-06-04 working session, narrowed to two HCOM-owned differentiation themes.</p>
+        <div class="card-foot">Open map <span class="arrow">&rarr;</span></div>
+      </a>
+
+      <a class="card" style="--accent: var(--teal)" href="../hcom-servicing-slide8/">
+        <div class="card-top"><span class="tag">Briefing</span><span class="date">Jun 2026</span></div>
+        <h4>HCOM Servicing — HLT Updates</h4>
+        <p>Status of the three servicing priorities I carry from the HLT deck (slide 8), with ownership changes reflected.</p>
+        <div class="card-foot">Open update <span class="arrow">&rarr;</span></div>
+      </a>
+
+      <a class="card" style="--accent: var(--teal)" href="../price-risk-engine/">
+        <div class="card-top"><span class="tag">Proposal</span><span class="date">May 2026</span></div>
+        <h4>Price Risk Engine — InsurTech Partnership</h4>
+        <p>A partnership proposal for HCOM and InsurTech to co-drive the Price Risk Engine and the two consumer products that ride on top of it.</p>
+        <div class="card-foot">Open proposal <span class="arrow">&rarr;</span></div>
+      </a>
+
+    </div>
+  </section>
+
+  <!-- ── Tooling ── -->
+  <section class="section" id="tooling">
+    <div class="section-head"><span class="kicker k-tool">04</span><h3>Portfolio &amp; Delivery Tooling</h3></div>
+    <p class="section-desc">Reusable tools that turn strategy and Jira data into fast, repeatable decisions.</p>
+    <div class="grid">
+
+      <a class="card" style="--accent: var(--blue)" href="../brd-evaluator/">
+        <div class="card-top"><span class="tag live">Live tool</span><span class="date">May 2026</span></div>
+        <h4>BRD Evaluator</h4>
+        <p>Drop a BRD, pick a strategy, and get a scored GO / NO-GO evaluation in one to two minutes — turning document review into a repeatable check.</p>
+        <div class="card-foot">Open tool <span class="arrow">&rarr;</span></div>
+      </a>
+
+      <a class="card" style="--accent: var(--blue)" href="../delivery-roadmap/">
+        <div class="card-top"><span class="tag live">Live tool</span><span class="date">May 2026</span></div>
+        <h4>Delivery Roadmap</h4>
+        <p>Strategy &rarr; Objective &rarr; Milestone &rarr; Initiative with quarterly delivery output, pulled live from Jira into one navigable roadmap.</p>
+        <div class="card-foot">Open roadmap <span class="arrow">&rarr;</span></div>
+      </a>
+
+      <a class="card" style="--accent: var(--blue)" href="../milestone-quality-scores.html">
+        <div class="card-top"><span class="tag">Analysis</span><span class="date">Apr 2026</span></div>
+        <h4>Milestone Quality Scores</h4>
+        <p>Quality-coach scores for all 30 active milestones, scored 0–10 and cross-referenced to Jira, organized by objective.</p>
+        <div class="card-foot">Open scores <span class="arrow">&rarr;</span></div>
+      </a>
+
+      <a class="card" style="--accent: var(--blue)" href="../core-platform-cross-brand-priorities/">
+        <div class="card-top"><span class="tag">Briefing</span><span class="date">May 2026</span></div>
+        <h4>Cross-Brand Priorities</h4>
+        <p>Six customer outcomes BEX, Hotels.com, and Vrbo all need solved — framed as an opening agenda for joint discovery with Core Platform.</p>
+        <div class="card-foot">Open briefing <span class="arrow">&rarr;</span></div>
+      </a>
+
+    </div>
+  </section>
+
+  <!-- ── Analysis ── -->
+  <section class="section" id="analysis">
+    <div class="section-head"><span class="kicker k-analysis">05</span><h3>Analysis &amp; Investigations</h3></div>
+    <p class="section-desc">The evidence behind the calls — investigations, impact reads, and milestone trackers.</p>
+    <div class="grid">
+
+      <a class="card" style="--accent: var(--amber)" href="../march-17-investigation.html">
+        <div class="card-top"><span class="tag">Investigation</span><span class="date">Apr 2026</span></div>
+        <h4>HCOM App CVR Decline — March 17</h4>
+        <p>Root-cause investigation of the single-visit conversion drop in the HCOM app, triaged from Slack signals through to a working hypothesis.</p>
+        <div class="card-foot">Open investigation <span class="arrow">&rarr;</span></div>
+      </a>
+
+      <a class="card" style="--accent: var(--amber)" href="../10-100-uk-merch-tile-impact.html">
+        <div class="card-top"><span class="tag">Analysis</span><span class="date">Jun 2026</span></div>
+        <h4>10:100 UK Merch Tile Impact</h4>
+        <p>Impact read on boosting the 10:100 merch tile to top of page in the UK (EGTnL 69824), across a defined study window.</p>
+        <div class="card-foot">Open analysis <span class="arrow">&rarr;</span></div>
+      </a>
+
+      <a class="card" style="--accent: var(--amber)" href="../priority6-milestone-ownership-analysis.html">
+        <div class="card-top"><span class="tag">Analysis</span><span class="date">Apr 2026</span></div>
+        <h4>Priority 6 Milestone Ownership</h4>
+        <p>Dream Team analysis of 41 milestones under Expand Internationally — clarifying ownership and surfacing coordination risk.</p>
+        <div class="card-foot">Open analysis <span class="arrow">&rarr;</span></div>
+      </a>
+
+      <a class="card" style="--accent: var(--amber)" href="../hcom-q3-tech-readiness.html">
+        <div class="card-top"><span class="tag">Review</span><span class="date">May 2026</span></div>
+        <h4>HCOM Q3 Tech Readiness</h4>
+        <p>Engineering readiness review across HCOM Q3 milestones — where delivery is ready and where it needs de-risking.</p>
+        <div class="card-foot">Open review <span class="arrow">&rarr;</span></div>
+      </a>
+
+      <a class="card" style="--accent: var(--amber)" href="../hcom-q2-active-milestones.html">
+        <div class="card-top"><span class="tag">Tracker</span><span class="date">Apr 2026</span></div>
+        <h4>HCOM Q2 Active Milestones</h4>
+        <p>In-progress milestones that started before April 1, 2026, ordered by start date for a clean Q2 status read.</p>
+        <div class="card-foot">Open tracker <span class="arrow">&rarr;</span></div>
+      </a>
+
+      <a class="card" style="--accent: var(--amber)" href="../hcom-q3-milestones.html">
+        <div class="card-top"><span class="tag">Tracker</span><span class="date">Apr 2026</span></div>
+        <h4>HCOM Q3 Milestones</h4>
+        <p>Milestones with a Jira start date in Q3 2026 (July–September), assembled into a single forward look.</p>
+        <div class="card-foot">Open tracker <span class="arrow">&rarr;</span></div>
+      </a>
+
+      <a class="card" style="--accent: var(--amber)" href="../logo-placement-ownership.html">
+        <div class="card-top"><span class="tag">Reference</span><span class="date">Apr 2026</span></div>
+        <h4>Logo Placement Ownership</h4>
+        <p>The ownership pattern from the HCOM and Vrbo Q1 brand identity refresh, with EGDS-owned rows first.</p>
+        <div class="card-foot">Open reference <span class="arrow">&rarr;</span></div>
+      </a>
+
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <strong>About this view.</strong> A curated index of GitHub Pages work I built between January and June 2026. Internal pages are hosted in the
+    <a href="../">Product Portfolio</a> site (<code>eg-internal.github.io/product-portfolio</code>, EG SSO). The Generative UI Home prototype is hosted separately on EG GitHub Pages.
+    A public-web mirror of this showcase is available for sharing outside SSO.<br>
+    Built solo with AI-accelerated tooling. Last updated June 2026.
+  </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Objective 2 Discovery — Create Stickiness Through Flexibility</title>
+<style>
+  :root {
+    --navy: #171c38;
+    --teal: #00a3b5;
+    --blue: #3d78f2;
+    --purple: #784cc7;
+    --amber: #d99e14;
+    --green: #2ea673;
+    --coral: #e56152;
+    --dark: #1e2129;
+    --subtle: #808899;
+    --bg: #f5f7fa;
+    --white: #ffffff;
+    --border: #dce0e8;
+    --shadow: 0 2px 8px rgba(0,0,0,0.06);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--dark); line-height: 1.6; }
+
+  .top-bar { background: var(--navy); padding: 14px 40px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
+  .top-bar h1 { color: #fff; font-size: 20px; font-weight: 700; }
+  .top-bar .sub { color: #9a9fb8; font-size: 12px; margin-top: 2px; }
+  .top-bar a { color: #9a9fb8; text-decoration: none; font-size: 13px; }
+  .top-bar a:hover { color: #fff; }
+
+  .layout { display: flex; max-width: 1400px; margin: 0 auto; }
+  .sidebar { width: 260px; min-width: 260px; background: var(--white); border-right: 1px solid var(--border); padding: 24px 0; position: sticky; top: 52px; height: calc(100vh - 52px); overflow-y: auto; }
+  .sidebar .nav-section { padding: 0 20px; margin-bottom: 20px; }
+  .sidebar .nav-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--subtle); margin-bottom: 8px; }
+  .sidebar a { display: block; padding: 5px 20px; font-size: 13px; color: var(--dark); text-decoration: none; border-left: 3px solid transparent; }
+  .sidebar a:hover { background: var(--bg); border-left-color: var(--teal); }
+  .sidebar a.active { background: #eef6ff; border-left-color: var(--blue); font-weight: 600; }
+
+  .main { flex: 1; padding: 32px 48px; min-width: 0; }
+  .main h1 { font-size: 28px; font-weight: 800; margin-bottom: 8px; color: var(--navy); }
+  .main .subtitle { font-size: 15px; color: var(--subtle); margin-bottom: 32px; }
+  .main h2 { font-size: 20px; font-weight: 700; margin: 40px 0 16px; padding-bottom: 8px; border-bottom: 2px solid var(--border); color: var(--navy); }
+  .main h3 { font-size: 16px; font-weight: 700; margin: 28px 0 12px; color: var(--dark); }
+  .main p { margin-bottom: 12px; font-size: 14px; }
+  .main ul, .main ol { margin: 8px 0 16px 24px; font-size: 14px; }
+  .main li { margin-bottom: 4px; }
+
+  .scorecard { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin: 24px 0; }
+  .score-card { background: var(--white); border: 1px solid var(--border); border-radius: 10px; padding: 20px; box-shadow: var(--shadow); }
+  .score-card .label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--subtle); margin-bottom: 6px; }
+  .score-card .value { font-size: 22px; font-weight: 800; color: var(--navy); }
+  .score-card .detail { font-size: 12px; color: var(--subtle); margin-top: 4px; }
+  .score-card.risk { border-left: 4px solid var(--coral); }
+  .score-card.good { border-left: 4px solid var(--green); }
+  .score-card.warn { border-left: 4px solid var(--amber); }
+  .score-card.info { border-left: 4px solid var(--blue); }
+  .score-card.purple { border-left: 4px solid var(--purple); }
+
+  table { width: 100%; border-collapse: collapse; margin: 12px 0 24px; font-size: 13px; background: var(--white); border-radius: 8px; overflow: hidden; box-shadow: var(--shadow); }
+  th { background: var(--navy); color: #fff; text-align: left; padding: 10px 14px; font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; }
+  td { padding: 10px 14px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: #f8fafc; }
+
+  .badge { display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; }
+  .badge.track { background: #dcfce7; color: #166534; }
+  .badge.discover { background: #fef3c7; color: #92400e; }
+  .badge.investigate { background: #f3e8ff; color: #6b21a8; }
+  .badge.cancelled { background: #fecaca; color: #991b1b; text-decoration: line-through; }
+  .badge.in-progress { background: #dbeafe; color: #1e40af; }
+  .badge.backlog { background: #f1f5f9; color: #475569; }
+  .badge.pending { background: #f1f5f9; color: #475569; }
+
+  .wave-badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: 700; text-transform: uppercase; }
+  .wave-badge.w1 { background: #dbeafe; color: #1e40af; }
+  .wave-badge.w2 { background: #e0e7ff; color: #3730a3; }
+  .wave-badge.w3 { background: #fae8ff; color: #86198f; }
+
+  .status-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; }
+  .status-dot.in-progress { background: var(--teal); }
+  .status-dot.backlog { background: var(--subtle); }
+  .status-dot.cancelled { background: var(--coral); }
+
+  .callout { background: var(--white); border-left: 4px solid var(--blue); padding: 16px 20px; margin: 16px 0; border-radius: 0 8px 8px 0; box-shadow: var(--shadow); }
+  .callout.warning { border-left-color: var(--coral); }
+  .callout.critical { border-left-color: #991b1b; background: #fef2f2; }
+  .callout.info { border-left-color: var(--teal); }
+  .callout.consensus { border-left-color: var(--green); background: #f0fdf4; }
+  .callout .callout-title { font-weight: 700; font-size: 13px; margin-bottom: 4px; }
+  .callout p { margin-bottom: 4px; }
+
+  .chain-viz { display: flex; align-items: center; gap: 0; margin: 12px 0 20px; flex-wrap: wrap; }
+  .chain-node { background: var(--white); border: 2px solid var(--border); border-radius: 8px; padding: 8px 14px; font-size: 12px; font-weight: 600; }
+  .chain-node.active { border-color: var(--teal); background: #ecfeff; }
+  .chain-node.planned { border-color: var(--amber); background: #fffbeb; }
+  .chain-node.cross { border-color: var(--purple); background: #faf5ff; }
+  .chain-arrow { font-size: 18px; color: var(--subtle); padding: 0 6px; }
+
+  .task-card { background: var(--white); border: 1px solid var(--border); border-radius: 8px; padding: 16px 20px; margin: 12px 0; box-shadow: var(--shadow); }
+  .task-card .tc-header { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; flex-wrap: wrap; }
+  .task-card .tc-title { font-size: 14px; font-weight: 700; color: var(--navy); }
+  .task-card .tc-desc { font-size: 13px; color: var(--dark); }
+
+  .avatar-tag { display: inline-flex; align-items: center; gap: 4px; padding: 2px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; background: #f1f5f9; color: #334155; }
+
+  .check-list { list-style: none; margin: 12px 0; padding: 0; }
+  .check-list li { padding: 6px 0; font-size: 13px; display: flex; align-items: start; gap: 8px; }
+  .check-list li::before { content: ''; display: inline-block; width: 16px; height: 16px; min-width: 16px; border: 2px solid var(--border); border-radius: 3px; margin-top: 2px; }
+
+  @media (max-width: 900px) {
+    .sidebar { display: none; }
+    .main { padding: 20px; }
+    .scorecard { grid-template-columns: 1fr 1fr; }
+    .chain-viz { flex-direction: column; align-items: flex-start; }
+    .chain-arrow { transform: rotate(90deg); padding: 4px 0; }
+  }
+  @media (max-width: 600px) {
+    .scorecard { grid-template-columns: 1fr; }
+    .top-bar { padding: 12px 16px; }
+    .top-bar h1 { font-size: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <div>
+    <h1>Objective 2 Discovery Plan</h1>
+    <div class="sub">Create Stickiness Through Flexibility, Add-Ons and Servicing</div>
+  </div>
+  <div style="display:flex;gap:18px;align-items:center;flex-wrap:wrap;">
+    <a href="../priority-7-coverage.html">P7 Coverage Analysis</a>
+    <a href="../priority-7-top10-overlap.html">P7 vs Top 10</a>
+    <a href="../index.html">Back to Portfolio</a>
+  </div>
+</div>
+
+<div class="layout">
+  <nav class="sidebar">
+    <div class="nav-section">
+      <div class="nav-label">Priority 7</div>
+      <a href="../priority-7-coverage.html">Milestone coverage</a>
+      <a href="../priority-7-top10-overlap.html">P7 vs Top 10 overlap</a>
+      <a href="index.html" class="active">Obj 2 Discovery Plan</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-label">This Plan</div>
+      <a href="#overview">Overview</a>
+      <a href="#milestones">Milestone Classification</a>
+      <a href="#chains">Critical Chains</a>
+      <a href="#assumptions">Riskiest Assumptions</a>
+      <a href="#indicators">Paired Indicators</a>
+      <a href="#tasks">Discovery Tasks</a>
+      <a href="#experts">Dream Team Analysis</a>
+      <a href="#verify">Completion Criteria</a>
+    </div>
+  </nav>
+
+  <main class="main">
+    <h1>Objective 2 Discovery Plan</h1>
+    <p class="subtitle">MLSTN1-5604 &middot; Get organized as PO, validate assumptions, establish tracking for milestones owned by other teams. Created 2026-04-21.</p>
+
+    <section id="overview">
+      <h2>Overview</h2>
+
+      <div class="scorecard">
+        <div class="score-card risk">
+          <div class="label">Active Milestones</div>
+          <div class="value">7</div>
+          <div class="detail">2 cancelled (Hotel Expert, UBT Policy)</div>
+        </div>
+        <div class="score-card" style="background:#ecfdf5;border-color:#a7f3d0">
+          <div class="label">Product Leads Assigned</div>
+          <div class="value" style="color:var(--green)">7 of 7</div>
+          <div class="detail">4 distinct leads: Argolo (3), Sahasrabuddhe (2), Kalia (1), Meadow (1)</div>
+        </div>
+        <div class="score-card warn">
+          <div class="label">Quality Score Avg</div>
+          <div class="value">9.5</div>
+          <div class="detail">Scores look good; initiative coverage doesn't</div>
+        </div>
+        <div class="score-card warn">
+          <div class="label">Initiative Coverage Gaps</div>
+          <div class="value">2 critical</div>
+          <div class="detail">MLSTN1-5883 (0 core), MLSTN1-5682 (CFAR only)</div>
+        </div>
+        <div class="score-card info">
+          <div class="label">Critical Chains</div>
+          <div class="value">4</div>
+          <div class="detail">CFAR, Pricing-Confidence, Arranger, Currency</div>
+        </div>
+        <div class="score-card purple">
+          <div class="label">Riskiest Assumptions</div>
+          <div class="value">8</div>
+          <div class="detail">Top 3 could invalidate major scope if wrong</div>
+        </div>
+      </div>
+
+      <div class="callout consensus">
+        <div class="callout-title">Dream Team Consensus (Torres, Goldratt, Cagan, Grove) &middot; updated 2026-04-23</div>
+        <p>On 2026-04-21 all four experts converged on "5 of 6 milestones have no product lead." Reconciliation with Jira on 2026-04-23 revealed that diagnosis was based on the wrong field (Assignee). The real picture: every milestone has a Product Lead in Jira's custom <code>Product Lead(s)</code> field, and there are 7 non-cancelled milestones (not 5 or 6) ladder up to MLSTN1-5604. Discovery work now starts from a cleaner baseline: 4 leads (Argolo x3, Sahasrabuddhe x2, Kalia x1, Meadow x1), coordination and capacity are the real constraints.</p>
+      </div>
+
+      <p>The objective's customer problem: <em>"As a frequent traveler shopping often for business trips, I find it difficult to find offers and context that match my needs, particularly in last minute booking scenarios."</em></p>
+    </section>
+
+    <section id="milestones">
+      <h2>Milestone Classification</h2>
+      <p>Seven non-cancelled milestones, sourced from <a href="https://expediagroup.atlassian.net/browse/MLSTN1-5604" style="color:var(--blue);text-decoration:none">MLSTN1-5604</a>'s "relates to" links in Jira. Leads reflect Jira's <code>Product Lead(s)</code> custom field. Each milestone needs a different approach depending on its maturity.</p>
+
+      <h3><span class="badge track">Track</span> Active execution. Role: coaching + unblocking.</h3>
+      <table>
+        <tr><th>Milestone</th><th>Jira</th><th>Lead</th><th>Status</th><th>Start</th><th>Why Track</th></tr>
+        <tr>
+          <td><strong>Deliver for Flexibility and Stickiness</strong> (Wave 1 CFAR)</td>
+          <td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-5682" style="color:var(--blue);text-decoration:none">MLSTN1-5682</a></td>
+          <td>Avantika Argolo</td>
+          <td><span class="status-dot in-progress"></span>in-progress</td>
+          <td>2025-09-01</td>
+          <td>12 team initiatives active across 10 teams</td>
+        </tr>
+        <tr>
+          <td><strong>Launch CFAR Pilot on Hcom</strong></td>
+          <td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-3593" style="color:var(--blue);text-decoration:none">MLSTN1-3593</a></td>
+          <td>Avantika Argolo</td>
+          <td><span class="status-dot in-progress"></span>in-progress</td>
+          <td>2025-10-01</td>
+          <td>In progress, discovery complete; delivery slice of MLSTN1-5682 W1</td>
+        </tr>
+        <tr>
+          <td><strong>Launch Pay Later for ETP Travelers</strong></td>
+          <td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-3515" style="color:var(--blue);text-decoration:none">MLSTN1-3515</a></td>
+          <td>Sangya Kalia</td>
+          <td><span class="status-dot in-progress"></span>in-progress</td>
+          <td>2026-01-01</td>
+          <td>Cross-team execution across Payments, MCKO, Offers, Pricing, OMS, Loyalty</td>
+        </tr>
+        <tr>
+          <td><strong>Differentiate VR on HCOM</strong></td>
+          <td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-5432" style="color:var(--blue);text-decoration:none">MLSTN1-5432</a></td>
+          <td>Lucy Meadow</td>
+          <td><span class="status-dot in-progress"></span>in-progress</td>
+          <td>2026-04-01</td>
+          <td>5-wave plan with PRD and prototype; executional phase</td>
+        </tr>
+      </table>
+
+      <h3><span class="badge discover">Discover</span> Solution described but assumptions unvalidated.</h3>
+      <table>
+        <tr><th>Milestone</th><th>Jira</th><th>Lead</th><th>Status</th><th>Start</th><th>Why Discover</th></tr>
+        <tr>
+          <td><strong>Deliver for Flexibility and Stickiness</strong> (Waves 2-4)</td>
+          <td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-5682" style="color:var(--blue);text-decoration:none">MLSTN1-5682</a></td>
+          <td>Avantika Argolo</td>
+          <td><span class="status-dot in-progress"></span>in-progress</td>
+          <td>2025-09-01</td>
+          <td>Pricing confidence, notifications, Weather Promise, AI deal-finding all unvalidated</td>
+        </tr>
+        <tr>
+          <td><strong>Provide Dedicated Service Solutions</strong> (Waves 1-3)</td>
+          <td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-5883" style="color:var(--blue);text-decoration:none">MLSTN1-5883</a></td>
+          <td>Ashish Sahasrabuddhe</td>
+          <td><span class="status-dot backlog"></span>backlog</td>
+          <td>2026-07-01</td>
+          <td>Zero core initiatives despite Backlog status; True Change, duty of care, premium tiers need validation</td>
+        </tr>
+        <tr>
+          <td><strong>Integrate Add-On Services</strong> (Walk/Run)</td>
+          <td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-5680" style="color:var(--blue);text-decoration:none">MLSTN1-5680</a></td>
+          <td>Ashish Sahasrabuddhe</td>
+          <td><span class="status-dot in-progress"></span>in-progress</td>
+          <td>2026-04-01</td>
+          <td>Partner integrations (Uber, Tiqets, expense tools) and AI concierge unvalidated</td>
+        </tr>
+      </table>
+
+      <h3><span class="badge investigate">Investigate</span> Insufficient context to classify.</h3>
+      <table>
+        <tr><th>Milestone</th><th>Jira</th><th>Lead</th><th>Status</th><th>Start</th><th>Why Investigate</th></tr>
+        <tr>
+          <td><strong>Pilot VAS Products on Hcom</strong></td>
+          <td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-2887" style="color:var(--blue);text-decoration:none">MLSTN1-2887</a></td>
+          <td>Avantika Argolo</td>
+          <td><span class="status-dot backlog"></span>backlog</td>
+          <td>Not set</td>
+          <td>Backlog, no start date, no initiatives yet</td>
+        </tr>
+      </table>
+    </section>
+
+    <section id="chains">
+      <h2>Critical Chains</h2>
+      <p>Four dependency chains govern this objective's throughput. Track buffer consumption, not task completion.</p>
+
+      <h3>1. CFAR Chain <span style="font-size:12px;color:var(--subtle);font-weight:400">(longest, any slip cascades everything)</span></h3>
+      <div class="chain-viz">
+        <div class="chain-node active">MLSTN1-3593<br><small>CFAR Pilot launch (active)</small></div>
+        <span class="chain-arrow">&rarr;</span>
+        <div class="chain-node planned">MLSTN1-5680<br><small>CFAR supply / OMS</small></div>
+        <span class="chain-arrow">&rarr;</span>
+        <div class="chain-node planned">MLSTN1-5682 W3<br><small>Remnant marketplace</small></div>
+        <span class="chain-arrow">&rarr;</span>
+        <div class="chain-node planned">MLSTN1-5883<br><small>CFAR claims servicing</small></div>
+      </div>
+
+      <h3>2. Pricing-Confidence Chain <span style="font-size:12px;color:var(--subtle);font-weight:400">(parallel pacemakers for the checkout flexibility story)</span></h3>
+      <div class="chain-viz">
+        <div class="chain-node active">MLSTN1-3515<br><small>Pay Later launch (active)</small></div>
+        <span class="chain-arrow">&rarr;</span>
+        <div class="chain-node planned">MLSTN1-5682 W2<br><small>Price integrity, context, post-booking protection</small></div>
+      </div>
+      <div class="chain-viz" style="margin-top: 4px;">
+        <div class="chain-node active">MLSTN1-3593<br><small>CFAR Pilot launch (active)</small></div>
+        <span class="chain-arrow">&rarr;</span>
+        <div class="chain-node planned">MLSTN1-5682 W2<br><small>Opaque rates + SYW</small></div>
+      </div>
+      <p style="font-size:13px;color:var(--subtle);margin-top:8px;">Customers experience Pay Later and CFAR together at checkout. Discovery must treat them as a single pricing-confidence story, not two independent launches.</p>
+
+      <h3>3. Arranger Chain <span style="font-size:12px;color:var(--subtle);font-weight:400">(cross-objective, you don't control upstream)</span></h3>
+      <div class="chain-viz">
+        <div class="chain-node cross">MLSTN1-5678<br><small>Obj 1: Travel Arranger MLP</small></div>
+        <span class="chain-arrow">&rarr;</span>
+        <div class="chain-node planned">MLSTN1-5883 W3<br><small>Arranger support</small></div>
+      </div>
+
+      <h3>4. Currency Chain <span style="font-size:12px;color:var(--subtle);font-weight:400">(cross-objective dependency)</span></h3>
+      <div class="chain-viz">
+        <div class="chain-node cross">Obj 3<br><small>Hotels.comCash architecture</small></div>
+        <span class="chain-arrow">&rarr;</span>
+        <div class="chain-node planned">MLSTN1-5883 W3<br><small>Currency disputes</small></div>
+      </div>
+      <div class="chain-viz" style="margin-top: 4px;">
+        <div class="chain-node cross">Obj 3<br><small>Hotels.comCash architecture</small></div>
+        <span class="chain-arrow">&rarr;</span>
+        <div class="chain-node planned">MLSTN1-5680 Walk<br><small>CFAR marketplace</small></div>
+      </div>
+    </section>
+
+    <section id="assumptions">
+      <h2>Riskiest Assumptions</h2>
+      <p>Test these first. Each could invalidate major scope if wrong.</p>
+
+      <table>
+        <tr><th>Assumption</th><th>Milestone</th><th>Test Method</th><th>Risk if Wrong</th></tr>
+        <tr style="background:#fef2f2">
+          <td><strong>UBTs expect duty of care from an OTA</strong></td>
+          <td>MLSTN1-5883 W2</td>
+          <td>Customer interviews</td>
+          <td>Entire duty of care scope is waste</td>
+        </tr>
+        <tr style="background:#fef2f2">
+          <td><strong>85% change abandonment is solvable via UX</strong></td>
+          <td>MLSTN1-5883 W1</td>
+          <td>Abandonment funnel data analysis</td>
+          <td>True Change scope needs reframing</td>
+        </tr>
+        <tr style="background:#fef2f2">
+          <td><strong>Travelers will pay for weather guarantees</strong></td>
+          <td>MLSTN1-5682 W4</td>
+          <td>Concept test, willingness-to-pay</td>
+          <td>Weather Promise scope is waste</td>
+        </tr>
+        <tr>
+          <td>eSIM/lounge passes drive repeat behavior</td>
+          <td>MLSTN1-2887</td>
+          <td>Pilot data from Avantika's team</td>
+          <td>VAS investment thesis collapses</td>
+        </tr>
+        <tr>
+          <td>Price-drop alerts drive return visits</td>
+          <td>MLSTN1-5682 W3</td>
+          <td>Competitor evidence, interviews</td>
+          <td>Notification scope is premature</td>
+        </tr>
+        <tr>
+          <td>Opaque rates convert without brand damage</td>
+          <td>MLSTN1-5682 W2</td>
+          <td>Brand perception test</td>
+          <td>Hotels.com trust proposition undermined</td>
+        </tr>
+        <tr>
+          <td>Pay Later + CFAR together don't confuse travelers</td>
+          <td>MLSTN1-3515 + MLSTN1-3593</td>
+          <td>Checkout usability test</td>
+          <td>Both attach rates suffer and customer trust erodes</td>
+        </tr>
+        <tr>
+          <td>Pay Later drives incremental bookings, not just shifts</td>
+          <td>MLSTN1-3515</td>
+          <td>Holdout analysis of pilot attach vs baseline conversion</td>
+          <td>GP dilution without flexibility uplift</td>
+        </tr>
+      </table>
+    </section>
+
+    <section id="indicators">
+      <h2>Paired Indicators</h2>
+      <p>Every milestone needs a quantity metric paired with a quality counterpart. Without pairs, teams optimize for easy metrics.</p>
+
+      <table>
+        <tr><th>Milestone</th><th>Quantity Metric</th><th>Quality Counterpart</th></tr>
+        <tr><td>CFAR Pilot (MLSTN1-3593)</td><td>CFAR attach rate</td><td>Loss ratio / cancellation economics</td></tr>
+        <tr><td>Pay Later (MLSTN1-3515)</td><td>Pay Later attach rate</td><td>Booking completion rate, cancellation rate vs non-Pay-Later</td></tr>
+        <tr><td>VR Differentiation (MLSTN1-5432)</td><td>Hotel conversion rate for hotel seekers</td><td>VR-related servicing contacts</td></tr>
+        <tr><td>Add-On Services (MLSTN1-5680)</td><td>Add-on attach rate</td><td>Post-booking CSAT for add-on users</td></tr>
+        <tr><td>Dedicated Service (MLSTN1-5883)</td><td>Self-service rate for changes</td><td>Resolution time and re-contact rate</td></tr>
+        <tr><td>VAS Pilot (MLSTN1-2887)</td><td>VAS attach rate</td><td>VAS utilization rate, insurance cannibalization</td></tr>
+        <tr><td>Flexibility/Stickiness (MLSTN1-5682 W2+)</td><td>12-month repeat rate</td><td>Notification opt-out rate</td></tr>
+      </table>
+    </section>
+
+    <section id="tasks">
+      <h2>Discovery Tasks</h2>
+      <p>8 tasks across 3 waves. Wave 1 has no dependencies and starts now.</p>
+
+      <h3><span class="wave-badge w1">Wave 1</span> This week. No dependencies.</h3>
+
+      <div class="task-card" style="border-left: 4px solid var(--green);">
+        <div class="tc-header">
+          <span class="tc-title">Reconcile Portfolio with Jira</span>
+          <span class="badge" style="background:#d1fadf;color:#0a6847">Completed 2026-04-23</span>
+          <span style="font-size:11px;color:var(--subtle)">Small</span>
+        </div>
+        <p class="tc-desc">Added 3 milestones missing from the portfolio (MLSTN1-3515 Pay Later, MLSTN1-3593 CFAR Pilot, MLSTN1-2887 VAS Pilot) and updated the stale <code>lead:</code> field on 4 existing milestones to match Jira's <code>Product Lead(s)</code>: Argolo (5682), Sahasrabuddhe (5680, 5883), Meadow (5432). Replaces the earlier "Secure Milestone Leads" task, which was based on the wrong Jira field.</p>
+      </div>
+
+      <div class="task-card" style="border-left: 4px solid var(--teal);">
+        <div class="tc-header">
+          <span class="tc-title">Start Weekly Customer Touchpoints</span>
+          <span class="badge pending">Pending</span>
+          <span style="font-size:11px;color:var(--subtle)">Medium</span>
+        </div>
+        <p class="tc-desc">Begin interviewing 3-5 frequent last-minute business travelers per week. Define recruitment criteria, build interview guide covering change/cancel pain, add-on needs, servicing expectations.</p>
+      </div>
+
+      <div class="task-card" style="border-left: 4px solid var(--purple);">
+        <div class="tc-header">
+          <span class="tc-title">Investigate VAS Pilot State</span>
+          <span class="badge pending">Pending</span>
+          <span style="font-size:11px;color:var(--subtle)">Small</span>
+        </div>
+        <p class="tc-desc">Connect with Avantika Argolo on MLSTN1-2887 (no start date, no initiatives yet) and with Sangya Kalia on MLSTN1-3515 (cross-team Pay Later execution). What customer evidence exists? Where are the Pay-Later-plus-CFAR UX interactions being coordinated? What do they need from the Obj 2 PO?</p>
+      </div>
+
+      <h3><span class="wave-badge w2">Wave 2</span> Once Wave 1 unblocks.</h3>
+
+      <div class="task-card">
+        <div class="tc-header">
+          <span class="tc-title">Build Opportunity Solution Tree</span>
+          <span class="badge pending">Pending</span>
+          <span style="font-size:11px;color:var(--subtle)">Medium &middot; depends on: Customer Touchpoints</span>
+        </div>
+        <p class="tc-desc">Map Objective 2 to customer opportunities (not milestone titles). Root: "Frequent last-minute travelers can't find context-matched offers." Use first 2 weeks of interview data.</p>
+      </div>
+
+      <div class="task-card">
+        <div class="tc-header">
+          <span class="tc-title">Define Paired Indicators</span>
+          <span class="badge pending">Pending</span>
+          <span style="font-size:11px;color:var(--subtle)">Small &middot; depends on: Reconcile Portfolio with Jira</span>
+        </div>
+        <p class="tc-desc">Validate quantity + quality indicator pairs with each milestone lead. Get baseline values where available.</p>
+      </div>
+
+      <div class="task-card">
+        <div class="tc-header">
+          <span class="tc-title">Build Critical Chain Buffer Tracker</span>
+          <span class="badge pending">Pending</span>
+          <span style="font-size:11px;color:var(--subtle)">Medium &middot; depends on: Reconcile Portfolio with Jira</span>
+        </div>
+        <p class="tc-desc">Map the four chains with target dates and handoff points. Track buffer consumption: green (proportional), yellow (>1/3 consumed with <1/3 complete), red (buffer exhausted).</p>
+      </div>
+
+      <div class="task-card">
+        <div class="tc-header">
+          <span class="tc-title">Schedule Monthly Milestone Sync</span>
+          <span class="badge pending">Pending</span>
+          <span style="font-size:11px;color:var(--subtle)">Small &middot; depends on: Reconcile Portfolio with Jira</span>
+        </div>
+        <p class="tc-desc">45-minute monthly sync with the 4 leads (Argolo, Sahasrabuddhe, Kalia, Meadow): each presents paired indicators (30 min), buffer status (5 min), cross-milestone deps (5 min), PO decisions (5 min).</p>
+      </div>
+
+      <h3><span class="wave-badge w3">Wave 3</span> Ongoing.</h3>
+
+      <div class="task-card" style="border-left: 4px solid var(--amber);">
+        <div class="tc-header">
+          <span class="tc-title">Test Top 3 Riskiest Assumptions</span>
+          <span class="badge pending">Pending</span>
+          <span style="font-size:11px;color:var(--subtle)">Large &middot; depends on: OST + Touchpoints</span>
+        </div>
+        <p class="tc-desc">Design and run assumption tests: (1) UBTs expect duty of care from an OTA, (2) 85% change abandonment is solvable via UX, (3) Travelers will pay for weather guarantees. Define success criteria before each test. Document findings as research.</p>
+      </div>
+    </section>
+
+    <section id="experts">
+      <h2>Dream Team Analysis</h2>
+      <p>Four experts consulted on 2026-04-21 using map-reduce pattern. Each responded independently, then synthesized.</p>
+
+      <div style="display:flex;gap:8px;margin:16px 0;flex-wrap:wrap;">
+        <span class="avatar-tag">Teresa Torres &middot; Discovery</span>
+        <span class="avatar-tag">Eliyahu Goldratt &middot; Constraints</span>
+        <span class="avatar-tag">Marty Cagan &middot; Product Strategy</span>
+        <span class="avatar-tag">Andy Grove &middot; Management</span>
+      </div>
+
+      <h3>Where They Agreed (with 2026-04-23 correction)</h3>
+      <ol>
+        <li><strong>Originally:</strong> "Unassigned milestones are the #1 problem." This was based on Jira's <code>Assignee</code> field, which is conventionally null on milestone-level issues. <strong>Corrected:</strong> every milestone has a Product Lead in Jira's custom <code>Product Lead(s)</code> field, and the portfolio now matches.</li>
+        <li><strong>Remaining principle:</strong> Start with people. Now that leads are identified (Argolo, Sahasrabuddhe, Kalia, Meadow), the work is coordinating them on shared critical chains, not finding them.</li>
+        <li><strong>Separate tracking from discovery.</strong> Track milestones are CFAR (3593), Pay Later (3515), Flexibility W1 (5682), VR (5432). Discover milestones are Add-Ons Walk/Run (5680), Dedicated Service (5883), and the later waves of 5682. Investigate: VAS (2887).</li>
+      </ol>
+
+      <h3>Where They Diverged</h3>
+      <table>
+        <tr><th>Topic</th><th>Torres</th><th>Goldratt</th><th>Cagan</th><th>Grove</th></tr>
+        <tr>
+          <td>First action</td>
+          <td>Start customer interviews this week</td>
+          <td>Map dependency chains, identify constraint</td>
+          <td>Separate your two jobs (context vs discovery)</td>
+          <td>Define paired indicators so you know what to measure</td>
+        </tr>
+        <tr>
+          <td>VR Differentiation &amp; VAS Pilot</td>
+          <td>Every milestone with customers deserves discovery</td>
+          <td>Not on critical path, don't optimize</td>
+          <td>Still need a lead, but not your priority</td>
+          <td>Track via monthly sync, match TRM to lead</td>
+        </tr>
+      </table>
+    </section>
+
+    <section id="verify">
+      <h2>Completion Criteria</h2>
+      <ul class="check-list">
+        <li style="text-decoration:line-through;color:var(--subtle)">Every active milestone has a named product lead &middot; <strong style="color:var(--green);text-decoration:none;">done 2026-04-23</strong></li>
+        <li style="text-decoration:line-through;color:var(--subtle)">Portfolio milestone set matches Jira &middot; <strong style="color:var(--green);text-decoration:none;">done 2026-04-23</strong></li>
+        <li>Weekly customer touchpoints established (3-5 interviews/week)</li>
+        <li>Opportunity Solution Tree created for Objective 2</li>
+        <li>Buffer tracker created for four critical chains</li>
+        <li>Monthly milestone sync meeting scheduled with the 4 leads</li>
+        <li>Top 3 riskiest assumptions each have a test in progress</li>
+      </ul>
+    </section>
+
+  </main>
+</div>
+
+<script>
+document.querySelectorAll('.sidebar a').forEach(link => {
+  link.addEventListener('click', function() {
+    document.querySelectorAll('.sidebar a').forEach(l => l.classList.remove('active'));
+    this.classList.add('active');
+  });
+});
+
+window.addEventListener('scroll', () => {
+  const sections = document.querySelectorAll('section[id]');
+  let current = '';
+  sections.forEach(section => {
+    const top = section.offsetTop - 100;
+    if (window.scrollY >= top) current = section.id;
+  });
+  document.querySelectorAll('.sidebar a[href^="#"]').forEach(link => {
+    link.classList.remove('active');
+    if (link.getAttribute('href') === '#' + current) link.classList.add('active');
+  });
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HCOM Q3 2026 Milestones</title>
+<style>
+  :root {
+    --navy: #171c38;
+    --teal: #00a3b5;
+    --blue: #3d78f2;
+    --purple: #784cc7;
+    --amber: #d99e14;
+    --green: #2ea673;
+    --coral: #e56152;
+    --dark: #1e2129;
+    --subtle: #808899;
+    --bg: #f5f7fa;
+    --white: #ffffff;
+    --border: #dce0e8;
+    --shadow: 0 2px 8px rgba(0,0,0,0.06);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--dark); line-height: 1.5; }
+  .container { max-width: 1600px; margin: 0 auto; }
+  a { color: var(--blue); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  .top-bar { background: var(--navy); padding: 14px 40px; display: flex; align-items: center; justify-content: space-between; }
+  .top-bar h1 { color: #fff; font-size: 22px; font-weight: 700; }
+  .top-bar .sub { color: #9a9fb8; font-size: 12px; margin-top: 2px; }
+  .top-bar .back-link { color: #9a9fb8; font-size: 12px; text-decoration: none; }
+  .top-bar .back-link:hover { color: #fff; }
+
+  .hero { background: linear-gradient(135deg, #171c38 0%, #252d55 50%, #1e2848 100%); padding: 40px 48px 32px; color: #fff; position: relative; overflow: hidden; }
+  .hero::before { content: ''; position: absolute; top: -60px; right: -60px; width: 300px; height: 300px; background: radial-gradient(circle, rgba(0,163,181,0.12) 0%, transparent 70%); pointer-events: none; }
+  .hero h2 { font-size: 24px; font-weight: 700; margin-bottom: 4px; position: relative; }
+  .hero .hero-sub { font-size: 13px; opacity: 0.65; margin-bottom: 20px; position: relative; }
+
+  .stat-row { display: flex; gap: 12px; flex-wrap: wrap; position: relative; }
+  .stat-box { background: rgba(255,255,255,0.08); border-radius: 8px; padding: 10px 18px; min-width: 120px; text-align: center; }
+  .stat-num { font-size: 22px; font-weight: 700; }
+  .stat-label { font-size: 9px; opacity: 0.6; text-transform: uppercase; letter-spacing: 0.5px; }
+
+  .section { padding: 24px 40px 0; }
+  .section-title { font-size: 18px; font-weight: 700; color: var(--dark); margin-bottom: 4px; }
+  .section-desc { font-size: 12px; color: var(--subtle); margin-bottom: 16px; }
+  .divider { height: 2px; background: var(--navy); opacity: 0.12; margin: 24px 0; }
+
+  .card { background: var(--white); border-radius: 12px; box-shadow: var(--shadow); overflow: hidden; }
+  .card-header { padding: 10px 16px; color: #fff; font-weight: 700; font-size: 13px; display: flex; align-items: center; justify-content: space-between; }
+  .card-body { padding: 0; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  thead th { text-align: left; padding: 10px 14px; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--subtle); border-bottom: 2px solid var(--border); background: #fafbfc; }
+  tbody td { padding: 10px 14px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+  tbody tr:last-child td { border-bottom: none; }
+  tbody tr:hover { background: rgba(61,120,242,0.02); }
+
+  .jira-link { font-family: 'SF Mono', 'Fira Code', monospace; font-size: 11px; color: var(--blue); font-weight: 500; white-space: nowrap; }
+  .status-badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: 600; white-space: nowrap; }
+  .status-in-progress { background: rgba(0,163,181,0.12); color: #00838f; }
+  .status-backlog { background: rgba(128,136,153,0.12); color: #606878; }
+  .status-draft { background: rgba(120,76,199,0.10); color: #6a3daa; }
+
+  .obj-tag { font-size: 9px; font-weight: 600; padding: 2px 6px; border-radius: 3px; white-space: nowrap; }
+  .obj-1 { background: rgba(61,120,242,0.10); color: var(--blue); }
+  .obj-2 { background: rgba(0,163,181,0.10); color: #00838f; }
+  .obj-3 { background: rgba(120,76,199,0.10); color: var(--purple); }
+  .obj-f { background: rgba(128,136,153,0.10); color: var(--subtle); }
+
+  .date-cell { font-family: 'SF Mono', 'Fira Code', monospace; font-size: 11px; color: var(--dark); white-space: nowrap; }
+  .q3-start { background: rgba(46,166,115,0.08); }
+
+  .legend { display: flex; gap: 16px; flex-wrap: wrap; padding: 12px 16px; border-top: 1px solid var(--border); font-size: 10px; color: var(--subtle); }
+  .legend-item { display: flex; align-items: center; gap: 5px; }
+  .legend-dot { width: 8px; height: 8px; border-radius: 2px; }
+
+  .footer { padding: 12px 40px 32px; font-size: 10px; color: var(--subtle); }
+
+  @media (max-width: 900px) {
+    .section { padding: 16px 16px 0; }
+    .hero { padding: 24px 16px; }
+    .top-bar { padding: 14px 16px; }
+    table { font-size: 11px; }
+    thead th, tbody td { padding: 8px 10px; }
+    .footer { padding: 12px 16px 24px; }
+  }
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+
+  <div class="top-bar">
+    <div>
+      <h1>HCOM Q3 2026 Milestones</h1>
+      <div class="sub">Make Hotels.com the Most Rewarding Way to Book a Hotel &middot; STRAT1-1346</div>
+    </div>
+    <a href="index.html" class="back-link">&larr; Back to Portfolio</a>
+  </div>
+
+  <div class="hero">
+    <h2>Q3 2026 Milestone Overview</h2>
+    <div class="hero-sub">July 1 &ndash; September 30, 2026 &middot; Synced from Jira on April 8, 2026</div>
+    <div class="stat-row">
+      <div class="stat-box"><div class="stat-num" style="color:var(--teal)">21</div><div class="stat-label">Active in Q3</div></div>
+      <div class="stat-box"><div class="stat-num" style="color:var(--green)">2</div><div class="stat-label">Starting in Q3</div></div>
+      <div class="stat-box"><div class="stat-num" style="color:var(--blue)">19</div><div class="stat-label">Continuing</div></div>
+      <div class="stat-box"><div class="stat-num" style="color:var(--subtle)">5</div><div class="stat-label">Ending Before Q3</div></div>
+      <div class="stat-box"><div class="stat-num" style="color:var(--subtle)">4</div><div class="stat-label">Starting After Q3</div></div>
+      <div class="stat-box"><div class="stat-num" style="color:var(--subtle)">1</div><div class="stat-label">No Dates Set</div></div>
+    </div>
+  </div>
+
+  <!-- Starting in Q3 -->
+  <div class="section">
+    <h3 class="section-title">Starting in Q3 2026</h3>
+    <p class="section-desc">Milestones with a Jira start date between July 1 and September 30, 2026.</p>
+    <div class="card" style="margin-bottom: 16px">
+      <div class="card-header" style="background: var(--green)">New in Q3 &middot; 2 milestones</div>
+      <div class="card-body">
+        <table>
+          <thead><tr><th>Milestone</th><th>Jira</th><th>Status</th><th>Start Date</th><th>End Date</th><th>Objective</th></tr></thead>
+          <tbody>
+            <tr class="q3-start">
+              <td><strong>Provide Dedicated Service Solutions for HBT</strong></td>
+              <td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-5883" class="jira-link" target="_blank">MLSTN1-5883</a></td>
+              <td><span class="status-badge status-in-progress">in-progress</span></td>
+              <td class="date-cell">2026-07-01</td>
+              <td class="date-cell">&mdash;</td>
+              <td><span class="obj-tag obj-1">Business Trips</span></td>
+            </tr>
+            <tr class="q3-start">
+              <td><strong>Loyalty Vault Save Now Travel Later</strong></td>
+              <td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-5674" class="jira-link" target="_blank">MLSTN1-5674</a></td>
+              <td><span class="status-badge status-backlog">backlog</span></td>
+              <td class="date-cell">2026-07-01</td>
+              <td class="date-cell">2026-12-31</td>
+              <td><span class="obj-tag obj-3">Rewards</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Continuing into Q3 -->
+  <div class="section">
+    <h3 class="section-title">Continuing into Q3 2026</h3>
+    <p class="section-desc">Milestones that started before July 1 and have an end date on or after July 1. Ordered by objective.</p>
+    <div class="card" style="margin-bottom: 16px">
+      <div class="card-header" style="background: var(--blue)">In Progress Through Q3 &middot; 19 milestones</div>
+      <div class="card-body">
+        <table>
+          <thead><tr><th>Milestone</th><th>Jira</th><th>Status</th><th>Start Date</th><th>End Date</th><th>Objective</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><strong>Build HBT Self Booker MLP</strong></td>
+              <td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-5676" class="jira-link" target="_blank">MLSTN1-5676</a></td>
+              <td><span class="status-badge status-in-progress">in-progress</span></td>
+              <td class="date-cell">2026-01-01</td>
+              <td class="date-cell">2026-09-30</td>
+              <td><span class="obj-tag obj-1">Business Trips</span></td>
+            </tr>
+            <tr>
+              <td><strong>Identify Business Travelers and Capture Preferences</strong></td>
+              <td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-3067" class="jira-link" target="_blank">MLSTN1-3067</a></td>
+              <td><span class="status-badge status-in-progress">in-progress</span></td>
+              <td class="date-cell">2026-01-01</td>
+              <td class="date-cell">2026-12-31</td>
+              <td><span class="obj-tag obj-1">Business Trips</span></td>
+            </tr>
+            <tr>
+              <td><strong>HCOM Home Improvements Phase 1</strong></td>
+              <td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-5679" class="jira-link" target="_blank">MLSTN1-5679</a></td>
+              <td><span class="status-badge status-in-progress">in-progress</span></td>
+              <td class="date-cell">2026-01-01</td>
+              <td class="date-cell">2026-12-31</td>
+              <td><span class="obj-tag obj-1">Business Trips</span></td>
+            </tr>
+            <tr>
+              <td><strong>Launch Pay Later to EG</strong></td>
+              <td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-3515" class="jira-link" target="_blank">MLSTN1-3515</a></td>
+              <td><span class="status-badge status-in-progress">in-progress</span></td>
+              <td class="date-cell">2026-01-01</td>
+              <td class="date-cell">2026-12-31</td>
+              <td><span class="obj-tag obj-1">Business Trips</span></td>
+            </tr>
+            <tr>
+              <td><strong>Partners Autopay Scale-Up</strong></td>
+              <td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-3516" class="jira-link" target="_blank">MLSTN1-3516</a></td>
+              <td><span class="status-badge status-in-progress">in-progress</span></td>
+              <td class="date-cell">2026-02-05</td>
+              <td class="date-cell">2027-03-31</td>
+              <td><span class="obj-tag obj-1">Business Trips</span></td>
+            </tr>
+            <tr>
+              <td><strong>Multi-Hotel Shopping</strong></td>
+              <td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-5332" class="jira-link" target="_blank">MLSTN1-5332</a></td>
+              <td><span class="status-badge status-in-progress">in-progress</span></td>
+              <td class="date-cell">2026-04-01</td>
+              <td class="date-cell">2027-06-30</td>
+              <td><span class="obj-tag obj-1">Business Trips</span></td>
+            </tr>
+            <tr>
+              <td><strong>Integrate Add-On Services</strong></td>
+              <td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-5680" class="jira-link" target="_blank">MLSTN1-5680</a></td>
+              <td><span class="status-badge status-in-progress">in-progress</span></td>
+              <td class="date-cell">2026-04-01</td>
+              <td class="date-cell">2027-06-30</td>
+              <td><span class="obj-tag obj-2">Flexibility</span></td>
+            </tr>
+            <tr>
+              <td><strong>Provide Dedicated Service Solutions</strong></td>
+              <td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-5681" class="jira-link" target="_blank">MLSTN1-5681</a></td>
+              <td><span class="status-badge status-backlog">backlog</span></td>
+              <td class="date-cell">2026-04-06</td>
+              <td class="date-cell">2026-12-31</td>
+              <td><span class="obj-tag obj-2">Flexibility</span></td>
+            </tr>
+            <tr>
+              <td><strong>Launch CFAR Pilot on Hcom</strong></td>
+              <td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-3593" class="jira-link" target="_blank">MLSTN1-3593</a></td>
+              <td><span class="status-badge status-in-progress">in-progress</span></td>
+              <td class="date-cell">2025-10-01</td>
+              <td class="date-cell">2026-09-25</td>
+              <td><span class="obj-tag obj-2">Flexibility</span></td>
+            </tr>
+            <tr>
+              <td><strong>Pilot VAS Products on Hcom</strong></td>
+              <td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-2887" class="jira-link" target="_blank">MLSTN1-2887</a></td>
+              <td><span class="status-badge status-backlog">backlog</span></td>
+              <td class="date-cell">2026-04-02</td>
+              <td class="date-cell">2026-12-31</td>
+              <td><span class="obj-tag obj-2">Flexibility</span></td>
+            </tr>
+            <tr>
+              <td><strong>Deliver for Flexibility and Stickiness</strong></td>
+              <td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-5682" class="jira-link" target="_blank">MLSTN1-5682</a></td>
+              <td><span class="status-badge status-in-progress">in-progress</span></td>
+              <td class="date-cell">2025-09-01</td>
+              <td class="date-cell">2027-12-31</td>
+              <td><span class="obj-tag obj-2">Flexibility</span></td>
+            </tr>
+            <tr>
+              <td><strong>Redesign Hotels.comCash Loyalty Program</strong></td>
+              <td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-5686" class="jira-link" target="_blank">MLSTN1-5686</a></td>
+              <td><span class="status-badge status-draft">draft</span></td>
+              <td class="date-cell">2026-04-01</td>
+              <td class="date-cell">2027-12-31</td>
+              <td><span class="obj-tag obj-3">Rewards</span></td>
+            </tr>
+            <tr>
+              <td><strong>HCOM Rewards Optimization RoW</strong></td>
+              <td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-608" class="jira-link" target="_blank">MLSTN1-608</a></td>
+              <td><span class="status-badge status-in-progress">in-progress</span></td>
+              <td class="date-cell">2026-03-23</td>
+              <td class="date-cell">2026-12-31</td>
+              <td><span class="obj-tag obj-3">Rewards</span></td>
+            </tr>
+            <tr>
+              <td><strong>Save Your Way 2026</strong></td>
+              <td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-5476" class="jira-link" target="_blank">MLSTN1-5476</a></td>
+              <td><span class="status-badge status-in-progress">in-progress</span></td>
+              <td class="date-cell">2026-03-02</td>
+              <td class="date-cell">2026-12-31</td>
+              <td><span class="obj-tag obj-3">Rewards</span></td>
+            </tr>
+            <tr>
+              <td><strong>Member-Led Messaging Improvements</strong></td>
+              <td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-3527" class="jira-link" target="_blank">MLSTN1-3527</a></td>
+              <td><span class="status-badge status-in-progress">in-progress</span></td>
+              <td class="date-cell">2025-09-15</td>
+              <td class="date-cell">2026-11-30</td>
+              <td><span class="obj-tag obj-3">Rewards</span></td>
+            </tr>
+            <tr>
+              <td><strong>VIPa 2.0</strong></td>
+              <td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-5657" class="jira-link" target="_blank">MLSTN1-5657</a></td>
+              <td><span class="status-badge status-backlog">backlog</span></td>
+              <td class="date-cell">2026-05-04</td>
+              <td class="date-cell">2026-12-31</td>
+              <td><span class="obj-tag obj-3">Rewards</span></td>
+            </tr>
+            <tr>
+              <td><strong>Hotels.com Partnerships</strong></td>
+              <td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-5683" class="jira-link" target="_blank">MLSTN1-5683</a></td>
+              <td><span class="status-badge status-backlog">backlog</span></td>
+              <td class="date-cell">2026-04-01</td>
+              <td class="date-cell">2028-06-30</td>
+              <td><span class="obj-tag obj-3">Rewards</span></td>
+            </tr>
+            <tr>
+              <td><strong>Save Your Way HBT Evolution</strong></td>
+              <td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-5478" class="jira-link" target="_blank">MLSTN1-5478</a></td>
+              <td><span class="status-badge status-in-progress">in-progress</span></td>
+              <td class="date-cell">2026-03-30</td>
+              <td class="date-cell">2026-12-31</td>
+              <td><span class="obj-tag obj-3">Rewards</span></td>
+            </tr>
+            <tr>
+              <td><strong>Yield Management: Optimize Room &amp; Rates Display</strong></td>
+              <td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-2349" class="jira-link" target="_blank">MLSTN1-2349</a></td>
+              <td><span class="status-badge status-in-progress">in-progress</span></td>
+              <td class="date-cell">2025-12-01</td>
+              <td class="date-cell">2026-12-31</td>
+              <td><span class="obj-tag obj-f">Foundations</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="legend">
+        <div class="legend-item"><div class="legend-dot" style="background:var(--blue)"></div> Business Trips</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--teal)"></div> Flexibility</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--purple)"></div> Rewards</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--subtle)"></div> Foundations</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Ending Before Q3 -->
+  <div class="section">
+    <div class="divider"></div>
+    <h3 class="section-title">Ending Before Q3</h3>
+    <p class="section-desc">Milestones with an end date before July 1, 2026. Expected to complete before Q3 begins.</p>
+    <div class="card" style="margin-bottom: 16px">
+      <div class="card-header" style="background: var(--subtle)">Complete by June 30 &middot; 5 milestones</div>
+      <div class="card-body">
+        <table>
+          <thead><tr><th>Milestone</th><th>Jira</th><th>Status</th><th>Start Date</th><th>End Date</th><th>Objective</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>Evolve Hotels.com Brand Identity</td>
+              <td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-3572" class="jira-link" target="_blank">MLSTN1-3572</a></td>
+              <td><span class="status-badge status-in-progress">in-progress</span></td>
+              <td class="date-cell">2026-01-01</td>
+              <td class="date-cell">2026-06-30</td>
+              <td><span class="obj-tag obj-1">Business Trips</span></td>
+            </tr>
+            <tr>
+              <td>Comms Thin Slice HBT Expensing</td>
+              <td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-5694" class="jira-link" target="_blank">MLSTN1-5694</a></td>
+              <td><span class="status-badge status-in-progress">in-progress</span></td>
+              <td class="date-cell">2026-03-13</td>
+              <td class="date-cell">2026-05-29</td>
+              <td><span class="obj-tag obj-1">Business Trips</span></td>
+            </tr>
+            <tr>
+              <td>Differentiate VR on HCOM</td>
+              <td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-5432" class="jira-link" target="_blank">MLSTN1-5432</a></td>
+              <td><span class="status-badge status-in-progress">in-progress</span></td>
+              <td class="date-cell">2026-04-01</td>
+              <td class="date-cell">2026-06-30</td>
+              <td><span class="obj-tag obj-2">Flexibility</span></td>
+            </tr>
+            <tr>
+              <td>Hcom 10 to 100 UK</td>
+              <td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-4025" class="jira-link" target="_blank">MLSTN1-4025</a></td>
+              <td><span class="status-badge status-in-progress">in-progress</span></td>
+              <td class="date-cell">2025-10-20</td>
+              <td class="date-cell">2026-06-30</td>
+              <td><span class="obj-tag obj-3">Rewards</span></td>
+            </tr>
+            <tr>
+              <td>Mitigate Price Inconsistencies</td>
+              <td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-2567" class="jira-link" target="_blank">MLSTN1-2567</a></td>
+              <td><span class="status-badge status-in-progress">in-progress</span></td>
+              <td class="date-cell">2025-10-01</td>
+              <td class="date-cell">2026-06-30</td>
+              <td><span class="obj-tag obj-f">Foundations</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Starting After Q3 -->
+  <div class="section">
+    <h3 class="section-title">Starting After Q3</h3>
+    <p class="section-desc">Milestones with a start date after September 30, 2026. Not yet in scope for Q3.</p>
+    <div class="card" style="margin-bottom: 16px">
+      <div class="card-header" style="background: var(--navy)">Q4 2026 and Beyond &middot; 4 milestones</div>
+      <div class="card-body">
+        <table>
+          <thead><tr><th>Milestone</th><th>Jira</th><th>Status</th><th>Start Date</th><th>End Date</th><th>Objective</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>Build Self Booker Extended Experience</td>
+              <td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-5677" class="jira-link" target="_blank">MLSTN1-5677</a></td>
+              <td><span class="status-badge status-backlog">backlog</span></td>
+              <td class="date-cell">2026-10-01</td>
+              <td class="date-cell">2027-12-31</td>
+              <td><span class="obj-tag obj-1">Business Trips</span></td>
+            </tr>
+            <tr>
+              <td>Create Travel Arranger Persona MLP</td>
+              <td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-5678" class="jira-link" target="_blank">MLSTN1-5678</a></td>
+              <td><span class="status-badge status-backlog">backlog</span></td>
+              <td class="date-cell">2026-10-01</td>
+              <td class="date-cell">2027-06-30</td>
+              <td><span class="obj-tag obj-1">Business Trips</span></td>
+            </tr>
+            <tr>
+              <td>Hcom Gift Cards</td>
+              <td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-5672" class="jira-link" target="_blank">MLSTN1-5672</a></td>
+              <td><span class="status-badge status-backlog">backlog</span></td>
+              <td class="date-cell">2026-10-01</td>
+              <td class="date-cell">2027-03-31</td>
+              <td><span class="obj-tag obj-3">Rewards</span></td>
+            </tr>
+            <tr>
+              <td>VIPa 2.0 Phase 2</td>
+              <td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-5767" class="jira-link" target="_blank">MLSTN1-5767</a></td>
+              <td><span class="status-badge status-draft">draft</span></td>
+              <td class="date-cell">2027-01-04</td>
+              <td class="date-cell">&mdash;</td>
+              <td><span class="obj-tag obj-3">Rewards</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- No Dates Set -->
+  <div class="section">
+    <h3 class="section-title">No Dates Set</h3>
+    <p class="section-desc">Milestones without start or end dates in Jira. Cannot be placed on the timeline.</p>
+    <div class="card" style="margin-bottom: 16px">
+      <div class="card-header" style="background: var(--coral)">Unscheduled &middot; 1 milestone</div>
+      <div class="card-body">
+        <table>
+          <thead><tr><th>Milestone</th><th>Jira</th><th>Status</th><th>Start Date</th><th>End Date</th><th>Objective</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>Loyalty Premium - Paid version of Hcom Loyalty</td>
+              <td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-5675" class="jira-link" target="_blank">MLSTN1-5675</a></td>
+              <td><span class="status-badge status-draft">draft</span></td>
+              <td class="date-cell">&mdash;</td>
+              <td class="date-cell">&mdash;</td>
+              <td><span class="obj-tag obj-3">Rewards</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    Product Portfolio &middot; HCOM Strategy: STRAT1-1346 &middot; Data synced from Jira on April 8, 2026 &middot;
+    <a href="https://github.com/eg-internal/product-portfolio/blob/main/Strategies/Make%20Hotels.com%20the%20Most%20Rewarding%20Way%20to%20Book%20a%20Hotel/Milestone%20Map.md">Source: Milestone Map.md</a>
+  </div>
+
+</div>
+</body>
+</html>

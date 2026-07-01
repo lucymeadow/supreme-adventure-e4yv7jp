@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>BRD Evaluator</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='10' fill='%231a365d'/%3E%3Ctext x='32' y='44' font-size='34' font-family='system-ui' font-weight='700' text-anchor='middle' fill='white'%3EB%3C/text%3E%3C/svg%3E">
+</head>
+<body>
+  <header>
+    <h1>BRD Evaluator</h1>
+    <p class="subtitle">Drop a BRD. Pick a strategy. Get a scored evaluation in 1–2 minutes.</p>
+    <button id="settings-btn" class="link-btn" title="Endpoint settings">Settings</button>
+  </header>
+
+  <main>
+    <section id="inputs">
+      <div class="field">
+        <label for="strategy">Strategy</label>
+        <select id="strategy" disabled>
+          <option value="">Loading…</option>
+        </select>
+        <p class="hint" id="strategy-hint">The BRD will be evaluated against this strategy's objectives, pillars, and milestones.</p>
+      </div>
+
+      <div class="field">
+        <label>BRD document</label>
+        <div id="dropzone" class="dropzone" tabindex="0" role="button" aria-label="Drop a BRD file or click to browse">
+          <p class="drop-primary">Drop a <code>.docx</code>, <code>.md</code>, or <code>.txt</code> file</p>
+          <p class="drop-secondary">or <button type="button" class="link-btn" id="browse-btn">browse</button> · max 10 MB</p>
+          <input type="file" id="file-input" accept=".docx,.md,.txt" hidden>
+        </div>
+        <p class="hint" id="file-hint"></p>
+      </div>
+
+      <div class="actions">
+        <button id="run-btn" class="primary" disabled>Run evaluation</button>
+        <button id="reset-btn" class="link-btn" hidden>Start over</button>
+      </div>
+    </section>
+
+    <section id="progress" hidden>
+      <h2>Progress</h2>
+      <ul id="criterion-list" class="criterion-list"></ul>
+      <p id="run-summary" class="hint" hidden></p>
+    </section>
+
+    <section id="results" hidden>
+      <div class="results-header">
+        <h2>Evaluation</h2>
+        <div class="results-actions">
+          <button id="copy-btn" class="link-btn">Copy markdown</button>
+          <button id="download-btn" class="primary">Download .md</button>
+        </div>
+      </div>
+      <div id="results-meta" class="results-meta"></div>
+      <article id="results-body" class="markdown-body"></article>
+    </section>
+  </main>
+
+  <dialog id="settings-dialog">
+    <form method="dialog" id="settings-form">
+      <h2>Settings</h2>
+      <label for="endpoint-url">Proxy endpoint URL</label>
+      <input type="url" id="endpoint-url" placeholder="https://your-worker.workers.dev/api/evaluate" required>
+      <p class="hint">Where to send criterion prompts. Local mode: <code>http://localhost:8765/api/evaluate</code>. Stored in your browser only.</p>
+      <label for="endpoint-token">Shared token (optional)</label>
+      <input type="text" id="endpoint-token" placeholder="rotate per deploy">
+      <p class="hint">Sent as <code>X-Evaluator-Token</code>. Adds a soft barrier; not a real auth boundary.</p>
+      <label for="model-name">Model (optional)</label>
+      <input type="text" id="model-name" placeholder="us.anthropic.claude-sonnet-4-5-20250929-v1:0">
+      <p class="hint">Bedrock model ID. Leave blank to use the worker's configured default.</p>
+      <div class="dialog-actions">
+        <button type="button" id="settings-cancel" class="link-btn">Cancel</button>
+        <button type="submit" class="primary">Save</button>
+      </div>
+    </form>
+  </dialog>
+
+  <footer>
+    <p>Source-of-truth: <a href="../../.rulesync/skills/brd-evaluate/SKILL.md"><code>.rulesync/skills/brd-evaluate</code></a>. This site runs the same criterion prompts and expert lenses through Claude on AWS Bedrock via EG's Generative AI Proxy (GAP).</p>
+  </footer>
+
+  <!-- mammoth.js for .docx → markdown in the browser -->
+  <script src="https://cdn.jsdelivr.net/npm/mammoth@1.8.0/mammoth.browser.min.js"></script>
+  <script type="module" src="app.js"></script>
+</body>
+</html>

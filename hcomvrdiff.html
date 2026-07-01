@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hotels.com — VR Differentiation Prototype</title>
+<style>
+  :root {
+    /* EGDS Hotels.com brand tokens */
+    --dark: #191E3B; --med: #31374F; --light: #676A7D; --border: #DFE0E4;
+    --white: #FFFFFF; --bg: #F9F6EE; --blue: #356CC0; --green: #227950;
+    --red: #E91401; --amber: #B26B00; --amber-bg: #FEF4E6;
+    --pill-bg: #D6E8FF; --pill-text: #191E3B; --info-bg: #D6E8FF;
+    --info-border: #356CC0; --green-bg: #E6F7E9;
+    --toggle-on: #356CC0; --toggle-off: #676A7D;
+    --negative: #A7183C; --negative-muted: #FED5D8;
+    --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: var(--font); background: var(--bg); color: var(--dark); }
+
+  .page { display: none; max-width: 820px; margin: 0 auto; padding: 16px; }
+  .page.active { display: block; }
+
+  .header { background: var(--red); color: var(--white); padding: 12px 16px; border-radius: 16px 16px 0 0; margin-bottom: 0; display: flex; align-items: center; gap: 12px; }
+  .header h1 { font-size: 18px; font-weight: 600; }
+  .header .logo { height: 24px; }
+  .header .logo img { height: 24px; }
+
+  .search-bar { background: var(--white); padding: 12px 16px; border-bottom: 1px solid var(--border); font-size: 14px; color: var(--med); }
+
+  .filter-bar { background: var(--white); padding: 10px 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .filter-pill { padding: 6px 14px; border: 1px solid var(--border); border-radius: 32px; font-size: 12px; color: var(--dark); cursor: pointer; white-space: nowrap; }
+  .toggle-wrap { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+  .toggle { width: 40px; height: 22px; border-radius: 11px; position: relative; cursor: pointer; transition: background .2s; }
+  .toggle.on { background: var(--toggle-on); }
+  .toggle.off { background: var(--toggle-off); }
+  .toggle .knob { width: 18px; height: 18px; background: var(--white); border-radius: 50%; position: absolute; top: 2px; transition: left .2s; }
+  .toggle.on .knob { left: 20px; }
+  .toggle.off .knob { left: 2px; }
+  .toggle-label { font-size: 12px; font-weight: 600; }
+  .toggle-label.on { color: var(--blue); }
+  .toggle-label.off { color: var(--med); }
+
+  .card { background: var(--white); border: 1px solid var(--border); border-radius: 16px; display: flex; overflow: hidden; margin-bottom: 12px; cursor: pointer; transition: box-shadow .15s; }
+  .card:hover { box-shadow: 0 2px 8px rgba(0,0,0,.08); }
+  .card-img { width: 200px; min-height: 160px; background-size: cover; background-position: center; flex-shrink: 0; }
+  .card-info { padding: 14px 16px; flex: 1; display: flex; flex-direction: column; gap: 4px; }
+  .card-price { padding: 14px 16px; text-align: right; display: flex; flex-direction: column; justify-content: flex-end; min-width: 110px; }
+  .card-price .per { font-size: 11px; color: var(--light); }
+  .card-price .amount { font-size: 20px; font-weight: 700; }
+  .card-price .total { font-size: 10px; color: var(--light); }
+
+  .pill { display: inline-block; padding: 4px 12px; background: var(--pill-bg); color: var(--pill-text); font-size: 12px; font-weight: 600; border-radius: 16px; letter-spacing: .2px; }
+  .card-name { font-size: 15px; font-weight: 600; }
+  .card-loc { font-size: 12px; color: var(--med); }
+  .rating-badge { display: inline-block; padding: 2px 8px; background: var(--dark); color: var(--white); font-size: 11px; font-weight: 700; border-radius: 4px; }
+  .rating-text { font-size: 11px; color: var(--med); margin-left: 6px; }
+  .multi-unit-warn { font-size: 12px; color: var(--amber); font-weight: 500; }
+
+  .hidden-count { text-align: center; padding: 16px; color: var(--light); font-size: 12px; border-top: 1px solid var(--border); }
+
+  .info-banner { background: var(--info-bg); border: 1px solid var(--info-border); border-radius: 12px; padding: 12px 16px; margin-bottom: 12px; font-size: 13px; color: var(--dark); font-weight: 500; }
+
+  /* PDP styles */
+  .pdp-hero { width: 100%; height: 240px; background-size: cover; background-position: center; border-radius: 16px; margin-bottom: 16px; }
+  .pdp-header { margin-bottom: 16px; }
+  .pdp-header h2 { font-size: 22px; margin: 8px 0 4px; }
+  .pdp-header .loc { font-size: 14px; color: var(--med); }
+
+  .module { background: var(--white); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin-bottom: 16px; }
+  .module h3 { font-size: 16px; font-weight: 600; margin-bottom: 12px; }
+  .module-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 16px; }
+  .module-item { display: flex; align-items: center; gap: 8px; }
+  .module-item .icon { font-size: 18px; }
+  .module-item .val { font-size: 14px; font-weight: 600; }
+  .module-item .label { font-size: 11px; color: var(--light); display: block; }
+  .divider { height: 1px; background: var(--border); margin: 16px 0; }
+  .rules-list { list-style: none; }
+  .rules-list li { font-size: 13px; color: var(--med); padding: 3px 0; }
+  .rules-list li::before { content: "• "; }
+
+  .amber-notice { background: var(--amber-bg); border-radius: 12px; padding: 10px 14px; font-size: 12px; color: var(--amber); font-weight: 500; margin: 12px 0; }
+
+  .price-row { display: flex; justify-content: space-between; padding: 4px 0; font-size: 13px; color: var(--med); }
+  .price-row .val { color: var(--dark); font-weight: 500; }
+  .price-total { display: flex; justify-content: space-between; padding: 8px 0; font-size: 16px; font-weight: 700; border-top: 2px solid var(--dark); margin-top: 8px; }
+  .parity-msg { background: var(--green-bg); border-radius: 12px; padding: 10px 14px; font-size: 12px; color: var(--green); font-weight: 500; margin-top: 12px; }
+
+  .btn { display: inline-block; padding: 12px 24px; background: var(--blue); color: var(--white); border: none; border-radius: 32px; font-size: 14px; font-weight: 600; cursor: pointer; text-align: center; width: 100%; margin-top: 16px; }
+  .btn:hover { opacity: .9; }
+  .btn-back { display: inline-block; padding: 8px 0; font-size: 13px; color: var(--blue); cursor: pointer; margin-bottom: 12px; text-decoration: none; }
+  .btn-back:hover { text-decoration: underline; }
+
+  .checkin-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+  .checkin-item h4 { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+  .checkin-item p { font-size: 13px; color: var(--med); }
+
+  .proto-badge { position: fixed; bottom: 16px; right: 16px; background: var(--dark); color: var(--white); padding: 8px 14px; border-radius: 8px; font-size: 11px; font-weight: 600; z-index: 100; opacity: .8; }
+</style>
+</head>
+<body>
+
+<div class="proto-badge">PROTOTYPE — Wave 1-3 VR Differentiation</div>
+
+<!-- ============ SRP PAGE ============ -->
+<div id="srp" class="page active">
+  <div class="header">
+    <div class="logo"><img src="https://hcom-generative-ui-prototype.eg-internal.ghpages.expedia.biz/ai-showcase/logo.png" alt="Hotels.com" onerror="this.onerror=null;this.parentElement.textContent='Hotels.com'"></div>
+    <h1>Kauai, Hawaii</h1>
+  </div>
+  <div class="search-bar">May 14–17, 2026 · 2 guests · 1 room</div>
+  <div class="filter-bar">
+    <div class="filter-pill">Sort: Recommended</div>
+    <div class="filter-pill">Price</div>
+    <div class="filter-pill">Star rating</div>
+    <div class="filter-pill">Guest rating</div>
+    <div class="toggle-wrap">
+      <div id="toggle" class="toggle on" onclick="toggleHotelsOnly()">
+        <div class="knob"></div>
+      </div>
+      <span id="toggle-label" class="toggle-label on">Hotels only</span>
+    </div>
+  </div>
+
+  <div style="padding-top: 12px;">
+    <!-- Hotel cards (always visible) -->
+    <div id="hotel-cards">
+      <div class="card" onclick="showPDP('hyatt')">
+        <div class="card-img" style="background-image: url('https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=400&h=300&fit=crop');"></div>
+        <div class="card-info">
+          <div class="card-name">Grand Hyatt Kauai Resort & Spa</div>
+          <div class="card-loc">Poipu, Kauai</div>
+          <div style="margin-top: auto;"><span class="rating-badge">8.8</span><span class="rating-text">2,341 reviews</span></div>
+        </div>
+        <div class="card-price">
+          <div class="per">per night</div>
+          <div class="amount">$389</div>
+          <div class="total">incl. taxes & fees</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-img" style="background-image: url('https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=400&h=300&fit=crop');"></div>
+        <div class="card-info">
+          <div class="card-name">Kauai Shores Hotel</div>
+          <div class="card-loc">Kapaa, Kauai</div>
+          <div style="margin-top: auto;"><span class="rating-badge">7.6</span><span class="rating-text">1,893 reviews</span></div>
+        </div>
+        <div class="card-price">
+          <div class="per">per night</div>
+          <div class="amount">$219</div>
+          <div class="total">incl. taxes & fees</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-img" style="background-image: url('https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?w=400&h=300&fit=crop');"></div>
+        <div class="card-info">
+          <div class="card-name">Koloa Landing Resort</div>
+          <div class="card-loc">Poipu, Kauai</div>
+          <div style="margin-top: auto;"><span class="rating-badge">9.0</span><span class="rating-text">756 reviews</span></div>
+        </div>
+        <div class="card-price">
+          <div class="per">per night</div>
+          <div class="amount">$459</div>
+          <div class="total">incl. taxes & fees</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Hidden VR count (toggle ON) -->
+    <div id="hidden-count" class="hidden-count">12 other stay types hidden</div>
+
+    <!-- VR cards (toggle OFF) -->
+    <div id="vr-cards" style="display: none;">
+      <div class="card" onclick="showPDP('villa')">
+        <div class="card-img" style="background-image: url('https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?w=400&h=300&fit=crop');"></div>
+        <div class="card-info">
+          <span class="pill">Villa</span>
+          <div class="card-name">Hanalei Bay Villa — Ocean View</div>
+          <div class="card-loc">Hanalei, Kauai</div>
+          <div style="margin-top: auto;"><span class="rating-badge">9.2</span><span class="rating-text">127 reviews</span></div>
+        </div>
+        <div class="card-price">
+          <div class="per">per night</div>
+          <div class="amount">$425</div>
+          <div class="total">incl. taxes & fees</div>
+        </div>
+      </div>
+
+      <div class="card" onclick="showPDP('apartment')">
+        <div class="card-img" style="background-image: url('https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=400&h=300&fit=crop');"></div>
+        <div class="card-info">
+          <span class="pill">Apartment</span>
+          <div class="card-name">Poipu Beach Apartment — 2BR</div>
+          <div class="card-loc">Poipu, Kauai</div>
+          <div style="margin-top: auto;"><span class="rating-badge">8.4</span><span class="rating-text">43 reviews</span></div>
+        </div>
+        <div class="card-price">
+          <div class="per">per night</div>
+          <div class="amount">$315</div>
+          <div class="total">incl. taxes & fees</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-img" style="background-image: url('https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=400&h=300&fit=crop');"></div>
+        <div class="card-info">
+          <span class="pill">Vacation Rental</span>
+          <div class="card-name">Sunset Beach House Collection</div>
+          <div class="multi-unit-warn">⚠️ 2 units required for your group</div>
+          <div class="card-loc">Poipu, Kauai</div>
+          <div style="margin-top: auto;"><span class="rating-badge">7.8</span><span class="rating-text">31 reviews</span></div>
+        </div>
+        <div class="card-price">
+          <div class="per">per night / per unit</div>
+          <div class="amount">$295</div>
+          <div class="total">incl. taxes & fees</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ PDP PAGE (Villa - Complete Data) ============ -->
+<div id="pdp-villa" class="page">
+  <a class="btn-back" onclick="showPage('srp')">← Back to search results</a>
+  <div class="pdp-hero" style="background-image: url('https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?w=800&h=400&fit=crop');"></div>
+  <div class="pdp-header">
+    <span class="pill">Villa</span>
+    <h2>Hanalei Bay Villa — Ocean View</h2>
+    <div class="loc">Hanalei, Kauai · <span class="rating-badge">9.2</span> <span class="rating-text">127 reviews</span></div>
+  </div>
+
+  <div class="module">
+    <h3>Property details</h3>
+    <div class="module-grid">
+      <div class="module-item"><span class="icon">🛏️</span><div><span class="val">3</span><span class="label">Bedrooms</span></div></div>
+      <div class="module-item"><span class="icon">🚿</span><div><span class="val">2</span><span class="label">Bathrooms</span></div></div>
+      <div class="module-item"><span class="icon">🏠</span><div><span class="val">Entire place</span><span class="label">Unit type</span></div></div>
+      <div class="module-item"><span class="icon">🍳</span><div><span class="val">Full kitchen</span><span class="label">Kitchen</span></div></div>
+      <div class="module-item"><span class="icon">👥</span><div><span class="val">6 guests</span><span class="label">Sleeps</span></div></div>
+    </div>
+    <div class="divider"></div>
+    <h3>Check-in & house rules</h3>
+    <div class="checkin-grid">
+      <div class="checkin-item"><h4>🔑 Check-in</h4><p>3:00 PM – 10:00 PM</p><p>Self check-in with lockbox code</p></div>
+      <div class="checkin-item"><h4>🚪 Check-out</h4><p>11:00 AM</p></div>
+    </div>
+    <div class="divider"></div>
+    <h4 style="font-size: 14px; margin-bottom: 8px;">📋 House rules</h4>
+    <ul class="rules-list">
+      <li>No smoking inside the property</li>
+      <li>No pets allowed</li>
+      <li>No parties or events</li>
+      <li>Quiet hours: 10:00 PM – 8:00 AM</li>
+      <li>Maximum 6 guests</li>
+    </ul>
+    <div class="divider"></div>
+    <h4 style="font-size: 14px; margin-bottom: 8px;">💳 Cancellation policy</h4>
+    <p style="font-size: 13px; color: var(--med);">Free cancellation until May 7. $200 security deposit refunded within 14 days.</p>
+  </div>
+
+  <div class="module">
+    <h3>Price details</h3>
+    <div class="price-row"><span>3 nights × $142/night</span><span class="val">$426</span></div>
+    <div class="price-row"><span>Cleaning fee</span><span class="val">$85</span></div>
+    <div class="price-row"><span>Service fee</span><span class="val">$52</span></div>
+    <div class="price-row"><span>Security deposit (refundable)</span><span class="val">$200</span></div>
+    <div class="price-row"><span>Taxes</span><span class="val">$63</span></div>
+    <div class="price-total"><span>Total</span><span>$826</span></div>
+  </div>
+
+  <button class="btn" onclick="showPage('booking')">Reserve — $826</button>
+</div>
+
+<!-- ============ PDP PAGE (Apartment - Partial Data) ============ -->
+<div id="pdp-apartment" class="page">
+  <a class="btn-back" onclick="showPage('srp')">← Back to search results</a>
+  <div class="pdp-hero" style="background-image: url('https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800&h=400&fit=crop');"></div>
+  <div class="pdp-header">
+    <span class="pill">Apartment</span>
+    <h2>Poipu Beach Apartment — 2BR</h2>
+    <div class="loc">Poipu, Kauai · <span class="rating-badge">8.4</span> <span class="rating-text">43 reviews</span></div>
+  </div>
+
+  <div class="module">
+    <h3>Property details</h3>
+    <div class="module-grid" style="grid-template-columns: repeat(2, 1fr);">
+      <div class="module-item"><span class="icon">🛏️</span><div><span class="val">2</span><span class="label">Bedrooms</span></div></div>
+      <div class="module-item"><span class="icon">🏠</span><div><span class="val">Entire place</span><span class="label">Unit type</span></div></div>
+    </div>
+    <div class="amber-notice">ℹ️ Some details will be confirmed at checkout</div>
+    <div class="divider"></div>
+    <h3>Check-in & house rules</h3>
+    <div class="checkin-grid">
+      <div class="checkin-item"><h4>🔑 Check-in</h4><p>3:00 PM</p></div>
+      <div class="checkin-item"><h4>🚪 Check-out</h4><p>10:00 AM</p></div>
+    </div>
+  </div>
+
+  <div class="module">
+    <h3>Price details</h3>
+    <div class="price-row"><span>3 nights × $105/night</span><span class="val">$315</span></div>
+    <div class="price-row"><span>Cleaning fee</span><span class="val">$60</span></div>
+    <div class="price-row"><span>Taxes</span><span class="val">$45</span></div>
+    <div class="amber-notice">ℹ️ Additional fees may be confirmed at checkout</div>
+    <div class="price-total"><span>Total</span><span>$420</span></div>
+  </div>
+
+  <button class="btn" onclick="showPage('booking')">Reserve — $420</button>
+</div>
+
+<!-- ============ BOOKING FORM ============ -->
+<div id="booking" class="page">
+  <a class="btn-back" onclick="showPage('pdp-villa')">← Back to property</a>
+  <div class="header" style="border-radius: 12px; margin-bottom: 16px;">
+    <div class="logo"><img src="https://hcom-generative-ui-prototype.eg-internal.ghpages.expedia.biz/ai-showcase/logo.png" alt="Hotels.com" onerror="this.onerror=null;this.parentElement.textContent='Hotels.com'"></div>
+    <h1>Review your booking</h1>
+  </div>
+
+  <div class="module">
+    <h3>Hanalei Bay Villa — Ocean View</h3>
+    <p style="font-size: 13px; color: var(--med); margin-bottom: 16px;">May 14–17, 2026 · 3 nights · 2 guests</p>
+    <div class="divider"></div>
+    <div class="price-row"><span>3 nights × $142/night</span><span class="val">$426</span></div>
+    <div class="price-row"><span>Cleaning fee</span><span class="val">$85</span></div>
+    <div class="price-row"><span>Service fee</span><span class="val">$52</span></div>
+    <div class="price-row"><span>Security deposit (refundable)</span><span class="val">$200</span></div>
+    <div class="price-row"><span>Taxes</span><span class="val">$63</span></div>
+    <div class="price-total"><span>Total</span><span>$826</span></div>
+    <div class="parity-msg">✓ Price matches property details page</div>
+  </div>
+
+  <div class="module">
+    <h3>Guest details</h3>
+    <p style="font-size: 13px; color: var(--med);">Lucy Meadow · lmeadow@expediagroup.com</p>
+  </div>
+
+  <button class="btn" onclick="alert('Booking confirmed! (prototype)')">Complete booking — $826</button>
+</div>
+
+<script>
+  let hotelsOnly = true;
+
+  function toggleHotelsOnly() {
+    hotelsOnly = !hotelsOnly;
+    const toggle = document.getElementById('toggle');
+    const label = document.getElementById('toggle-label');
+    const vrCards = document.getElementById('vr-cards');
+    const hiddenCount = document.getElementById('hidden-count');
+
+    if (hotelsOnly) {
+      toggle.className = 'toggle on';
+      label.className = 'toggle-label on';
+      vrCards.style.display = 'none';
+      hiddenCount.style.display = 'block';
+    } else {
+      toggle.className = 'toggle off';
+      label.className = 'toggle-label off';
+      vrCards.style.display = 'block';
+      hiddenCount.style.display = 'none';
+    }
+  }
+
+  function showPage(id) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    window.scrollTo(0, 0);
+  }
+
+  function showPDP(type) {
+    if (type === 'villa') showPage('pdp-villa');
+    else if (type === 'apartment') showPage('pdp-apartment');
+    else showPage('srp');
+  }
+</script>
+</body>
+</html>

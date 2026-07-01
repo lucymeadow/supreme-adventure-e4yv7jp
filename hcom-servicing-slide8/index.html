@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HCOM Servicing — HLT Updates</title>
+<style>
+  :root {
+    --navy: #171c38;
+    --teal: #00a3b5;
+    --blue: #3d78f2;
+    --purple: #784cc7;
+    --amber: #d99e14;
+    --green: #2ea673;
+    --coral: #e56152;
+    --dark: #1e2129;
+    --subtle: #808899;
+    --bg: #f5f7fa;
+    --white: #ffffff;
+    --border: #dce0e8;
+    --shadow: 0 2px 8px rgba(0,0,0,0.06);
+    --shadow-lg: 0 6px 20px rgba(23,28,56,0.10);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--dark); line-height: 1.6; }
+
+  .top-bar { background: var(--navy); padding: 14px 40px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
+  .top-bar .brand h1 { color: #fff; font-size: 19px; font-weight: 700; }
+  .top-bar .brand .sub { color: #9a9fb8; font-size: 12px; margin-top: 2px; }
+  .top-bar a { color: #9a9fb8; text-decoration: none; font-size: 13px; }
+  .top-bar a:hover { color: #fff; }
+
+  .wrap { max-width: 1100px; margin: 0 auto; padding: 32px 40px 64px; }
+  h1.page { font-size: 28px; font-weight: 800; margin-bottom: 6px; color: var(--navy); }
+  .subtitle { font-size: 15px; color: var(--subtle); margin-bottom: 24px; }
+  .lead { font-size: 15px; color: var(--dark); margin-bottom: 24px; }
+
+  .scorecard { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; margin: 20px 0 28px; }
+  .score-card { background: var(--white); border: 1px solid var(--border); border-radius: 10px; padding: 16px 18px; box-shadow: var(--shadow); }
+  .score-card .label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--subtle); margin-bottom: 6px; }
+  .score-card .value { font-size: 26px; font-weight: 800; color: var(--navy); }
+  .score-card .detail { font-size: 12px; color: var(--subtle); margin-top: 4px; }
+  .score-card.info { border-left: 4px solid var(--blue); }
+  .score-card.canvas { border-left: 4px solid var(--teal); }
+  .score-card.sheet { border-left: 4px solid var(--amber); }
+  .score-card.flag { border-left: 4px solid var(--coral); }
+
+  .pcard { background: var(--white); border: 1px solid var(--border); border-radius: 14px; box-shadow: var(--shadow-lg); margin: 22px 0; overflow: hidden; }
+  .pcard-head { display: flex; align-items: center; gap: 16px; padding: 18px 24px; background: linear-gradient(100deg, var(--navy), #28315e); }
+  .pcard-num { flex: 0 0 auto; width: 46px; height: 46px; border-radius: 50%; background: rgba(255,255,255,0.12); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 800; }
+  .pcard-title { color: #fff; }
+  .pcard-title .t { font-size: 18px; font-weight: 700; }
+  .pcard-title .role { font-size: 12.5px; color: #aeb6d6; margin-top: 2px; }
+
+  .pcard-body { display: grid; grid-template-columns: 1fr 1fr; gap: 0; }
+  .col { padding: 18px 24px; }
+  .col + .col { border-left: 1px solid var(--border); }
+  .col h3 { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--subtle); margin-bottom: 12px; display: flex; align-items: center; gap: 7px; }
+  .col h3 .dot { width: 9px; height: 9px; border-radius: 50%; }
+  .col.canvas h3 .dot { background: var(--teal); }
+  .col.sheet h3 .dot { background: var(--amber); }
+
+  .item { padding: 10px 0; border-bottom: 1px dashed var(--border); }
+  .item:last-child { border-bottom: none; }
+  .item .name { font-size: 13.5px; font-weight: 600; color: var(--navy); }
+  .item .sublist { margin: 7px 0 2px 2px; padding-left: 16px; list-style: none; }
+  .item .sublist li { font-size: 12.5px; color: var(--dark); margin-bottom: 5px; position: relative; padding-left: 12px; line-height: 1.45; }
+  .item .sublist li:before { content: "\2022"; position: absolute; left: 0; color: var(--teal); font-weight: 700; }
+  .item .meta { font-size: 12px; color: var(--subtle); margin-top: 3px; }
+  .item .owner { font-size: 12px; color: var(--dark); margin-top: 3px; }
+  .empty { font-size: 13px; color: var(--subtle); font-style: italic; padding: 8px 0; }
+
+  .links { margin-top: 6px; }
+  a.lnk { display: inline-block; color: var(--blue); text-decoration: none; font-weight: 600; font-size: 11px; background: #eef4ff; border: 1px solid #d7e4fd; border-radius: 6px; padding: 2px 8px; }
+  a.lnk:hover { background: #dbeafe; text-decoration: none; }
+
+  .refs { display: grid; grid-template-columns: repeat(auto-fit, minmax(245px, 1fr)); gap: 14px; margin: 14px 0 8px; }
+  .ref-card { background: var(--white); border: 1px solid var(--border); border-left: 4px solid var(--teal); border-radius: 12px; padding: 14px 16px; box-shadow: var(--shadow); display: flex; flex-direction: column; gap: 7px; }
+  .ref-card.doc { border-left-color: var(--blue); }
+  .ref-card.sheet { border-left-color: var(--amber); }
+  .ref-card.canvas { border-left-color: var(--teal); }
+  .ref-card.deck { border-left-color: var(--purple); }
+  .ref-card.tmpl { border-left-color: var(--green); }
+  .ref-card.page { border-left-color: var(--coral); }
+  .ref-card .rk { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--subtle); }
+  .ref-card .rt { font-size: 14.5px; font-weight: 700; color: var(--navy); line-height: 1.3; }
+  .ref-card .rd { font-size: 12px; color: var(--subtle); line-height: 1.45; }
+  .ref-card a.openbtn { margin-top: auto; align-self: flex-start; color: var(--blue); text-decoration: none; font-weight: 700; font-size: 12px; background: #eef4ff; border: 1px solid #d7e4fd; border-radius: 7px; padding: 5px 11px; }
+  .ref-card a.openbtn:hover { background: #dbeafe; }
+  .ref-card .nolink { margin-top: auto; font-size: 11.5px; color: var(--subtle); font-style: italic; }
+
+  .tag { display: inline-block; padding: 1px 8px; border-radius: 11px; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em; margin-right: 5px; vertical-align: middle; }
+  .tag.q3 { background: #ccfbf1; color: #0f766e; }
+  .tag.q4 { background: #dbeafe; color: #1e40af; }
+  .tag.q1 { background: #e0e7ff; color: #3730a3; }
+  .tag.feature { background: #f0fdf4; color: #166534; }
+  .tag.bug { background: #fee2e2; color: #991b1b; }
+  .tag.tpsp { background: #f3e8ff; color: #6b21a8; }
+  .tag.sheet { background: #fef3c7; color: #92400e; }
+
+  .pcard-foot { padding: 12px 24px; background: #f8fafc; border-top: 1px solid var(--border); font-size: 12.5px; color: var(--dark); }
+  .pcard-foot strong { color: var(--navy); }
+
+  .mono { font-family: ui-monospace, 'SF Mono', Menlo, monospace; font-size: 12px; color: var(--blue); }
+
+  .callout { background: var(--white); border-left: 4px solid var(--coral); padding: 16px 20px; margin: 26px 0 10px; border-radius: 0 10px 10px 0; box-shadow: var(--shadow); }
+  .callout .ct { font-weight: 700; font-size: 14px; margin-bottom: 8px; color: var(--navy); }
+  .callout ul { margin: 0 0 0 18px; }
+  .callout li { font-size: 13px; margin-bottom: 6px; }
+
+  h2 { font-size: 18px; font-weight: 700; margin: 36px 0 12px; color: var(--navy); }
+
+  .confirm-card { background: var(--white); border: 1px solid var(--border); border-left: 4px solid var(--amber); border-radius: 10px; box-shadow: var(--shadow); overflow: hidden; margin: 12px 0; }
+  .confirm-head { display: flex; align-items: center; gap: 10px; padding: 14px 20px; background: #fffbeb; border-bottom: 1px solid var(--border); }
+  .confirm-head .confirm-title { font-size: 15px; font-weight: 700; color: var(--navy); }
+  .confirm-body { padding: 16px 20px; }
+  .confirm-body p { font-size: 13.5px; margin-bottom: 10px; }
+  .confirm-meta { display: flex; flex-wrap: wrap; gap: 8px 22px; margin: 10px 0 12px; font-size: 12.5px; color: var(--dark); }
+  .confirm-meta strong { color: var(--subtle); font-weight: 700; }
+  .confirm-q { font-size: 13.5px; color: var(--dark); background: #f8fafc; border-radius: 8px; padding: 10px 14px; margin-bottom: 0; }
+
+  table.bugs { width: 100%; border-collapse: collapse; margin: 12px 0 8px; font-size: 13px; background: var(--white); border-radius: 10px; overflow: hidden; box-shadow: var(--shadow); }
+  table.bugs th { background: var(--navy); color: #fff; text-align: left; padding: 11px 14px; font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; }
+  table.bugs td { padding: 12px 14px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  table.bugs tr:last-child td { border-bottom: none; }
+  table.bugs tbody tr:hover td { background: #f8fafc; }
+  table.bugs td .bug { font-weight: 600; color: var(--navy); }
+  table.bugs td .sub { font-size: 12px; color: var(--subtle); margin-top: 2px; }
+
+  .tag.road { background: #dcfce7; color: #166534; }
+  .tag.team { background: #f3e8ff; color: #6b21a8; }
+  .tag.confirm { background: #fee2e2; color: #991b1b; }
+
+  .roadmap { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 14px 0 8px; align-items: start; }
+  .rm-col { background: #eef1f6; border-radius: 12px; padding: 10px; }
+  .rm-qhead { display: flex; align-items: baseline; justify-content: space-between; padding: 8px 10px 12px; }
+  .rm-qhead .q { font-size: 15px; font-weight: 800; color: var(--navy); }
+  .rm-qhead .n { font-size: 11px; font-weight: 700; color: var(--subtle); }
+  .rm-col.q3 { box-shadow: inset 0 3px 0 var(--teal); }
+  .rm-col.q4 { box-shadow: inset 0 3px 0 var(--blue); }
+  .rm-col.q1 { box-shadow: inset 0 3px 0 var(--purple); }
+  .rm-card { background: var(--white); border: 1px solid var(--border); border-radius: 10px; padding: 12px 13px; margin-bottom: 10px; box-shadow: var(--shadow); }
+  .rm-card:last-child { margin-bottom: 0; }
+  .rm-card .rm-tags { margin-bottom: 6px; }
+  .rm-card .rm-name { font-size: 13px; font-weight: 700; color: var(--navy); line-height: 1.35; }
+  .rm-card .rm-impact { font-size: 11.5px; color: var(--subtle); margin-top: 5px; }
+  .rm-card .rm-foot { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 9px; padding-top: 8px; border-top: 1px dashed var(--border); }
+  .rm-card .rm-owner { font-size: 11px; color: var(--dark); }
+  .rm-card .rm-deliver { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em; color: var(--green); background: #f0fdf4; padding: 2px 7px; border-radius: 10px; white-space: nowrap; }
+
+  @media (max-width: 760px) {
+    .roadmap { grid-template-columns: 1fr; }
+  }
+
+  .footer { margin-top: 44px; padding-top: 18px; border-top: 1px solid var(--border); font-size: 12px; color: var(--subtle); }
+
+  @media (max-width: 760px) {
+    .wrap { padding: 20px; }
+    .top-bar { padding: 12px 16px; }
+    .pcard-body { grid-template-columns: 1fr; }
+    .col + .col { border-left: none; border-top: 1px solid var(--border); }
+  }
+</style>
+</head>
+<body>
+  <div class="top-bar">
+    <div class="brand">
+      <h1>HCOM Servicing — HLT Updates</h1>
+      <div class="sub">The HLT priorities assigned to me, mapped to the roadmap canvas and offsite action items</div>
+    </div>
+    <a href="/product-portfolio/hcom-servicing/">&larr; Landing Map</a>
+  </div>
+
+  <div class="wrap">
+    <h1 class="page">HCOM Servicing — HLT Updates</h1>
+    <div class="subtitle">Review draft for Stephanie &middot; 24 June 2026 &middot; Working input for the slide-8 update, before editing the deck</div>
+
+    <p class="lead">The HLT deck (slide 8) named me as owner of four servicing priorities. Agent effectiveness (#6) has since moved to Hemani (TPSP), so this covers the three I carry &mdash; #3, #4, and #5 &mdash; and how each maps to the live <strong>roadmap canvas</strong> (the product-delivery source of truth) and the <strong>offsite action-items spreadsheet</strong> (the cross-functional follow-up log), so we can confirm the picture together before the deck gets updated.</p>
+
+    <div class="scorecard">
+      <div class="score-card info"><div class="label">My slide-8 priorities</div><div class="value">3</div><div class="detail">#3, #4, #5 &middot; #6 to Hemani</div></div>
+      <div class="score-card canvas"><div class="label">Canvas roadmap lines</div><div class="value">9</div><div class="detail">Across Q3 2026 – Q1 2027</div></div>
+      <div class="score-card sheet"><div class="label">Spreadsheet items</div><div class="value">10</div><div class="detail">Mapped follow-ups</div></div>
+      <div class="score-card info"><div class="label">HLT audit bugs</div><div class="value">6</div><div class="detail">5 mapped &middot; 1 to confirm</div></div>
+      <div class="score-card flag"><div class="label">Open to confirm</div><div class="value">2</div><div class="detail">Item 16 &middot; Hotel collect charges</div></div>
+    </div>
+
+    <h2>Reference Artifacts</h2>
+    <p class="lead">Every source behind this page, in one place for easy access. SharePoint and Slack links open in a new tab and need EG access.</p>
+    <div class="refs">
+      <div class="ref-card deck">
+        <div class="rk">Deck &middot; 16&ndash;17 Jun 2026</div>
+        <div class="rt">HCOM Servicing Offsite</div>
+        <div class="rd">The full offsite deck &mdash; guiding principles, service-demand metrics, product roadmap, ROW audit, financials, and the differentiated-service strawman.</div>
+        <a class="openbtn" href="https://expediacorp.sharepoint.com/:p:/s/HCOMLT/IQAi2gHpLpFIR4pr9gDYQSKvAV1hCWzcUNnvutExzfurA7s" target="_blank" rel="noopener">Open in SharePoint &nearr;</a>
+      </div>
+      <div class="ref-card deck">
+        <div class="rk">Deck &middot; reviewed 23 Jun 2026</div>
+        <div class="rt">July HLT Servicing Strategy Summary</div>
+        <div class="rd">The executive rollup for HLT Dallas. Slide 8 is the ownership list this page maps; slide 16 is the bug audit.</div>
+        <a class="openbtn" href="https://expediacorp.sharepoint.com/:p:/s/HCOMLT/IQBMutuvyh-FTKZBudkXzJAnAbONjdE9tRie1bINXMkdatY?e=cN5Ii2" target="_blank" rel="noopener">Open in SharePoint &nearr;</a>
+      </div>
+      <div class="ref-card canvas">
+        <div class="rk">Slack canvas &middot; updated 24 Jun 2026</div>
+        <div class="rt">Roadmap Workshop Outcome</div>
+        <div class="rd">The product-delivery source of truth. The &ldquo;Roadmap view&rdquo; below is drawn from this canvas.</div>
+        <a class="openbtn" href="https://expediagroup.enterprise.slack.com/docs/T09D77D4P/F0BBJFM4R1U" target="_blank" rel="noopener">Open in Slack &nearr;</a>
+      </div>
+      <div class="ref-card sheet">
+        <div class="rk">Spreadsheet &middot; 16&ndash;17 Jun 2026</div>
+        <div class="rt">Offsite Action Items</div>
+        <div class="rd">The cross-functional follow-up log. The &ldquo;action-items spreadsheet&rdquo; columns and item numbers on this page come from here.</div>
+        <a class="openbtn" href="https://expediacorp-my.sharepoint.com/:x:/g/personal/stgarner_sea_corp_expecn_com/IQCNXpgQWDjWQql4u841KsQoAU5aznsuXYOOncKr_HPyOjs?e=veLLbq" target="_blank" rel="noopener">Open in SharePoint &nearr;</a>
+      </div>
+      <div class="ref-card tmpl">
+        <div class="rk">Template</div>
+        <div class="rt">Servicing BRD Update Template</div>
+        <div class="rd">The baseline for business cases on the two HCOM-owned gaps &mdash; BRD criteria fused with the business-case framework.</div>
+        <a class="openbtn" href="https://expediacorp-my.sharepoint.com/:w:/g/personal/lmeadow_sea_corp_expecn_com/IQBiIaqK9pzhRI5ogorkASv0AWHwjQR7G8iXJIxCV95Gp0M?e=A5vEV3" target="_blank" rel="noopener">Open in SharePoint &nearr;</a>
+      </div>
+      <div class="ref-card page">
+        <div class="rk">Companion page</div>
+        <div class="rt">Requirement Landing Map</div>
+        <div class="rd">The BRD / offsite / SteerCo mapping against the backlog &mdash; the broader classification view.</div>
+        <a class="openbtn" href="/product-portfolio/hcom-servicing/" target="_blank" rel="noopener">Open page &nearr;</a>
+      </div>
+      <div class="ref-card doc">
+        <div class="rk">Doc &middot; source</div>
+        <div class="rt">Customer Service BRD HCOM 2026</div>
+        <div class="rd">The original requirements document (scored in the prior BRD evaluation). Shared as a file; no live link.</div>
+        <div class="nolink">File only &mdash; no shared link</div>
+      </div>
+      <div class="ref-card doc">
+        <div class="rk">Deck &middot; source</div>
+        <div class="rt">Servicing for HLT Offsite (Mar 2026)</div>
+        <div class="rd">The earlier strategy presentation &mdash; Top-10 priorities and tier GP analysis. Shared as a file; no live link.</div>
+        <div class="nolink">File only &mdash; no shared link</div>
+      </div>
+      <div class="ref-card doc">
+        <div class="rk">Deck &middot; source</div>
+        <div class="rt">HCOM Servicing SteerCo (Jun 2026)</div>
+        <div class="rd">Katie&rsquo;s June SteerCo &mdash; initiative status, Crawl/Walk/Run, Care Guarantee. Shared as a file; no live link.</div>
+        <div class="nolink">File only &mdash; no shared link</div>
+      </div>
+    </div>
+
+    <h2>Roadmap view (Slack canvas)</h2>
+    <p class="lead">The product-delivery source of truth, as it stands on the workshop canvas after the 24 June updates. Features and bugs by quarter.</p>
+    <div class="roadmap">
+      <div class="rm-col q3">
+        <div class="rm-qhead"><span class="q">Q3 2026</span><span class="n">5 items</span></div>
+        <div class="rm-card">
+          <div class="rm-tags"><span class="tag q3">Q3</span><span class="tag feature">Feature</span></div>
+          <div class="rm-name">&lsquo;Where is my refund&rsquo; on H.com</div>
+          <div class="rm-impact">Improve SSER for refunds &middot; refund confirmation email + timeline-view A/B</div>
+          <div class="rm-foot"><span class="rm-owner"><span class="mono">@lmeadow</span> &middot; <span class="mono">@ozhu</span></span><span class="rm-deliver">Jun 2026</span></div>
+        </div>
+        <div class="rm-card">
+          <div class="rm-tags"><span class="tag q3">Q3</span><span class="tag feature">Feature</span></div>
+          <div class="rm-name">AI Help Center release &mdash; all English (EN + GB)</div>
+          <div class="rm-impact">SSER by reducing Help Center contacts &middot; HCOM launch brand</div>
+          <div class="rm-foot"><span class="rm-owner">Olivia / Lindsey</span><span class="rm-deliver">Jul 2026</span></div>
+        </div>
+        <div class="rm-card">
+          <div class="rm-tags"><span class="tag q3">Q3</span><span class="tag feature">Feature</span></div>
+          <div class="rm-name">Make H.com phone numbers discoverable in ROW</div>
+          <div class="rm-impact">Improve DUET for ROW &middot; Nordic / Swedish &ldquo;contact us&rdquo;</div>
+          <div class="rm-foot"><span class="rm-owner"><span class="mono">@lmeadow</span> discovery</span></div>
+        </div>
+        <div class="rm-card">
+          <div class="rm-tags"><span class="tag q3">Q3</span><span class="tag bug">Bug</span></div>
+          <div class="rm-name">Replace old VA logos (BR, KR, TR, CH, HK)</div>
+          <div class="rm-impact">Legacy branding in chat</div>
+          <div class="links"><a class="lnk" href="https://expediagroup.atlassian.net/browse/TCP-18469" target="_blank" rel="noopener">TCP-18469 &nearr;</a></div>
+          <div class="rm-foot"><span class="rm-owner"><span class="mono">@ozhu</span> &rarr; eng</span></div>
+        </div>
+        <div class="rm-card">
+          <div class="rm-tags"><span class="tag q3">Q3</span><span class="tag bug">Bug</span></div>
+          <div class="rm-name">Fix VA surfacing wrong phone number (Turkey)</div>
+          <div class="rm-impact">Wrong contact number in VA</div>
+          <div class="rm-foot"><span class="rm-owner"><span class="mono">@ozhu</span> &rarr; eng</span></div>
+        </div>
+      </div>
+      <div class="rm-col q4">
+        <div class="rm-qhead"><span class="q">Q4 2026</span><span class="n">3 items</span></div>
+        <div class="rm-card">
+          <div class="rm-tags"><span class="tag q4">Q4</span><span class="tag feature">Feature</span></div>
+          <div class="rm-name">Asymmetrical multi-room cancellation</div>
+          <div class="rm-impact">Maintain SSER with the new shopping UX</div>
+          <div class="links"><a class="lnk" href="https://expediagroup.atlassian.net/wiki/spaces/~712020900fd4bed2d14f49bb5bb7ee1d4d3158/pages/1085989302/PRD+Cancellations" target="_blank" rel="noopener">PRD: Cancellations &nearr;</a></div>
+          <div class="rm-foot"><span class="rm-owner"><span class="mono">@ozhu</span> &middot; <span class="mono">@vajohnson</span></span><span class="rm-deliver">Nov 2026</span></div>
+        </div>
+        <div class="rm-card">
+          <div class="rm-tags"><span class="tag q4">Q4</span><span class="tag feature">Feature</span></div>
+          <div class="rm-name">Waivers &mdash; 24h self-service + Lodging Waiver Request</div>
+          <div class="rm-impact">Improve DUET &middot; OKC + cash; clarify supplier requirements</div>
+          <div class="rm-foot"><span class="rm-owner"><span class="mono">@ranichols</span> &middot; <span class="mono">@lhami</span> &middot; <span class="mono">@michalee</span></span></div>
+        </div>
+        <div class="rm-card">
+          <div class="rm-tags"><span class="tag q4">Q4</span><span class="tag feature">Feature</span></div>
+          <div class="rm-name">Changes for 3PI inventory</div>
+          <div class="rm-impact">Improve SSER &middot; new on canvas</div>
+          <div class="links"><a class="lnk" href="https://expediagroup.atlassian.net/wiki/spaces/~712020900fd4bed2d14f49bb5bb7ee1d4d3158/pages/1084935124/3PI+Self-Service+Changes+-+Program+Overview" target="_blank" rel="noopener">3PI Self-Service Changes &nearr;</a></div>
+          <div class="rm-foot"><span class="rm-owner">Olivia</span></div>
+        </div>
+      </div>
+      <div class="rm-col q1">
+        <div class="rm-qhead"><span class="q">Q1 2027</span><span class="n">1 item</span></div>
+        <div class="rm-card">
+          <div class="rm-tags"><span class="tag q1">Q1 2027</span><span class="tag feature">Feature</span></div>
+          <div class="rm-name">True Change &mdash; dropping a night</div>
+          <div class="rm-impact">Improve SSER &middot; size demand; supplier-policy vs rate-imposed</div>
+          <div class="rm-foot"><span class="rm-owner"><span class="mono">@ranichols</span>&rsquo;s team &middot; <span class="mono">@argopalakrishn</span></span></div>
+        </div>
+      </div>
+    </div>
+
+    <h2>HLT Deck Slide 8 Ownership + Mappings</h2>
+
+    <!-- P3 -->
+    <div class="pcard">
+      <div class="pcard-head">
+        <div class="pcard-num">3</div>
+        <div class="pcard-title">
+          <div class="t">Change / Cancel</div>
+          <div class="role">My role: go-between &middot; delivery: @ranichols&rsquo;s team + Olivia</div>
+        </div>
+      </div>
+      <div class="pcard-body">
+        <div class="col canvas">
+          <h3><span class="dot"></span>Roadmap canvas</h3>
+          <div class="item">
+            <div class="name">Waivers</div>
+            <div class="meta"><span class="tag q4">Q4 2026</span><span class="tag feature">Feature</span> Improve DUET &middot; lead <span class="mono">@ranichols</span></div>
+            <ul class="sublist">
+              <li>24-hour self-service &mdash; confirm experience + whether we offer both OKC and cash refund (<span class="mono">@ranichols</span>)</li>
+              <li>Lodging Waiver Request &mdash; traveler self-service: clarify/define requirements (<span class="mono">@ranichols</span>)</li>
+              <li>Crisis waivers &mdash; part of the waivers initiative; launched earlier than the 24-hour cancel feature (<span class="mono">@ranichols</span>; Lily / Michael in her absence)</li>
+            </ul>
+          </div>
+          <div class="item">
+            <div class="name">True Change &mdash; dropping a night</div>
+            <div class="meta"><span class="tag q1">Q1 2027</span><span class="tag feature">Feature</span> Reduce voluntary-change contacts</div>
+            <div class="owner"><span class="mono">@ranichols</span>&rsquo;s team &middot; <span class="mono">@argopalakrishn</span></div>
+          </div>
+          <div class="item">
+            <div class="name">Asymmetrical multi-room cancellation</div>
+            <div class="meta"><span class="tag q4">Q4 2026</span><span class="tag feature">Feature</span> Maintain SSER on new shopping UX</div>
+            <div class="owner"><span class="mono">@ozhu</span> &middot; <span class="mono">@vajohnson</span> &middot; design by Nov 2026</div>
+            <div class="links"><a class="lnk" href="https://expediagroup.atlassian.net/wiki/spaces/~712020900fd4bed2d14f49bb5bb7ee1d4d3158/pages/1085989302/PRD+Cancellations" target="_blank" rel="noopener">PRD: Cancellations &nearr;</a></div>
+          </div>
+          <div class="item">
+            <div class="name">Changes for 3PI inventory</div>
+            <div class="meta"><span class="tag q4">Q4 2026</span><span class="tag feature">Feature</span> Improve SSER</div>
+            <div class="owner">Olivia &middot; new on canvas</div>
+            <div class="links"><a class="lnk" href="https://expediagroup.atlassian.net/wiki/spaces/~712020900fd4bed2d14f49bb5bb7ee1d4d3158/pages/1084935124/3PI+Self-Service+Changes+-+Program+Overview" target="_blank" rel="noopener">3PI Self-Service Changes &nearr;</a></div>
+          </div>
+        </div>
+        <div class="col sheet">
+          <h3><span class="dot"></span>Action-items spreadsheet</h3>
+          <div class="item">
+            <div class="name">Item 4 &mdash; analyze business-traveler change types; assess need for enhanced True Change</div>
+            <div class="owner">AK</div>
+          </div>
+          <div class="item">
+            <div class="name">Item 25 &mdash; ROW True Change launch dates</div>
+            <div class="owner">AK</div>
+          </div>
+          <div class="item">
+            <div class="name">TPSP list &mdash; Waiver cash or OKC (Q3); agent tools: 24h waiver, multi-rooms</div>
+            <div class="owner">TPSP</div>
+          </div>
+        </div>
+      </div>
+      <div class="pcard-foot"><strong>To confirm:</strong> multi-room and 3PI may read better under Self-Service (#5) than Change/Cancel.</div>
+    </div>
+
+    <!-- P4 -->
+    <div class="pcard">
+      <div class="pcard-head">
+        <div class="pcard-num">4</div>
+        <div class="pcard-title">
+          <div class="t">Billing &amp; Refund Status</div>
+          <div class="role">My role: go-between &middot; both of my owned spreadsheet items sit here</div>
+        </div>
+      </div>
+      <div class="pcard-body">
+        <div class="col canvas">
+          <h3><span class="dot"></span>Roadmap canvas</h3>
+          <div class="item">
+            <div class="name">&lsquo;Where is my refund&rsquo; on H.com</div>
+            <div class="meta"><span class="tag q3">Q3 2026</span><span class="tag feature">Feature</span> Improve SSER for refunds &middot; delivery June 2026</div>
+            <ul class="sublist">
+              <li>Email gap &mdash; Lucy to confirm with Stephanie, then address with UMP</li>
+              <li>Timeline-view gap &mdash; Lucy to confirm with Stephanie; ensure it is captured in Olivia&rsquo;s A/B test follow-up</li>
+            </ul>
+          </div>
+        </div>
+        <div class="col sheet">
+          <h3><span class="dot"></span>Action-items spreadsheet</h3>
+          <div class="item">
+            <div class="name">Item 10 &mdash; holistic &ldquo;Where&rsquo;s My Refund&rdquo; Jira (email + refund status)</div>
+            <div class="owner">Mine &middot; umbrella for the canvas line</div>
+          </div>
+          <div class="item">
+            <div class="name">Item 11 &mdash; refund process designs (multi-room, change)</div>
+            <div class="owner">Lindsey &middot; complete</div>
+            <ul class="sublist">
+              <li>Clarify which use cases are included in AIHC</li>
+              <li>Clarify what information will be presented to the traveler for those use cases</li>
+              <li>Clarify the gap between current VA capabilities and the initial AIHC release</li>
+              <li>Determine how and when that gap will be addressed</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="pcard-foot"><strong>Note:</strong> the canvas line is the umbrella for item 10. See <em>For Confirmation</em> below for the related booking-receipt gap (item 16).</div>
+    </div>
+
+    <!-- P5 -->
+    <div class="pcard">
+      <div class="pcard-head">
+        <div class="pcard-num">5</div>
+        <div class="pcard-title">
+          <div class="t">Self-Service &amp; Help Center</div>
+          <div class="role">My role: lead ROW phone/article discovery + open the Jira; bugs go to Olivia&rsquo;s eng team</div>
+        </div>
+      </div>
+      <div class="pcard-body">
+        <div class="col canvas">
+          <h3><span class="dot"></span>Roadmap canvas</h3>
+          <div class="item">
+            <div class="name">AI Help Center release &mdash; all English (EN + GB)</div>
+            <div class="meta"><span class="tag q3">Q3 2026</span><span class="tag feature">Feature</span> July 2026 &middot; HCOM is launch brand</div>
+          </div>
+          <div class="item">
+            <div class="name">Make H.com phone numbers discoverable in ROW (+ Danish &ldquo;Contact Us&rdquo; article)</div>
+            <div class="meta"><span class="tag q3">Q3 2026</span><span class="tag feature">Feature</span> Improve DUET for ROW</div>
+            <div class="owner">My discovery &middot; product bug, Q3 &middot; team TBD by Olivia</div>
+            <ul class="sublist">
+              <li>Lucy to work with Stephanie to define the customer problem and requirements</li>
+            </ul>
+          </div>
+          <div class="item">
+            <div class="name">Replace old VA logos (BR, KR, TR, CH, HK)</div>
+            <div class="meta"><span class="tag q3">Q3 2026</span><span class="tag bug">Bug</span> Olivia &rarr; eng</div>
+            <div class="links"><a class="lnk" href="https://expediagroup.atlassian.net/browse/TCP-18469" target="_blank" rel="noopener">TCP-18469 &nearr;</a></div>
+          </div>
+          <div class="item">
+            <div class="name">Fix VA surfacing wrong phone number (Turkey)</div>
+            <div class="meta"><span class="tag q3">Q3 2026</span><span class="tag bug">Bug</span> Olivia &rarr; eng</div>
+          </div>
+        </div>
+        <div class="col sheet">
+          <h3><span class="dot"></span>Action-items spreadsheet</h3>
+          <div class="item">
+            <div class="name">Item 9 &mdash; align self-service across web, AIHC, VA; define VA role post-AIHC</div>
+            <div class="owner">Olivia</div>
+            <ul class="sublist">
+              <li>Clarify which use cases are included in AIHC</li>
+              <li>Clarify what information will be presented to the traveler for those use cases</li>
+              <li>Clarify the gap between current VA capabilities and the initial AIHC release</li>
+              <li>Determine how and when that gap will be addressed</li>
+            </ul>
+          </div>
+          <div class="item">
+            <div class="name">Item 23 &mdash; legacy Hotels.com branding inconsistencies</div>
+            <div class="owner">Olivia</div>
+          </div>
+          <div class="item">
+            <div class="name">ROW accessibility notes &mdash; Switzerland / Nordics numbers not discoverable</div>
+            <div class="owner">From the ROW audit</div>
+          </div>
+        </div>
+      </div>
+      <div class="pcard-foot"><strong>Note:</strong> AIHC note on canvas &mdash; &ldquo;should solve the agent/human quality problem related to intent detection.&rdquo;</div>
+    </div>
+
+    <h2>Known Bugs (HLT Audit)</h2>
+    <p class="lead">The bug list from the HLT deck (slide 16), with where each one is tracked &mdash; on the product roadmap or with the responsible team. Five are mapped; Hotel Collect Charges is the one still to confirm.</p>
+    <div class="callout" style="border-left-color: var(--blue);">
+      <div class="ct">The ask for Stephanie</div>
+      <p style="font-size:13px;margin:0;">Confirm this is the current, concrete list of known bugs &mdash; nothing missing, nothing stale &mdash; and validate that each mapping (roadmap line or owning team) is right. This becomes the agreed bug list we track from here.</p>
+    </div>
+    <table class="bugs">
+      <thead>
+        <tr>
+          <th>Bug</th>
+          <th>Where it maps</th>
+          <th>Owner</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><div class="bug">Call Center phone number hard to find</div></td>
+          <td>Canvas: <em>Make H.com phone numbers discoverable in ROW</em> <span class="tag q3">Q3</span> (#5)<div class="sub">+ ROW accessibility notes (Switz/Nordics)</div></td>
+          <td>Lucy to open Jira</td>
+          <td><span class="tag road">On roadmap</span></td>
+        </tr>
+        <tr>
+          <td><div class="bug">Virtual / Human agent quality</div></td>
+          <td>Canvas: <em>AI Help Center release</em> <span class="tag q3">Q3</span> (#5)<div class="sub">+ item 21 Language IO quality (#6)</div></td>
+          <td>Addressed by AIHC; TPSP for LIO</td>
+          <td><span class="tag road">On roadmap</span></td>
+        </tr>
+        <tr>
+          <td><div class="bug">Missing refund skills</div></td>
+          <td>Canvas: <em>&lsquo;Where is my refund&rsquo; on H.com</em> &mdash; email + timeline <span class="tag q3">Q3</span> (#4)</td>
+          <td>Olivia / Lucy</td>
+          <td><span class="tag road">On roadmap</span></td>
+        </tr>
+        <tr>
+          <td><div class="bug">Legacy logo in chat</div><div class="sub">BR, KR, TR, CH, HK</div></td>
+          <td>Canvas: <em>Replace old VA logos</em> <span class="tag bug">Bug</span> (#5)<div class="sub">+ item 23 legacy branding</div></td>
+          <td>Olivia chasing eng</td>
+          <td><span class="tag team">With eng</span></td>
+        </tr>
+        <tr>
+          <td><div class="bug">IVR can&rsquo;t authenticate bookings</div></td>
+          <td>Item 22 (non-English markets) &mdash; TPSP (#6)</td>
+          <td>TPSP &middot; AK investigating</td>
+          <td><span class="tag team">With TPSP</span></td>
+        </tr>
+        <tr>
+          <td><div class="bug">Hotel collect charges</div></td>
+          <td>No confirmed home yet<div class="sub">possibly UK pay-later early charging (item 14)</div></td>
+          <td>TBD</td>
+          <td><span class="tag confirm">For confirmation</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>For Confirmation</h2>
+    <div class="confirm-card">
+      <div class="confirm-head">
+        <span class="tag sheet">Item 16</span>
+        <span class="confirm-title">Booking-receipt download gap (ROW)</span>
+      </div>
+      <div class="confirm-body">
+        <p>No self-serve booking-receipt download in any ROW POSA (the US has it). Logged as a top-5 contact driver, fix path is the MyTrips web flow.</p>
+        <div class="confirm-meta">
+          <span><strong>Owner:</strong> mine</span>
+          <span><strong>Status:</strong> not yet on the canvas</span>
+          <span><strong>Source:</strong> spreadsheet row 21 / item 16</span>
+          <span><strong>Relates to:</strong> #4 Billing &amp; Refund Status</span>
+        </div>
+        <p class="confirm-q"><strong>To confirm with Stephanie:</strong> what exactly does this gap cover, and should it become its own canvas line under #4?</p>
+      </div>
+    </div>
+
+    <div class="confirm-card">
+      <div class="confirm-head">
+        <span class="tag confirm">HLT bug</span>
+        <span class="confirm-title">Hotel collect charges</span>
+      </div>
+      <div class="confirm-body">
+        <p>Listed as a bug in the HLT audit (slide 16) with a &ldquo;(?)&rdquo;. No confirmed roadmap or team home yet.</p>
+        <div class="confirm-meta">
+          <span><strong>Owner:</strong> TBD</span>
+          <span><strong>Status:</strong> no home yet</span>
+          <span><strong>Source:</strong> HLT deck slide 16</span>
+          <span><strong>Possible match:</strong> UK pay-later early charging (item 14)</span>
+        </div>
+        <p class="confirm-q"><strong>To confirm with Stephanie:</strong> what does this bug actually describe, and is it the same as the UK pay-later early-charging issue or something distinct?</p>
+      </div>
+    </div>
+
+    <div class="callout">
+      <div class="ct">Two things to settle before I update the deck</div>
+      <ul>
+        <li><strong>Ownership reality vs the deck.</strong> Slide 8 lists me as &ldquo;owner&rdquo; of all four, but delivery actually sits with Olivia&rsquo;s team (and Rachel Nichols&rsquo; team for waivers / True Change). The agreed model is that I&rsquo;m the go-between and gate, not the delivery owner &mdash; slide 8 should reflect that split.</li>
+        <li><strong>Ambiguous placement.</strong> Multi-room cancellation and 3PI inventory could sit under Self-Service (#5) rather than Change/Cancel (#3). Worth aligning so the deck is clean. (Agent effectiveness, #6, has moved to Hemani / TPSP and is off this page.)</li>
+      </ul>
+    </div>
+
+    <div class="footer">
+      Source: <em>HCOM Servicing Strategy Analysis</em> research doc &middot; HLT deck slide 8, roadmap workshop canvas (updated 24 June 2026), and offsite action-items spreadsheet (16&ndash;17 June 2026). Draft for review; not the final deck.
+    </div>
+  </div>
+</body>
+</html>

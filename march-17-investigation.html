@@ -1,0 +1,1043 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HCOM App SV CVR Decline — March 17 Investigation</title>
+<style>
+  :root {
+    --navy: #171c38;
+    --teal: #00a3b5;
+    --blue: #3d78f2;
+    --purple: #784cc7;
+    --amber: #d99e14;
+    --green: #2ea673;
+    --coral: #e56152;
+    --dark: #1e2129;
+    --subtle: #808899;
+    --bg: #f5f7fa;
+    --white: #ffffff;
+    --border: #dce0e8;
+    --shadow: 0 2px 8px rgba(0,0,0,0.06);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--dark); line-height: 1.6; }
+
+  .top-bar { background: var(--navy); padding: 14px 40px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
+  .top-bar h1 { color: #fff; font-size: 20px; font-weight: 700; }
+  .top-bar .sub { color: #9a9fb8; font-size: 12px; margin-top: 2px; }
+  .top-bar a { color: #9a9fb8; text-decoration: none; font-size: 13px; }
+  .top-bar a:hover { color: #fff; }
+
+  .layout { display: flex; max-width: 1400px; margin: 0 auto; }
+  .sidebar { width: 260px; min-width: 260px; background: var(--white); border-right: 1px solid var(--border); padding: 24px 0; position: sticky; top: 52px; height: calc(100vh - 52px); overflow-y: auto; }
+  .sidebar .nav-section { padding: 0 20px; margin-bottom: 20px; }
+  .sidebar .nav-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--subtle); margin-bottom: 8px; }
+  .sidebar a { display: block; padding: 5px 20px; font-size: 13px; color: var(--dark); text-decoration: none; border-left: 3px solid transparent; }
+  .sidebar a:hover { background: var(--bg); border-left-color: var(--teal); }
+  .sidebar a.active { background: #eef6ff; border-left-color: var(--blue); font-weight: 600; }
+
+  .main { flex: 1; padding: 32px 48px; min-width: 0; }
+  .main h1 { font-size: 28px; font-weight: 800; margin-bottom: 8px; color: var(--navy); }
+  .main .subtitle { font-size: 15px; color: var(--subtle); margin-bottom: 32px; }
+  .main h2 { font-size: 20px; font-weight: 700; margin: 40px 0 16px; padding-bottom: 8px; border-bottom: 2px solid var(--border); color: var(--navy); }
+  .main h3 { font-size: 16px; font-weight: 700; margin: 28px 0 12px; color: var(--dark); }
+  .main h4 { font-size: 14px; font-weight: 700; margin: 20px 0 8px; color: var(--dark); }
+  .main p { margin-bottom: 12px; font-size: 14px; }
+
+  .card { background: var(--white); border-radius: 10px; box-shadow: var(--shadow); padding: 20px 24px; margin-bottom: 16px; }
+  .badge { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; }
+  .badge.red { background: #fef2f2; color: #991b1b; }
+  .badge.amber { background: #fef9c3; color: #92400e; }
+  .badge.green { background: #f0fdf4; color: #166534; }
+  .badge.blue { background: #eff6ff; color: #1e40af; }
+  .badge.purple { background: #faf5ff; color: #6b21a8; }
+  .badge.teal { background: #f0fdfa; color: #115e59; }
+
+  table { width: 100%; border-collapse: collapse; margin: 12px 0 20px; font-size: 13px; }
+  th { text-align: left; padding: 10px 12px; background: var(--navy); color: #fff; font-weight: 600; font-size: 12px; }
+  th:first-child { border-radius: 6px 0 0 0; }
+  th:last-child { border-radius: 0 6px 0 0; }
+  td { padding: 10px 12px; border-bottom: 1px solid var(--border); }
+  tr:hover td { background: #f9fafb; }
+  a { color: var(--blue); }
+
+  .callout { background: #eff6ff; border-left: 4px solid var(--blue); border-radius: 6px; padding: 16px 20px; margin: 16px 0; font-size: 13px; }
+  .callout.warning { background: #fef9c3; border-left-color: var(--amber); }
+  .callout.critical { background: #fef2f2; border-left-color: #991b1b; }
+  .callout.success { background: #f0fdf4; border-left-color: var(--green); }
+
+  .kpi-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin: 20px 0 28px; }
+  .kpi { background: var(--white); border-radius: 10px; box-shadow: var(--shadow); padding: 20px; text-align: center; }
+  .kpi .number { font-size: 36px; font-weight: 800; color: var(--navy); line-height: 1.1; }
+  .kpi .label { font-size: 12px; color: var(--subtle); margin-top: 6px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.04em; }
+  .kpi .detail { font-size: 11px; color: var(--subtle); margin-top: 4px; }
+  .kpi.highlight { border-top: 3px solid var(--coral); }
+  .kpi.highlight .number { color: var(--coral); }
+
+  .bar-chart { margin: 16px 0 24px; }
+  .bar-row { display: flex; align-items: center; margin-bottom: 6px; }
+  .bar-label { width: 100px; font-size: 12px; color: var(--subtle); text-align: right; padding-right: 12px; flex-shrink: 0; }
+  .bar-track { flex: 1; background: #eef0f4; border-radius: 4px; height: 24px; position: relative; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 4px; display: flex; align-items: center; padding-left: 8px; font-size: 11px; font-weight: 600; color: #fff; min-width: 32px; transition: width 0.6s ease; }
+  .bar-fill.navy { background: var(--navy); }
+  .bar-fill.blue { background: var(--blue); }
+  .bar-fill.teal { background: var(--teal); }
+  .bar-fill.purple { background: var(--purple); }
+  .bar-fill.coral { background: var(--coral); }
+  .bar-fill.amber { background: var(--amber); }
+  .bar-fill.green { background: var(--green); }
+  .weekend-tag { display: inline-block; background: #fef2f2; color: #991b1b; font-size: 10px; font-weight: 600; padding: 1px 6px; border-radius: 3px; margin-left: 4px; vertical-align: middle; }
+
+  .timeline { position: relative; margin: 20px 0 32px 20px; padding-left: 24px; border-left: 2px solid var(--border); }
+  .timeline-item { position: relative; margin-bottom: 20px; }
+  .timeline-item::before { content: ''; position: absolute; left: -31px; top: 4px; width: 12px; height: 12px; background: var(--blue); border: 2px solid var(--white); border-radius: 50%; box-shadow: 0 0 0 2px var(--blue); }
+  .timeline-item.critical::before { background: var(--coral); box-shadow: 0 0 0 2px var(--coral); }
+  .timeline-item.success::before { background: var(--green); box-shadow: 0 0 0 2px var(--green); }
+  .timeline-date { font-size: 11px; font-weight: 700; color: var(--subtle); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
+  .timeline-content { font-size: 13px; }
+
+  .people-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 8px; margin: 12px 0; }
+  .person-tag { background: var(--white); border: 1px solid var(--border); border-radius: 6px; padding: 8px 12px; font-size: 12px; }
+  .person-tag .name { font-weight: 600; color: var(--dark); }
+  .person-tag .role { color: var(--subtle); font-size: 11px; margin-top: 2px; }
+
+  .waterfall { margin: 16px 0; }
+  .waterfall-item { display: flex; align-items: center; margin-bottom: 4px; }
+  .waterfall-label { width: 260px; font-size: 12px; padding-right: 12px; text-align: right; flex-shrink: 0; }
+  .waterfall-bar { height: 22px; border-radius: 3px; display: flex; align-items: center; padding: 0 8px; font-size: 11px; font-weight: 600; color: #fff; }
+
+  .thread-list { margin: 12px 0; }
+  .thread-item { background: var(--white); border: 1px solid var(--border); border-radius: 8px; padding: 14px 18px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
+  .thread-item .thread-title { font-size: 13px; font-weight: 600; }
+  .thread-item .thread-title a { color: var(--blue); text-decoration: underline; }
+  .thread-item .thread-title a:hover { color: #1e40af; }
+  .thread-item .thread-meta { font-size: 11px; color: var(--subtle); margin-top: 2px; }
+  .thread-item .thread-count { font-size: 20px; font-weight: 800; color: var(--navy); }
+
+  ul { margin: 8px 0 16px 24px; font-size: 13px; }
+  li { margin-bottom: 4px; }
+  .muted { color: var(--subtle); }
+
+  @media (max-width: 900px) {
+    .sidebar { display: none; }
+    .main { padding: 20px 16px; }
+    .kpi-row { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <div>
+    <h1>HCOM App SV CVR Decline Investigation</h1>
+    <div class="sub">March 17, 2026 &mdash; Slack Channel Analysis &amp; Effort Report</div>
+  </div>
+  <a href="index.html">&larr; Portfolio Home</a>
+</div>
+
+<div class="layout">
+  <nav class="sidebar">
+    <div class="nav-section">
+      <div class="nav-label">Overview</div>
+      <a href="#executive-summary" class="active">Executive Summary</a>
+      <a href="#key-metrics">Key Metrics</a>
+      <a href="#business-impact">Business Impact</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-label">Engagement</div>
+      <a href="#daily-activity">Daily Activity</a>
+      <a href="#weekly-breakdown">Weekly Breakdown</a>
+      <a href="#top-contributors">Top Contributors</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-label">Investigation</div>
+      <a href="#investigation-threads">Investigation Threads</a>
+      <a href="#timeline">Key Events Timeline</a>
+      <a href="#cross-org">Cross-Org Participation</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-label">Impact</div>
+      <a href="#all-participants">All Participants</a>
+      <a href="#artifacts">Artifacts Created</a>
+      <a href="#effort-cost">Effort &amp; Cost</a>
+    </div>
+  </nav>
+
+  <div class="main">
+    <h1>HCOM App SV CVR Decline Investigation</h1>
+    <p class="subtitle">Analysis of Slack channel <strong>#tmp-hcom-app-svcvr-decline-mar17</strong> &mdash; Quantifying the cross-organizational effort invested in diagnosing and resolving the Hotels.com app conversion rate decline first observed on March 17, 2026.</p>
+
+    <!-- EXECUTIVE SUMMARY -->
+    <h2 id="executive-summary">Executive Summary</h2>
+    <div class="callout critical">
+      <strong>Incident:</strong> A significant decline in Hotels.com App Shopping Visit Conversion Rate (SV CVR) was observed starting March 17, 2026, unique to HCOM and affecting both iOS and Android. The Pure SV CVR gap was measured at <strong>&minus;2.12 percentage points</strong> between periods, with approximately 52% attributed to identified root causes. PAX estimated the daily financial impact at <strong>~$487k/day</strong>.
+    </div>
+    <p>A dedicated Slack channel was created on <strong>March 23, 2026</strong> by Sophie Jones to coordinate the investigation. Over the following 31 days, the channel grew to <strong>305 members</strong> spanning 8+ organizational groups plus an external vendor (Quantum Metric). Dozens of active contributors drove investigation across 20+ threads, with significant weekend work on 4+ weekends. The investigation involved recurring syncs, multiple parallel engineering workstreams, financial impact modeling, crash analysis, pricing deep-dives, and cross-team coordination at scale.</p>
+
+    <!-- KEY METRICS -->
+    <h2 id="key-metrics">Key Metrics at a Glance</h2>
+    <div class="kpi-row">
+      <div class="kpi highlight">
+        <div class="number">&minus;2.12 pts</div>
+        <div class="label">Pure SV CVR Gap</div>
+        <div class="detail">YoY between periods</div>
+      </div>
+      <div class="kpi highlight">
+        <div class="number">~$487k</div>
+        <div class="label">Est. Daily Impact</div>
+        <div class="detail">PAX estimate</div>
+      </div>
+      <div class="kpi">
+        <div class="number">31</div>
+        <div class="label">Days Active</div>
+        <div class="detail">Mar 23 &ndash; Apr 22</div>
+      </div>
+      <div class="kpi">
+        <div class="number">305</div>
+        <div class="label">Channel Members</div>
+        <div class="detail">Across 8+ org groups</div>
+      </div>
+      <div class="kpi">
+        <div class="number">20+</div>
+        <div class="label">Investigation Threads</div>
+        <div class="detail">Parallel workstreams</div>
+      </div>
+      <div class="kpi">
+        <div class="number">4+</div>
+        <div class="label">Weekends Worked</div>
+        <div class="detail">Mar 29-30, Apr 12-13, 19-20</div>
+      </div>
+      <div class="kpi">
+        <div class="number">52%</div>
+        <div class="label">Gap Explained</div>
+        <div class="detail">Of known root causes</div>
+      </div>
+    </div>
+
+    <!-- BUSINESS IMPACT -->
+    <h2 id="business-impact">Business Impact</h2>
+    <div class="card">
+      <h3>CVR Waterfall &mdash; Sized Impacts</h3>
+      <p class="muted">Pure SV CVR gap of &minus;2.12 pts decomposed into known contributors. Approximately 52% of the total gap has been attributed to identified issues.</p>
+      <div class="waterfall">
+        <div class="waterfall-item">
+          <div class="waterfall-label">App Crashes (+91% vs baseline)</div>
+          <div class="waterfall-bar" style="width: 28%; background: var(--coral);">Major</div>
+        </div>
+        <div class="waterfall-item">
+          <div class="waterfall-label">iOS v2026.11 Instability</div>
+          <div class="waterfall-bar" style="width: 22%; background: var(--amber);">Significant</div>
+        </div>
+        <div class="waterfall-item">
+          <div class="waterfall-label">UITextField / QM SDK Crashes</div>
+          <div class="waterfall-bar" style="width: 14%; background: var(--purple);">Moderate</div>
+        </div>
+        <div class="waterfall-item">
+          <div class="waterfall-label">DDoS Attack (Apr 19)</div>
+          <div class="waterfall-bar" style="width: 18%; background: var(--navy);">Significant</div>
+        </div>
+        <div class="waterfall-item">
+          <div class="waterfall-label">Price Tracking Clickstream Bug</div>
+          <div class="waterfall-bar" style="width: 10%; background: var(--teal);">Minor</div>
+        </div>
+        <div class="waterfall-item">
+          <div class="waterfall-label" style="color: var(--coral); font-weight: 600;">Unexplained (~48%)</div>
+          <div class="waterfall-bar" style="width: 40%; background: #dce0e8; color: var(--dark);">Under investigation</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DAILY ACTIVITY -->
+    <h2 id="daily-activity">Daily Activity</h2>
+    <div class="card">
+      <h3>Messages by Day (Estimated)</h3>
+      <p class="muted">Based on Glean-indexed Slack data. Includes both top-level messages and thread replies.</p>
+      <h4>Week 1: Channel Launch &amp; Initial Investigation (Mar 23&ndash;29)</h4>
+      <div class="bar-chart">
+        <div class="bar-row">
+          <div class="bar-label">Mar 23 Sun</div>
+          <div class="bar-track"><div class="bar-fill navy" style="width: 5%;">~3 <span class="weekend-tag">WEEKEND</span></div></div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Mar 24 Mon</div>
+          <div class="bar-track"><div class="bar-fill blue" style="width: 10%;">~6</div></div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Mar 25 Tue</div>
+          <div class="bar-track"><div class="bar-fill blue" style="width: 42%;">~25+</div></div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Mar 26 Wed</div>
+          <div class="bar-track"><div class="bar-fill blue" style="width: 50%;">~30+</div></div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Mar 27 Thu</div>
+          <div class="bar-track"><div class="bar-fill blue" style="width: 33%;">~20+</div></div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Mar 28 Fri</div>
+          <div class="bar-track"><div class="bar-fill teal" style="width: 17%;">~10+</div></div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Mar 29 Sat</div>
+          <div class="bar-track"><div class="bar-fill coral" style="width: 8%;">~5 <span class="weekend-tag">WEEKEND</span></div></div>
+        </div>
+      </div>
+      <h4>Week 2: Hypothesis Validation &amp; Deeper Dives (Mar 30&ndash;Apr 5)</h4>
+      <div class="bar-chart">
+        <div class="bar-row">
+          <div class="bar-label">Mar 30 Sun</div>
+          <div class="bar-track"><div class="bar-fill coral" style="width: 5%;">~3 <span class="weekend-tag">WEEKEND</span></div></div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Mar 31 Mon</div>
+          <div class="bar-track"><div class="bar-fill blue" style="width: 25%;">~15+</div></div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Apr 1 Tue</div>
+          <div class="bar-track"><div class="bar-fill blue" style="width: 17%;">~10+</div></div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Apr 2 Wed</div>
+          <div class="bar-track"><div class="bar-fill blue" style="width: 17%;">~10+</div></div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Apr 3 Thu</div>
+          <div class="bar-track"><div class="bar-fill teal" style="width: 8%;">~5</div></div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Apr 4 Fri</div>
+          <div class="bar-track"><div class="bar-fill teal" style="width: 8%;">~5</div></div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Apr 5 Sat</div>
+          <div class="bar-track"><div class="bar-fill coral" style="width: 3%;">~2 <span class="weekend-tag">WEEKEND</span></div></div>
+        </div>
+      </div>
+      <h4>Week 3: Monitoring &amp; Second Wave (Apr 6&ndash;12)</h4>
+      <div class="bar-chart">
+        <div class="bar-row">
+          <div class="bar-label">Apr 6 Sun</div>
+          <div class="bar-track"><div class="bar-fill coral" style="width: 3%;">~2 <span class="weekend-tag">WEEKEND</span></div></div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Apr 7 Mon</div>
+          <div class="bar-track"><div class="bar-fill blue" style="width: 17%;">~10+</div></div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Apr 8 Tue</div>
+          <div class="bar-track"><div class="bar-fill blue" style="width: 13%;">~8</div></div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Apr 9 Wed</div>
+          <div class="bar-track"><div class="bar-fill teal" style="width: 8%;">~5</div></div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Apr 10 Thu</div>
+          <div class="bar-track"><div class="bar-fill navy" style="width: 25%;">~15</div></div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Apr 11 Fri</div>
+          <div class="bar-track"><div class="bar-fill blue" style="width: 42%;">~25+</div></div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Apr 12 Sat</div>
+          <div class="bar-track"><div class="bar-fill coral" style="width: 8%;">~5 <span class="weekend-tag">WEEKEND</span></div></div>
+        </div>
+      </div>
+      <h4>Week 4: Escalation &amp; Parallel Deep-Dives (Apr 13&ndash;19)</h4>
+      <div class="bar-chart">
+        <div class="bar-row">
+          <div class="bar-label">Apr 13 Sun</div>
+          <div class="bar-track"><div class="bar-fill coral" style="width: 100%;">~60+ <span class="weekend-tag">WEEKEND</span></div></div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Apr 14 Mon</div>
+          <div class="bar-track"><div class="bar-fill blue" style="width: 50%;">~30+</div></div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Apr 15 Tue</div>
+          <div class="bar-track"><div class="bar-fill blue" style="width: 25%;">~15+</div></div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Apr 16 Wed</div>
+          <div class="bar-track"><div class="bar-fill teal" style="width: 8%;">~5</div></div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Apr 17 Thu</div>
+          <div class="bar-track"><div class="bar-fill teal" style="width: 5%;">~3</div></div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Apr 18 Fri</div>
+          <div class="bar-track"><div class="bar-fill teal" style="width: 5%;">~3</div></div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Apr 19 Sat</div>
+          <div class="bar-track"><div class="bar-fill coral" style="width: 25%;">~15 <span class="weekend-tag">WEEKEND</span></div></div>
+        </div>
+      </div>
+      <h4>Week 5: Normalization &amp; Ongoing Monitoring (Apr 20&ndash;22)</h4>
+      <div class="bar-chart">
+        <div class="bar-row">
+          <div class="bar-label">Apr 20 Sun</div>
+          <div class="bar-track"><div class="bar-fill coral" style="width: 66%;">~40+ <span class="weekend-tag">WEEKEND</span></div></div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Apr 21 Mon</div>
+          <div class="bar-track"><div class="bar-fill blue" style="width: 16%;">~10</div></div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Apr 22 Tue</div>
+          <div class="bar-track"><div class="bar-fill blue" style="width: 25%;">~15+</div></div>
+        </div>
+      </div>
+      <div class="callout warning">
+        <strong>Weekend Effort:</strong> At least 8 of the 31 active days had weekend activity (including channel creation on Sunday Mar 23). Sunday April 13 was the single busiest day with 60+ messages as Mark Adams launched 5 parallel investigation threads. April 19&ndash;20 saw renewed weekend urgency due to DDoS overlay.
+      </div>
+    </div>
+
+    <!-- WEEKLY BREAKDOWN -->
+    <h2 id="weekly-breakdown">Weekly Breakdown</h2>
+    <div class="card">
+      <table>
+        <thead>
+          <tr>
+            <th>Week</th>
+            <th>Dates</th>
+            <th>Est. Messages</th>
+            <th>Character</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Week 1</strong></td>
+            <td>Mar 23 &ndash; 29</td>
+            <td><strong>~100+</strong></td>
+            <td>Channel creation by Sophie Jones. Recurring syncs established (Daniel De Oliveira). Financial impact estimated at ~$487k/day. Backend latency investigation, TnL 67201 identified, experiments reviewed, iOS investigation finds no crash trends (Sebastian Ghetu).</td>
+          </tr>
+          <tr>
+            <td><strong>Week 2</strong></td>
+            <td>Mar 30 &ndash; Apr 5</td>
+            <td><strong>~50+</strong></td>
+            <td>Hypothesis validation &mdash; CVR stabilization monitored, PDEA prefetch optimization deployed, Trip Overview page event inflation identified, Quantum Metrics blank session replay bug raised, SDK update planned.</td>
+          </tr>
+          <tr>
+            <td><strong>Week 3</strong></td>
+            <td>Apr 6 &ndash; 12</td>
+            <td><strong>~70+</strong></td>
+            <td>Second wave of investigation &mdash; Sophie Rabet posts comprehensive summary with ruled-in/out hypotheses. QM onboarded externally. QM crash analysis reveals +91% crash volume. App reviews trending down.</td>
+          </tr>
+          <tr>
+            <td><strong>Week 4</strong></td>
+            <td>Apr 13 &ndash; 19</td>
+            <td><strong>~130+</strong></td>
+            <td>Peak effort &mdash; Mark Adams launches 5+ parallel threads. Crash fixes land (iOS FocusedSearchEntryTransition, Android EGDSIcon). Pricing inconsistency resolved as clickstream bug. UITextField/QM SDK crash identified. DDoS attack (Apr 19) compounds investigation.</td>
+          </tr>
+          <tr>
+            <td><strong>Week 5</strong></td>
+            <td>Apr 20 &ndash; 22</td>
+            <td><strong>~65+</strong></td>
+            <td>Monitoring &amp; follow-up &mdash; CVR waterfall report (&minus;2.12 pts, 52% explained), DDoS impact sizing, Android rollback assessment, crash trend normalization, ongoing Android crash rate investigation.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- TOP CONTRIBUTORS -->
+    <h2 id="top-contributors">Top 10 Most Prolific Contributors</h2>
+    <div class="card">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Est. Messages</th>
+            <th>Role in Investigation</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>1</strong></td>
+            <td><strong>Sophie Jones</strong></td>
+            <td>35+</td>
+            <td>Channel creator &amp; investigation lead &mdash; posted first message Mar 23, summarized experiments, drove analytics workstream from day 1, coordinated with pricing and engineering teams throughout</td>
+          </tr>
+          <tr>
+            <td><strong>2</strong></td>
+            <td><strong>Mark Adams</strong></td>
+            <td>30+</td>
+            <td>Investigation coordinator (from Apr 10) &mdash; created &amp; organized threads, chased status, assigned owners, drove accountability across all engineering workstreams</td>
+          </tr>
+          <tr>
+            <td><strong>3</strong></td>
+            <td><strong>Pascal Collet</strong></td>
+            <td>25+</td>
+            <td>Technical lead &mdash; deep crash analysis, QM interrogation, escalation, probing technical questions across every thread, active from Week 1 through Week 5</td>
+          </tr>
+          <tr>
+            <td><strong>4</strong></td>
+            <td><strong>Sophie Rabet</strong></td>
+            <td>15+</td>
+            <td>Analytics lead &mdash; investigation summary, ruled in/out hypotheses, financial impact sizing, QM validation, clickstream event analysis</td>
+          </tr>
+          <tr>
+            <td><strong>5</strong></td>
+            <td><strong>Daniel De Oliveira</strong></td>
+            <td>12+</td>
+            <td>Engineering coordination &mdash; set up recurring syncs, maintained investigation tracker, compiled Confluence documentation, coordinated team stand-down/ramp-up</td>
+          </tr>
+          <tr>
+            <td><strong>6</strong></td>
+            <td><strong>Srishti Jaiprakash Jaju</strong></td>
+            <td>12+</td>
+            <td>Quantum Metric liaison &mdash; delivered crash insights report, coordinated QM team, answered methodology questions</td>
+          </tr>
+          <tr>
+            <td><strong>7</strong></td>
+            <td><strong>Levi Sitters</strong></td>
+            <td>10+</td>
+            <td>Android engineering &mdash; crash fixes (PRs #22528, #22531), release management, TnL remediation</td>
+          </tr>
+          <tr>
+            <td><strong>8</strong></td>
+            <td><strong>Harriet Burrell</strong></td>
+            <td>10+</td>
+            <td>CVR reporting &mdash; performance updates, YoY dashboards, DDoS impact sizing, normalization tracking, active through Apr 22</td>
+          </tr>
+          <tr>
+            <td><strong>9</strong></td>
+            <td><strong>Nikita Hasis</strong></td>
+            <td>9+</td>
+            <td>App platform &mdash; version rollback expertise, TnL analysis, force update triage</td>
+          </tr>
+          <tr>
+            <td><strong>10</strong></td>
+            <td><strong>Erik Krietsch</strong></td>
+            <td>9+</td>
+            <td>iOS engineering &mdash; UITextField crash investigation, identified QM SDK interaction, submitted fix PR</td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="muted" style="font-size: 12px; margin-top: 8px;">Additional high-activity contributors: Lisa Olson (Quantum Metric), Marek Stoma (iOS debugging), Pandiyan Kannaiyan (PDP-to-CKO analysis), Alessio Caradossi (Android), Karanveer Singh (platform), Vita Bush (TnL analysis), Liz Gorton (QM coordination).</p>
+    </div>
+
+    <!-- INVESTIGATION THREADS -->
+    <h2 id="investigation-threads">Investigation Threads</h2>
+    <p>The investigation evolved across two phases. Sophie Jones launched the channel and drove early hypothesis development (Mar 23&ndash;Apr 9). Mark Adams then escalated with structured parallel threads (Apr 10+) to prevent confusion and ensure accountability.</p>
+
+    <h3>Phase 1: Initial Investigation (Mar 23 &ndash; Apr 9)</h3>
+    <div class="thread-list">
+      <div class="thread-item">
+        <div>
+          <div class="thread-title"><a href="https://expediagroup.enterprise.slack.com/archives/C0AN764KH8D/p1774547431800479" target="_blank">Experiment Analysis &amp; CVR Hypothesis Testing &#x2197;</a></div>
+          <div class="thread-meta">Sophie Jones / Josh Templin / Pascal Collet &bull; Mar 26&ndash;31 &bull; <span class="badge red">High traffic</span></div>
+        </div>
+        <div class="thread-count">18+</div>
+      </div>
+      <div class="thread-item">
+        <div>
+          <div class="thread-title"><a href="https://expediagroup.enterprise.slack.com/archives/C0AN764KH8D/p1774524074241129" target="_blank">Backend Latency Investigation (Pagelayout / PDEA) &#x2197;</a></div>
+          <div class="thread-meta">Pandiyan Kannaiyan / Jitendra Joshi / Daniel De Oliveira &bull; Mar 25&ndash;27 &bull; <span class="badge amber">TnL 67201 identified</span></div>
+        </div>
+        <div class="thread-count">15+</div>
+      </div>
+      <div class="thread-item">
+        <div>
+          <div class="thread-title"><a href="https://expediagroup.enterprise.slack.com/archives/C0AN764KH8D/p1774526643705659" target="_blank">Financial Impact &amp; P&amp;L Sizing &#x2197;</a></div>
+          <div class="thread-meta">Hari Nair / Sandeep Abraham / Sophie Rabet &bull; Mar 25&ndash;26 &bull; <span class="badge red">~$487k/day impact</span></div>
+        </div>
+        <div class="thread-count">10+</div>
+      </div>
+      <div class="thread-item">
+        <div>
+          <div class="thread-title"><a href="https://expediagroup.enterprise.slack.com/archives/C0AN764KH8D/p1774632428837089" target="_blank">CVR Stabilization &amp; Trip Overview Analysis &#x2197;</a></div>
+          <div class="thread-meta">Sophie Jones / Nicolas Vincenti / Liz Gorton &bull; Mar 27&ndash;31 &bull; <span class="badge blue">Tracking inflation hypothesis</span></div>
+        </div>
+        <div class="thread-count">12+</div>
+      </div>
+      <div class="thread-item">
+        <div>
+          <div class="thread-title">iOS Investigation &mdash; No Crash/Degradation Found</div>
+          <div class="thread-meta">Sebastian Ghetu / Alessio Caradossi &bull; Mar 25&ndash;26 &bull; <span class="badge green">Ruled out (initially)</span></div>
+        </div>
+        <div class="thread-count">8+</div>
+      </div>
+      <div class="thread-item">
+        <div>
+          <div class="thread-title">Top of PDP Redesign TnL 67201 Latency</div>
+          <div class="thread-meta">Vita Bush / Zora Lawrence / Sophie Jones &bull; Mar 26 &bull; <span class="badge amber">Removed from prefetch</span></div>
+        </div>
+        <div class="thread-count">8+</div>
+      </div>
+    </div>
+
+    <h3>Phase 2: Structured Parallel Workstreams (Apr 10 &ndash; 22)</h3>
+    <div class="thread-list">
+      <div class="thread-item">
+        <div>
+          <div class="thread-title"><a href="https://expediagroup.enterprise.slack.com/archives/C0AN764KH8D/p1775858243875889" target="_blank">QM Crash Insights &amp; Analysis &#x2197;</a></div>
+          <div class="thread-meta">Srishti Jaju / Aleena Pedersen &bull; Apr 11&ndash;16 &bull; <span class="badge red">Highest traffic</span></div>
+        </div>
+        <div class="thread-count">42+</div>
+      </div>
+      <div class="thread-item">
+        <div>
+          <div class="thread-title"><a href="https://expediagroup.enterprise.slack.com/archives/C0AN764KH8D/p1775858243875889" target="_blank">iOS Crashes &mdash; UITextField Background Thread &#x2197;</a></div>
+          <div class="thread-meta">Mark Adams / Erik Krietsch &bull; Apr 13&ndash;16 &bull; <span class="badge purple">Fix merged</span></div>
+        </div>
+        <div class="thread-count">31+</div>
+      </div>
+      <div class="thread-item">
+        <div>
+          <div class="thread-title"><a href="https://expediagroup.enterprise.slack.com/archives/C0AN764KH8D/p1775858243875889" target="_blank">Price Inconsistency PDP&rarr;CKO &#x2197;</a></div>
+          <div class="thread-meta">Mark Adams / Karan Arulmani &bull; Apr 13&ndash;15 &bull; <span class="badge green">Resolved &mdash; tracking bug</span></div>
+        </div>
+        <div class="thread-count">29+</div>
+      </div>
+      <div class="thread-item">
+        <div>
+          <div class="thread-title"><a href="https://expediagroup.enterprise.slack.com/archives/C0AN764KH8D/p1775858243875889" target="_blank">Android Crashes from v2026.11 &#x2197;</a></div>
+          <div class="thread-meta">Mark Adams / Levi Sitters &bull; Apr 13&ndash;20 &bull; <span class="badge green">Fix merged</span></div>
+        </div>
+        <div class="thread-count">19+</div>
+      </div>
+      <div class="thread-item">
+        <div>
+          <div class="thread-title"><a href="https://expediagroup.enterprise.slack.com/archives/C0AN764KH8D/p1776655582808649" target="_blank">Force Update Doom Loop &#x2197;</a></div>
+          <div class="thread-meta">Rohan Kulkarni / Nikita Hasis &bull; Apr 20 &bull; <span class="badge green">Resolved</span></div>
+        </div>
+        <div class="thread-count">14+</div>
+      </div>
+      <div class="thread-item">
+        <div>
+          <div class="thread-title"><a href="https://expediagroup.enterprise.slack.com/archives/C0AN764KH8D/p1776605210017149" target="_blank">Android Search Not Working &#x2197;</a></div>
+          <div class="thread-meta">Natasha Owen / Mark Adams &bull; Apr 19&ndash;20 &bull; <span class="badge amber">DDoS related</span></div>
+        </div>
+        <div class="thread-count">11+</div>
+      </div>
+      <div class="thread-item">
+        <div>
+          <div class="thread-title"><a href="https://expediagroup.enterprise.slack.com/archives/C0AN764KH8D/p1775857181900059" target="_blank">Investigation Summary &amp; Hypothesis Ruling &#x2197;</a></div>
+          <div class="thread-meta">Sophie Rabet / Mark Adams &bull; Apr 10&ndash;11 &bull; <span class="badge teal">Foundation document</span></div>
+        </div>
+        <div class="thread-count">10+</div>
+      </div>
+      <div class="thread-item">
+        <div>
+          <div class="thread-title"><a href="https://expediagroup.enterprise.slack.com/archives/C0AN764KH8D/p1775858243875889" target="_blank">S3 Image CDN 404s &#x2197;</a></div>
+          <div class="thread-meta">Mark Adams / Etienne B-Dury &bull; Apr 13 &bull; <span class="badge green">Ruled out</span></div>
+        </div>
+        <div class="thread-count">9+</div>
+      </div>
+      <div class="thread-item">
+        <div>
+          <div class="thread-title"><a href="https://expediagroup.enterprise.slack.com/archives/C0AN764KH8D/p1776682759656759" target="_blank">Android Rollback CVR Impact &#x2197;</a></div>
+          <div class="thread-meta">Harriet Burrell / Serena Durrani &bull; Apr 20&ndash;21 &bull; <span class="badge blue">Monitoring</span></div>
+        </div>
+        <div class="thread-count">8+</div>
+      </div>
+      <div class="thread-item">
+        <div>
+          <div class="thread-title"><a href="https://expediagroup.enterprise.slack.com/archives/C0AN764KH8D/p1776845087962149" target="_blank">Crash Rate iOS vs Android Trends &#x2197;</a></div>
+          <div class="thread-meta">Pascal Collet / Jesse Gill / Shruthi Gangadharan &bull; Apr 22 &bull; <span class="badge blue">Active</span></div>
+        </div>
+        <div class="thread-count">10+</div>
+      </div>
+      <div class="thread-item">
+        <div>
+          <div class="thread-title"><a href="https://expediagroup.enterprise.slack.com/archives/C0AN764KH8D/p1776857138793489" target="_blank">Crash TnL Analysis &#x2197;</a></div>
+          <div class="thread-meta">Bastien Cojan / Divyanshu Sharma / Nikita Hasis &bull; Apr 22 &bull; <span class="badge blue">Active</span></div>
+        </div>
+        <div class="thread-count">6+</div>
+      </div>
+      <div class="thread-item">
+        <div>
+          <div class="thread-title"><a href="https://expediagroup.enterprise.slack.com/archives/C0AN764KH8D/p1776670373074149" target="_blank">CVR Trend Check (Mar 22&ndash;25 &amp; post-Apr 8) &#x2197;</a></div>
+          <div class="thread-meta">Fabio Marchetti / Harriet Burrell &bull; Apr 20&ndash;22</div>
+        </div>
+        <div class="thread-count">6+</div>
+      </div>
+    </div>
+    <p class="muted" style="font-size: 12px;">+ additional threads: Checkout TnLs, Korea App Outage (Hari Nair), DDoS Impact Report (Harriet), CVR Waterfall (Serena), App Perf Normalization Update</p>
+
+    <!-- TIMELINE -->
+    <h2 id="timeline">Key Events Timeline</h2>
+    <div class="card">
+      <div class="timeline">
+        <div class="timeline-item critical">
+          <div class="timeline-date">March 17 &mdash; Incident Detected</div>
+          <div class="timeline-content">Decline in HCOM App SV CVR first observed. Unique to Hotels.com; both iOS and Android affected. Investigation begins within existing teams.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-date">March 23 &mdash; Channel Created</div>
+          <div class="timeline-content">Sophie Jones creates <strong>#tmp-hcom-app-svcvr-decline-mar17</strong> to centralize the investigation. First messages establish the scope: both platforms, HCOM-specific, and decline is significant enough to warrant cross-org mobilization.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-date">March 25 &mdash; Investigation Mobilizes</div>
+          <div class="timeline-content">Daniel De Oliveira sets up recurring syncs. Hari Nair asks about financial impact; Sandeep Abraham reports PAX estimate of <strong>~$487k/day</strong>. Pandiyan Kannaiyan identifies increased pagelayout latency. Alessio Caradossi confirms both iOS and Android affected, points to backend.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-date">March 26 &mdash; Experiments Under Scrutiny</div>
+          <div class="timeline-content">Vita Bush links TnL 67201 (Top of PDP redesign) to latency increase. Sophie Jones posts summary of suspect experiments: Trip Screens Prefetch, search ranking change, P13N date pre-fills. Sebastian Ghetu&rsquo;s iOS investigation finds no new crash trends. Daniel De Oliveira compiles master investigation tracker on Confluence.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-date">March 27&ndash;31 &mdash; Hypothesis Refinement</div>
+          <div class="timeline-content">PDEA prefetch optimization deployed (redesign component removed). CVR stabilizes at &minus;3.58%. Trip Overview page event inflation identified as potential tracking issue. QM blank session replay bug raised. Channel settles into monitoring mode over the weekend.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-date">April 1&ndash;9 &mdash; Deeper Dives</div>
+          <div class="timeline-content">Funnel analysis shows PDP-to-CKO as worst-hit step. User segments examined (auth/anon, loyalty tiers, booking windows). App reviews declining. Crash rates rising on iOS. Multiple hypotheses ruled out (seasonality, spring sale, bots, outages, data quality). QM analysis requested.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-date">April 10 &mdash; Investigation Escalation</div>
+          <div class="timeline-content">Sophie Rabet posts comprehensive investigation summary with ruled-in/ruled-out hypotheses. Quantum Metric (external vendor) onboarded with NDA verification. Mark Adams begins structuring parallel workstreams.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-date">April 11 &mdash; QM Crash Report</div>
+          <div class="timeline-content">Srishti Jaju shares Quantum Metric crash analysis: <strong>+91% crash volume vs baseline</strong>, 4,859 crash sessions. Android is primary driver (77.5% of crashes). iOS v2026.11 identified as high-suspect release.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-date">April 13 &mdash; Investigation Surge</div>
+          <div class="timeline-content">Mark Adams launches 5+ parallel investigation threads: pricing inconsistency, Android crashes, iOS crashes, image CDN 404s, checkout TnLs. <strong>60+ messages on a Sunday.</strong></div>
+        </div>
+        <div class="timeline-item success">
+          <div class="timeline-date">April 13&ndash;15 &mdash; Fixes Begin Landing</div>
+          <div class="timeline-content">FocusedSearchEntryTransition crash fix merged (race condition since Dec 2024). Android EGDSIcon crash fix PRs submitted. Pricing inconsistency resolved as clickstream tracking bug (SHOPPING-9601).</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-date">April 15 &mdash; QM/UITextField Deep Dive</div>
+          <div class="timeline-content">Marek Stoma publishes Claude + Firebase CLI analysis identifying Qualtrics SDK swizzle as UITextField crash contributor. Erik Krietsch submits fix PR.</div>
+        </div>
+        <div class="timeline-item critical">
+          <div class="timeline-date">April 19 &mdash; DDoS Attack</div>
+          <div class="timeline-content">P1 incident INC7991196: DDoS attack on Cloud Gateway Proxy causes widespread booking degradation across all brands. Compounds CVR decline investigation.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-date">April 20 &mdash; Waterfall Report</div>
+          <div class="timeline-content">Serena Durrani shares CVR waterfall: <strong>&minus;2.12 pts Pure SV CVR gap</strong>, ~52% captured in known impacts. Android rollback monitoring underway.</div>
+        </div>
+        <div class="timeline-item success">
+          <div class="timeline-date">April 22 &mdash; Normalization</div>
+          <div class="timeline-content">Harriet Burrell reports YoY normalization back to pre-Easter comp levels. Crash trends improving. Pascal Collet and Jesse Gill continue active crash investigation. Investigation continues for unexplained portion.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CROSS-ORG -->
+    <h2 id="cross-org">Cross-Organizational Participation</h2>
+    <div class="card">
+      <div class="callout">
+        <strong>305 channel members</strong> across 8+ organizational groups. The numbers below reflect people who actively posted messages; the remaining ~250 members monitored the investigation, reflecting the breadth of organizational attention this incident demanded.
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Organization / Team</th>
+            <th>People Involved</th>
+            <th>Contribution</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="badge teal">Yield &amp; Analytics</span></td>
+            <td>Sophie Jones, Sophie Rabet, Harriet Burrell, Serena Durrani, Sandeep Abraham</td>
+            <td>Channel creation, investigation leadership, CVR measurement, financial impact sizing ($487k/day), waterfall analysis, hypothesis testing, dashboards</td>
+          </tr>
+          <tr>
+            <td><span class="badge blue">Experience Platform / App Eng</span></td>
+            <td>Pascal Collet, Nikita Hasis, Jesse Gill, Levi Sitters, Erik Krietsch, Marek Stoma, Bastien Cojan, Daniel Levy, Stanislav Palguyev, Mark Perkins, Tami Olson, Irshad Kumail, Shruthi Gangadharan, Karanveer Singh, Alessio Caradossi, Sebastian Ghetu, Artur Chembrovsky</td>
+            <td>Crash debugging, fix PRs, rollback management, Firebase/Crashlytics analysis, release engineering, clickstream events, platform investigation</td>
+          </tr>
+          <tr>
+            <td><span class="badge navy">Engineering Program Management</span></td>
+            <td>Daniel De Oliveira, Mark Adams</td>
+            <td>Recurring sync setup, investigation tracker, Confluence documentation, thread management, owner assignment, status tracking</td>
+          </tr>
+          <tr>
+            <td><span class="badge purple">Search</span></td>
+            <td>Fabio Marchetti, Muhammad Junaid Hafeez</td>
+            <td>EALS log analysis, search API investigation</td>
+          </tr>
+          <tr>
+            <td><span class="badge amber">Pricing</span></td>
+            <td>Karan Arulmani, Raja Mohamed, Steven Schmidt, Matteo Bertasa, Yijin Wang, Kailin Jin</td>
+            <td>Price consistency analysis, clickstream investigation, SHOPPING-9601 resolution</td>
+          </tr>
+          <tr>
+            <td><span class="badge purple">Backend / Platform Services</span></td>
+            <td>Pandiyan Kannaiyan, Jitendra Joshi, Navid Naddaf, Vita Bush, Zora Lawrence</td>
+            <td>Pagelayout latency investigation, TnL 67201 analysis, PDEA prefetch optimization, backend root cause analysis</td>
+          </tr>
+          <tr>
+            <td><span class="badge red">External: Quantum Metric</span></td>
+            <td>Aleena Pedersen, Lisa Olson, Adam Zhujiang (+ Srishti Jaju as liaison)</td>
+            <td>Crash analytics, session replays, QM SDK investigation, dashboard configuration</td>
+          </tr>
+          <tr>
+            <td><span class="badge blue">Leadership / Stakeholders</span></td>
+            <td>Josh Templin, Jason Moorman, Hari Nair, Debashis Saha, Liz Gorton, Nicolas Vincenti, Rohan Kulkarni, Natasha Owen</td>
+            <td>Strategic direction, escalation, financial impact queries, user reports, incident correlation, QM audit requests</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ALL PARTICIPANTS -->
+    <h2 id="all-participants">All Identified Active Participants (50+)</h2>
+    <p class="muted" style="font-size: 12px; margin-bottom: 12px;">305 total channel members. Below are the 50+ individuals confirmed to have posted messages, out of ~250 additional monitoring members.</p>
+    <div class="people-grid">
+      <div class="person-tag"><div class="name">Sophie Jones</div><div class="role">Channel Creator / Investigation Lead</div></div>
+      <div class="person-tag"><div class="name">Mark Adams</div><div class="role">Investigation Coordinator</div></div>
+      <div class="person-tag"><div class="name">Pascal Collet</div><div class="role">Technical Lead</div></div>
+      <div class="person-tag"><div class="name">Sophie Rabet</div><div class="role">Analytics Lead</div></div>
+      <div class="person-tag"><div class="name">Daniel De Oliveira</div><div class="role">Engineering Program Mgmt</div></div>
+      <div class="person-tag"><div class="name">Harriet Burrell</div><div class="role">CVR Reporting</div></div>
+      <div class="person-tag"><div class="name">Serena Durrani</div><div class="role">CVR Analytics</div></div>
+      <div class="person-tag"><div class="name">Sandeep Abraham</div><div class="role">PAX / Financial Impact</div></div>
+      <div class="person-tag"><div class="name">Pandiyan Kannaiyan</div><div class="role">Backend / PDP Latency</div></div>
+      <div class="person-tag"><div class="name">Jitendra Joshi</div><div class="role">Pagelayout Latency</div></div>
+      <div class="person-tag"><div class="name">Alessio Caradossi</div><div class="role">Android Engineering</div></div>
+      <div class="person-tag"><div class="name">Navid Naddaf</div><div class="role">Engineering Coordination</div></div>
+      <div class="person-tag"><div class="name">Artur Chembrovsky</div><div class="role">Clickstream Events</div></div>
+      <div class="person-tag"><div class="name">Vita Bush</div><div class="role">TnL / PDP Redesign</div></div>
+      <div class="person-tag"><div class="name">Zora Lawrence</div><div class="role">TnL Timing Data</div></div>
+      <div class="person-tag"><div class="name">Sebastian Ghetu</div><div class="role">iOS Investigation</div></div>
+      <div class="person-tag"><div class="name">Nikita Hasis</div><div class="role">App Platform</div></div>
+      <div class="person-tag"><div class="name">Levi Sitters</div><div class="role">Android Engineering</div></div>
+      <div class="person-tag"><div class="name">Erik Krietsch</div><div class="role">iOS Engineering</div></div>
+      <div class="person-tag"><div class="name">Marek Stoma</div><div class="role">iOS Debugging</div></div>
+      <div class="person-tag"><div class="name">Jesse Gill</div><div class="role">App QA / Testing</div></div>
+      <div class="person-tag"><div class="name">Srishti Jaiprakash Jaju</div><div class="role">QM Liaison</div></div>
+      <div class="person-tag"><div class="name">Lisa Olson</div><div class="role">Quantum Metric</div></div>
+      <div class="person-tag"><div class="name">Aleena Pedersen</div><div class="role">Quantum Metric</div></div>
+      <div class="person-tag"><div class="name">Adam Zhujiang</div><div class="role">Quantum Metric</div></div>
+      <div class="person-tag"><div class="name">Liz Gorton</div><div class="role">QM Coordination</div></div>
+      <div class="person-tag"><div class="name">Josh Templin</div><div class="role">Strategy / Pricing</div></div>
+      <div class="person-tag"><div class="name">Nicolas Vincenti</div><div class="role">Session Replay / QM Audit</div></div>
+      <div class="person-tag"><div class="name">Jason Moorman</div><div class="role">Stakeholder</div></div>
+      <div class="person-tag"><div class="name">Karan Arulmani</div><div class="role">Pricing Investigation</div></div>
+      <div class="person-tag"><div class="name">Raja Mohamed</div><div class="role">Pricing Team</div></div>
+      <div class="person-tag"><div class="name">Steven Schmidt</div><div class="role">Shopping Eng</div></div>
+      <div class="person-tag"><div class="name">Matteo Bertasa</div><div class="role">Ticket Investigation</div></div>
+      <div class="person-tag"><div class="name">Yijin Wang</div><div class="role">Clickstream Analysis</div></div>
+      <div class="person-tag"><div class="name">Fabio Marchetti</div><div class="role">Search / EALS</div></div>
+      <div class="person-tag"><div class="name">Muhammad Junaid Hafeez</div><div class="role">Android Search</div></div>
+      <div class="person-tag"><div class="name">Stanislav Palguyev</div><div class="role">Android / Firebase</div></div>
+      <div class="person-tag"><div class="name">Daniel Levy</div><div class="role">iOS Crashlytics</div></div>
+      <div class="person-tag"><div class="name">Mark Perkins</div><div class="role">Home Experience</div></div>
+      <div class="person-tag"><div class="name">Tami Olson</div><div class="role">iOS Fix Owner</div></div>
+      <div class="person-tag"><div class="name">Jordan Houari</div><div class="role">iOS Guidance</div></div>
+      <div class="person-tag"><div class="name">Karthik Bedre</div><div class="role">Image Investigation</div></div>
+      <div class="person-tag"><div class="name">Etienne B-Dury</div><div class="role">Image CDN Owner</div></div>
+      <div class="person-tag"><div class="name">Li Guo</div><div class="role">Loyalty Tier Analysis</div></div>
+      <div class="person-tag"><div class="name">Bastien Cojan</div><div class="role">Crash / TnL Analysis</div></div>
+      <div class="person-tag"><div class="name">Divyanshu Sharma</div><div class="role">TnL Investigation</div></div>
+      <div class="person-tag"><div class="name">Shruthi Gangadharan</div><div class="role">Crash Investigation</div></div>
+      <div class="person-tag"><div class="name">Karanveer Singh</div><div class="role">Platform Changes</div></div>
+      <div class="person-tag"><div class="name">Irshad Kumail</div><div class="role">Crash Fix Verification</div></div>
+      <div class="person-tag"><div class="name">Natasha Owen</div><div class="role">User Bug Report</div></div>
+      <div class="person-tag"><div class="name">Rohan Kulkarni</div><div class="role">User Bug Report</div></div>
+      <div class="person-tag"><div class="name">Hari Nair</div><div class="role">Financial Impact / Korea Outage</div></div>
+      <div class="person-tag"><div class="name">Debashis Saha</div><div class="role">DDoS Intelligence</div></div>
+      <div class="person-tag"><div class="name">Mohammed Waseem</div><div class="role">Incident Correlation</div></div>
+      <div class="person-tag"><div class="name">Lukasz Kufel</div><div class="role">Booking Impact Data</div></div>
+      <div class="person-tag"><div class="name">Jennifer HC Lee</div><div class="role">Investigation Support</div></div>
+      <div class="person-tag"><div class="name">Stephanie Chen</div><div class="role">Investigation Support</div></div>
+      <div class="person-tag"><div class="name">Joonas Tanner</div><div class="role">Investigation Support</div></div>
+      <div class="person-tag"><div class="name">Yan Dong</div><div class="role">Investigation Support</div></div>
+      <div class="person-tag"><div class="name">Kailin Jin</div><div class="role">Pricing Analysis</div></div>
+    </div>
+
+    <!-- ARTIFACTS -->
+    <h2 id="artifacts">Artifacts Created</h2>
+    <div class="card">
+      <h3>Confluence Documentation</h3>
+      <ul>
+        <li><a href="https://expediagroup.atlassian.net/wiki/spaces/~712020105f6b5c0a1b41408fbbf19c219742fe/pages/1042943208" target="_blank">iOS &mdash; Hcom App CVR Decline &mdash; v2026.11 &mdash; March 15</a></li>
+        <li><a href="https://expediagroup.atlassian.net/wiki/spaces/~712020105f6b5c0a1b41408fbbf19c219742fe/pages/1042910346" target="_blank">Android &mdash; Hcom App CVR Decline &mdash; March 15</a></li>
+        <li>Areas of Exploration Canvas (live investigation tracker in Slack channel)</li>
+        <li>Analytics graphs from analysis (linked from investigation summary)</li>
+      </ul>
+
+      <h3>Jira Tickets</h3>
+      <ul>
+        <li><a href="https://expediagroup.atlassian.net/browse/FCI-726" target="_blank"><strong>FCI-726</strong></a> &mdash; Android crash fix (Levi Sitters)</li>
+        <li><a href="https://expediagroup.atlassian.net/browse/FCI-706" target="_blank"><strong>FCI-706</strong></a> &mdash; Trips-related iOS crash</li>
+        <li><a href="https://expediagroup.atlassian.net/browse/TCP-14655" target="_blank"><strong>TCP-14655</strong></a> &mdash; QMM iOS crasher</li>
+        <li><a href="https://expediagroup.atlassian.net/browse/SHOPPING-9000" target="_blank"><strong>SHOPPING-9000</strong></a> &mdash; Clickstream pricing capture fix</li>
+        <li><a href="https://expediagroup.atlassian.net/browse/SHOPPING-9601" target="_blank"><strong>SHOPPING-9601</strong></a> &mdash; Payment option clickstream tracking fix</li>
+        <li><a href="https://expediagroup.atlassian.net/browse/LINC-1364" target="_blank"><strong>LINC-1364</strong></a> &mdash; Pricing inconsistency</li>
+        <li><a href="https://expediagroup.atlassian.net/browse/WTR-12494" target="_blank"><strong>WTR-12494</strong></a> &mdash; Attach pricing issue</li>
+        <li><a href="https://expediagroup.atlassian.net/browse/SEARCH-8187" target="_blank"><strong>SEARCH-8187</strong></a> &mdash; Search investigation</li>
+        <li><strong>INC7991196</strong> &mdash; P1 DDoS incident</li>
+        <li><strong>INC7991253</strong> &mdash; Android search not working</li>
+      </ul>
+
+      <h3>GitHub Pull Requests</h3>
+      <ul>
+        <li>PR #22528 &mdash; Android EGDSIcon crash fix</li>
+        <li>PR #22531 &mdash; Android HotelDetailViewModel crash fix</li>
+        <li>iOS FocusedSearchEntryTransition fix (merged Apr 13)</li>
+        <li>iOS UITextField / date selector fix (Erik Krietsch, merged Apr 15)</li>
+      </ul>
+
+      <h3>Dashboards &amp; Tools</h3>
+      <ul>
+        <li><a href="https://expedia.quantummetric.com/#/dashboard/d3ba6539-8f3f-4f19-8d5b-98538a9fc03e?dashboardUseGlobal=true&amp;teamID=56dd455e-8cca-4417-9578-beffe8549875&amp;ts=1773730800-1775804399" target="_blank">Quantum Metric Mobile App Crash Investigation Dashboard</a></li>
+        <li>QM iOS/Android session replay segments (within QM dashboard above)</li>
+        <li>Product Pulse CVR monitoring</li>
+        <li><a href="https://expediagroup.atlassian.net/wiki/spaces/~lsitters/pages/970855975/Firebase+MCP+and+CLI+FTW" target="_blank">Firebase Crashlytics analysis (with Claude + CLI integration)</a></li>
+        <li><a href="https://tableau.sea.corp.expecn.com/#/views/MDEPriceconsistencydashboard/LodgingPriceConsistencydetails?:iid=1" target="_blank">Tableau MDE Price Consistency dashboard</a></li>
+      </ul>
+    </div>
+
+    <!-- EFFORT & COST -->
+    <h2 id="effort-cost">Effort &amp; Cost Estimation</h2>
+    <div class="card">
+      <div class="callout warning">
+        <strong>Note:</strong> These are conservative estimates based on observed Slack activity over the full 31-day channel lifespan. Actual effort is likely significantly higher as it does not include: pre-channel work (Mar 17&ndash;22), Zoom calls (referenced multiple times), offline analysis, dashboard creation, code review, testing, and the work of the ~250 monitoring members.
+      </div>
+
+      <h3>Person-Hours Estimate</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Category</th>
+            <th>People</th>
+            <th>Avg Hrs / Person</th>
+            <th>Total Est. Hours</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Investigation Leads (Sophie J., Mark, Pascal)</td>
+            <td>3</td>
+            <td>50+</td>
+            <td><strong>150+</strong></td>
+          </tr>
+          <tr>
+            <td>Analytics (Sophie R., Harriet, Serena, Sandeep)</td>
+            <td>4</td>
+            <td>25</td>
+            <td><strong>100</strong></td>
+          </tr>
+          <tr>
+            <td>Engineering (Levi, Erik, Marek, Nikita, Jesse, Daniel D.O., +10)</td>
+            <td>16</td>
+            <td>12</td>
+            <td><strong>192</strong></td>
+          </tr>
+          <tr>
+            <td>Backend / Platform (Pandiyan, Jitendra, Vita, Navid, +2)</td>
+            <td>6</td>
+            <td>8</td>
+            <td><strong>48</strong></td>
+          </tr>
+          <tr>
+            <td>Pricing / Search (Karan, Raja, Fabio, +4)</td>
+            <td>7</td>
+            <td>8</td>
+            <td><strong>56</strong></td>
+          </tr>
+          <tr>
+            <td>Quantum Metric (Srishti, Lisa, Aleena, Adam)</td>
+            <td>4</td>
+            <td>20</td>
+            <td><strong>80</strong></td>
+          </tr>
+          <tr>
+            <td>Leadership / Stakeholders</td>
+            <td>8</td>
+            <td>5</td>
+            <td><strong>40</strong></td>
+          </tr>
+          <tr>
+            <td>Other contributors</td>
+            <td>12</td>
+            <td>4</td>
+            <td><strong>48</strong></td>
+          </tr>
+          <tr style="background: #f0f4ff;">
+            <td><strong>TOTAL</strong></td>
+            <td><strong>60+</strong></td>
+            <td></td>
+            <td><strong>~714+ person-hours</strong></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="kpi-row">
+        <div class="kpi highlight">
+          <div class="number">714+</div>
+          <div class="label">Person-Hours</div>
+          <div class="detail">Conservative estimate</div>
+        </div>
+        <div class="kpi">
+          <div class="number">~89</div>
+          <div class="label">Person-Days</div>
+          <div class="detail">At 8 hrs/day</div>
+        </div>
+        <div class="kpi">
+          <div class="number">4+</div>
+          <div class="label">Weekends</div>
+          <div class="detail">With active work</div>
+        </div>
+        <div class="kpi">
+          <div class="number">36</div>
+          <div class="label">Calendar Days</div>
+          <div class="detail">Since decline detected (Mar 17)</div>
+        </div>
+      </div>
+
+      <div class="callout critical">
+        <strong>Estimated revenue impact:</strong> At ~$487k/day over 36 calendar days (March 17 &ndash; April 22), the total potential revenue exposure is in the range of <strong>$17.5M</strong> (assuming full impact across all days &mdash; actual impact varies as fixes landed progressively).
+      </div>
+
+      <div class="callout">
+        <strong>What this estimate does not include:</strong>
+        <ul style="margin-top: 8px;">
+          <li>Pre-channel investigation work (March 17 &ndash; 22 = 6 days of analysis before the channel was created)</li>
+          <li>Multiple Zoom calls referenced in threads ("answered over various zoom calls", recurring syncs)</li>
+          <li>Quantum Metric vendor cost (external contract time beyond included hours)</li>
+          <li>App release management overhead (code cut, QA, rollout, rollback)</li>
+          <li>Opportunity cost of 305 channel members diverted from or distracted from roadmap work</li>
+          <li>The ~250 monitoring members who spent time reading/context-switching but did not post</li>
+          <li>Business revenue impact from the &minus;2.12pt CVR gap over 5+ weeks</li>
+        </ul>
+      </div>
+    </div>
+
+    <div style="margin-top: 48px; padding: 24px; background: var(--white); border-radius: 10px; box-shadow: var(--shadow); text-align: center;">
+      <p class="muted" style="font-size: 12px; margin: 0;">
+        Generated from Slack channel <strong>#tmp-hcom-app-svcvr-decline-mar17</strong> (C0AN764KH8D) &bull; 305 members &bull; Data as of April 22, 2026<br>
+        Channel created March 23, 2026 by Sophie Jones. Message counts are estimates based on Glean-indexed Slack data. Actual totals may be higher.
+      </p>
+    </div>
+
+  </div>
+</div>
+
+<script>
+document.querySelectorAll('.sidebar a').forEach(link => {
+  link.addEventListener('click', function() {
+    document.querySelectorAll('.sidebar a').forEach(l => l.classList.remove('active'));
+    this.classList.add('active');
+  });
+});
+
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const id = entry.target.id;
+      document.querySelectorAll('.sidebar a').forEach(l => {
+        l.classList.toggle('active', l.getAttribute('href') === '#' + id);
+      });
+    }
+  });
+}, { rootMargin: '-80px 0px -80% 0px' });
+
+document.querySelectorAll('h2[id]').forEach(h => observer.observe(h));
+</script>
+</body>
+</html>

@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Delivery Roadmap</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='10' fill='%231a365d'/%3E%3Ctext x='32' y='44' font-size='34' font-family='system-ui' font-weight='700' text-anchor='middle' fill='white'%3ED%3C/text%3E%3C/svg%3E">
+</head>
+<body>
+  <header>
+    <h1>Delivery Roadmap</h1>
+    <p class="subtitle">Strategy &rarr; Objective &rarr; Milestone &rarr; Initiative, with quarterly delivery output, pulled live from Jira.</p>
+    <button id="settings-btn" class="link-btn" title="Endpoint settings">Settings</button>
+  </header>
+
+  <main>
+    <section id="controls">
+      <div class="row">
+        <div class="field grow">
+          <label for="objective-key">Objective or Milestone Jira key</label>
+          <input type="text" id="objective-key" value="MLSTN1-5603" placeholder="e.g. MLSTN1-5603 or MLSTN1-5679" autocomplete="off">
+          <p class="hint">Pass an Objective (Jira type <em>Key Result</em>, e.g. <code>MLSTN1-5603</code>) for the full strategy view, or a single Milestone (Jira type <em>Objective</em>, e.g. <code>MLSTN1-5679</code>) to scope the view to one milestone and its initiatives. URLs are accepted too.</p>
+        </div>
+        <div class="actions">
+          <button id="load-btn" class="primary">Load</button>
+        </div>
+      </div>
+      <div class="row view-toggle">
+        <label class="toggle">
+          <input type="radio" name="view" value="tree" checked> Tree view
+        </label>
+        <label class="toggle">
+          <input type="radio" name="view" value="grid"> Quarter grid
+        </label>
+        <span id="mode-badge" class="mode-badge" hidden></span>
+        <span class="grow"></span>
+        <button id="snapshot-btn" class="link-btn" disabled title="Download a self-contained HTML snapshot of the current view">Download snapshot</button>
+        <span id="status" class="hint"></span>
+      </div>
+    </section>
+
+    <section id="snapshot-banner" class="snapshot-banner" hidden>
+      <strong>Snapshot view.</strong>
+      <span id="snapshot-meta"></span>
+      <a id="snapshot-source-link" href="#" target="_blank" rel="noopener">Open the live source in Jira</a>
+    </section>
+
+    <section id="program-card" class="header-card" hidden>
+      <div class="card-header">
+        <span class="badge badge-program">Program</span>
+        <span id="program-key" class="key"></span>
+        <span id="program-counts" class="dates"></span>
+      </div>
+      <h2 id="program-title"></h2>
+      <p id="program-description" class="hint"></p>
+    </section>
+
+    <section id="strategy-card" class="header-card" hidden>
+      <div class="card-header">
+        <span class="badge badge-strategy">Strategy</span>
+        <a id="strategy-key" class="key" href="#" target="_blank" rel="noopener"></a>
+        <span id="strategy-status" class="status-pill"></span>
+      </div>
+      <h2 id="strategy-title"></h2>
+    </section>
+
+    <section id="objective-card" class="header-card" hidden>
+      <div class="card-header">
+        <span class="badge badge-objective">Objective</span>
+        <a id="objective-key-link" class="key" href="#" target="_blank" rel="noopener"></a>
+        <span id="objective-status" class="status-pill"></span>
+        <span id="objective-dates" class="dates"></span>
+      </div>
+      <h2 id="objective-title"></h2>
+      <p id="objective-summary" class="hint"></p>
+    </section>
+
+    <section id="counts-bar" hidden>
+      <div class="counts">
+        <span id="count-milestones"></span>
+        <span class="dot"></span>
+        <span id="count-initiatives"></span>
+        <span class="dot"></span>
+        <span id="count-by-quarter"></span>
+      </div>
+    </section>
+
+    <section id="quarter-filter" class="quarter-filter" hidden>
+      <div class="filter-header">
+        <span class="filter-label">Filter by quarter:</span>
+        <div class="filter-actions">
+          <button type="button" id="quarter-filter-all" class="link-btn">All</button>
+          <button type="button" id="quarter-filter-none" class="link-btn">None</button>
+        </div>
+      </div>
+      <div id="quarter-chips" class="quarter-chips"></div>
+    </section>
+
+    <section id="tree-view" hidden>
+      <h2>Tree</h2>
+      <p class="hint">Milestones are children of the objective. Initiatives are children of each milestone. The quarter badge on the right is the delivery quarter (based on due date).</p>
+      <ol id="milestone-list" class="milestone-list"></ol>
+    </section>
+
+    <section id="grid-view" hidden>
+      <h2>Quarterly delivery</h2>
+      <p class="hint">Each milestone and initiative is placed in the quarter its due date falls in. Items without a due date land in <em>Unscheduled</em>.</p>
+      <div id="grid-container" class="grid-container"></div>
+    </section>
+
+    <section id="error-card" class="error-card" hidden>
+      <h2>Couldn't load</h2>
+      <p id="error-message"></p>
+      <p class="hint">Check the Settings gear is pointing at <code>http://127.0.0.1:8766</code> and the proxy is running. If the proxy logs an upstream error, you may need to be on EG VPN / Zscaler.</p>
+    </section>
+  </main>
+
+  <dialog id="settings-dialog">
+    <form method="dialog" id="settings-form">
+      <h2>Settings</h2>
+      <label for="proxy-base">Proxy base URL</label>
+      <input type="url" id="proxy-base" placeholder="http://127.0.0.1:8766" required>
+      <p class="hint">Where the local Node proxy is listening. Stored in your browser only.</p>
+      <label for="endpoint-token">Shared token (optional)</label>
+      <input type="text" id="endpoint-token" placeholder="rotate per deploy">
+      <p class="hint">Sent as <code>X-Roadmap-Token</code>. Adds a soft barrier; not a real auth boundary.</p>
+      <div class="dialog-actions">
+        <button type="button" id="settings-cancel" class="link-btn">Cancel</button>
+        <button type="submit" class="primary">Save</button>
+      </div>
+    </form>
+  </dialog>
+
+  <footer>
+    <p>Source-of-truth: <a href="../../Functional%20Areas/Experience%20Platform/Teams/Design%20System/Products/Product%20Portfolio/Research/Jira%20Hierarchy.md"><code>Research/Jira Hierarchy</code></a> in this portfolio. Default load is Hotels.com Priority 7 Objective 1 (<code>MLSTN1-5603</code>). Pulls live from Jira via a local proxy — see <a href="README.md">README.md</a>.</p>
+  </footer>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>

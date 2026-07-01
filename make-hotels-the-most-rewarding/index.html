@@ -1,457 +1,541 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Priority 7: Make Hotels.com the Most Rewarding Way to Book a Hotel</title>
-  <style>
-    :root {
-      --hcom-red: #c8102e;
-      --hcom-red-light: #f9e8eb;
-      --hcom-red-muted: #e8596a;
-      --gold: #d4a017;
-      --gold-light: #fdf6e3;
-      --blue: #1a3a5c;
-      --blue-mid: #2c5f8a;
-      --blue-light: #e8f2f9;
-      --gray-50: #f8f9fa;
-      --gray-100: #f0f2f5;
-      --gray-200: #e4e7ec;
-      --gray-400: #9aa5b4;
-      --gray-600: #4b5563;
-      --gray-800: #1f2937;
-      --white: #ffffff;
-      --shadow-sm: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06);
-      --shadow-md: 0 4px 12px rgba(0,0,0,0.10), 0 2px 4px rgba(0,0,0,0.06);
-      --shadow-lg: 0 10px 30px rgba(0,0,0,0.12), 0 4px 8px rgba(0,0,0,0.06);
-      --radius: 12px;
-      --radius-sm: 8px;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Priority 7 — Make Hotels.com the Most Rewarding Way to Book a Hotel</title>
+<style>
+  :root {
+    --navy: #171c38;
+    --teal: #00a3b5;
+    --blue: #3d78f2;
+    --purple: #784cc7;
+    --amber: #d99e14;
+    --green: #2ea673;
+    --coral: #e56152;
+    --dark: #1e2129;
+    --subtle: #808899;
+    --bg: #f5f7fa;
+    --white: #ffffff;
+    --border: #dce0e8;
+    --shadow: 0 2px 8px rgba(0,0,0,0.06);
+    --hcom-red: #c8102e;
+    --covered: #2ea673;
+    --partial: #d99e14;
+    --gap: #e56152;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--dark); line-height: 1.6; }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+  /* ── Top bar ── */
+  .top-bar { background: var(--navy); padding: 14px 40px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
+  .top-bar-left h1 { color: #fff; font-size: 18px; font-weight: 700; }
+  .top-bar-left .sub { color: #9a9fb8; font-size: 11px; margin-top: 2px; }
+  .top-bar a { color: #9a9fb8; text-decoration: none; font-size: 13px; }
+  .top-bar a:hover { color: #fff; }
 
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      background: var(--gray-50);
-      color: var(--gray-800);
-      min-height: 100vh;
-    }
+  /* ── Hero ── */
+  .hero {
+    background: linear-gradient(135deg, var(--hcom-red) 0%, #8b0d1f 100%);
+    color: #fff; padding: 48px 48px 40px;
+    position: relative; overflow: hidden;
+  }
+  .hero::before { content: ''; position: absolute; top: -80px; right: -80px; width: 320px; height: 320px; border-radius: 50%; background: rgba(255,255,255,0.05); }
+  .hero-inner { max-width: 1100px; margin: 0 auto; position: relative; }
+  .priority-pill { display: inline-flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.25); border-radius: 20px; padding: 4px 14px; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 16px; }
+  .hero h2 { font-size: clamp(20px, 3vw, 30px); font-weight: 800; line-height: 1.2; max-width: 640px; margin-bottom: 14px; }
+  .hero p { font-size: 14px; opacity: 0.8; max-width: 560px; line-height: 1.65; }
 
-    /* ── Top banner ── */
-    .top-banner {
-      background: var(--blue);
-      color: var(--white);
-      padding: 10px 24px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      font-size: 13px;
-      letter-spacing: 0.02em;
-    }
-    .top-banner .breadcrumb {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      opacity: 0.75;
-    }
-    .top-banner .breadcrumb span { font-weight: 500; }
-    .top-banner .breadcrumb .sep { opacity: 0.5; }
-    .top-banner .current { opacity: 1; font-weight: 600; }
+  /* ── Legend bar ── */
+  .legend-bar { background: var(--white); border-bottom: 1px solid var(--border); padding: 10px 48px; display: flex; align-items: center; gap: 24px; flex-wrap: wrap; }
+  .legend-bar .lbl { font-size: 10px; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; color: var(--subtle); }
+  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--dark); }
+  .lbadge { display: inline-block; width: 12px; height: 12px; border-radius: 3px; }
+  .lbadge-covered { background: var(--covered); }
+  .lbadge-partial  { background: var(--partial); }
+  .lbadge-gap      { background: var(--gap); }
 
-    /* ── Hero section ── */
-    .hero {
-      background: linear-gradient(135deg, var(--hcom-red) 0%, #9b0d20 100%);
-      color: var(--white);
-      padding: 52px 32px 44px;
-      text-align: center;
-      position: relative;
-      overflow: hidden;
-    }
-    .hero::before {
-      content: '';
-      position: absolute;
-      top: -60px; right: -60px;
-      width: 240px; height: 240px;
-      border-radius: 50%;
-      background: rgba(255,255,255,0.06);
-    }
-    .hero::after {
-      content: '';
-      position: absolute;
-      bottom: -80px; left: -40px;
-      width: 300px; height: 300px;
-      border-radius: 50%;
-      background: rgba(255,255,255,0.04);
-    }
-    .hero .priority-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: rgba(255,255,255,0.18);
-      border: 1px solid rgba(255,255,255,0.28);
-      border-radius: 20px;
-      padding: 5px 14px;
-      font-size: 12px;
-      font-weight: 600;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      margin-bottom: 20px;
-    }
-    .hero h1 {
-      font-size: clamp(22px, 4vw, 34px);
-      font-weight: 700;
-      line-height: 1.25;
-      max-width: 680px;
-      margin: 0 auto 16px;
-    }
-    .hero .subtitle {
-      font-size: 14px;
-      opacity: 0.8;
-      max-width: 520px;
-      margin: 0 auto;
-      line-height: 1.6;
-    }
-    .hero .reward-icon {
-      font-size: 44px;
-      margin-bottom: 16px;
-      display: block;
-    }
+  /* ── Content ── */
+  .content { max-width: 1100px; margin: 0 auto; padding: 40px 48px 80px; }
 
-    /* ── Connector from hero to objectives ── */
-    .connector {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 20px 0 4px;
-    }
-    .connector-line {
-      width: 2px;
-      height: 28px;
-      background: linear-gradient(to bottom, var(--hcom-red), var(--gray-200));
-    }
-    .connector-label {
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--gray-400);
-      background: var(--gray-50);
-      padding: 4px 12px;
-      border-radius: 20px;
-      border: 1px solid var(--gray-200);
-      margin: 6px 0;
-    }
+  /* ── Objective block ── */
+  .objective-block { margin-bottom: 56px; }
+  .obj-title-bar {
+    display: flex; align-items: flex-start; gap: 16px;
+    padding: 20px 24px; border-radius: 10px 10px 0 0;
+    background: linear-gradient(135deg, #fff5f7 0%, var(--white) 100%);
+    border: 1px solid var(--border); border-bottom: 3px solid var(--hcom-red);
+  }
+  .obj-num-badge { flex-shrink: 0; background: var(--hcom-red); color: #fff; font-size: 10px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; padding: 4px 10px; border-radius: 4px; margin-top: 3px; }
+  .obj-title-text { font-size: 17px; font-weight: 800; color: var(--navy); line-height: 1.35; }
 
-    /* ── Main content ── */
-    .main {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 8px 24px 64px;
-    }
+  /* ── Two-column body ── */
+  .obj-body { display: grid; grid-template-columns: 280px 1fr; border: 1px solid var(--border); border-top: none; border-radius: 0 0 10px 10px; background: var(--white); overflow: hidden; }
+  @media (max-width: 900px) { .obj-body { grid-template-columns: 1fr; } }
 
-    /* ── Objectives grid ── */
-    .objectives-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 24px;
-      margin-top: 8px;
-    }
-    @media (max-width: 900px) {
-      .objectives-grid { grid-template-columns: 1fr; }
-    }
+  /* ── Left: problems ── */
+  .problems-col { background: #fefbf0; border-right: 1px solid var(--border); padding: 20px; }
+  .col-hd { font-size: 10px; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase; margin-bottom: 14px; display: flex; align-items: center; gap: 7px; }
+  .pip { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .pip-problems { background: var(--amber); }
+  .pip-solutions { background: var(--blue); }
+  .col-hd-problems { color: var(--amber); }
+  .col-hd-solutions { color: var(--blue); }
 
-    /* ── Objective card ── */
-    .objective-card {
-      background: var(--white);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow-md);
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      border: 1px solid var(--gray-200);
-      transition: box-shadow 0.2s;
-    }
-    .objective-card:hover { box-shadow: var(--shadow-lg); }
+  .problem-item { display: flex; gap: 9px; margin-bottom: 12px; align-items: flex-start; }
+  .problem-item:last-child { margin-bottom: 0; }
+  .p-num { flex-shrink: 0; width: 18px; height: 18px; border-radius: 50%; background: var(--amber); color: #fff; font-size: 10px; font-weight: 800; display: flex; align-items: center; justify-content: center; margin-top: 2px; }
+  .p-text { font-size: 12px; color: var(--dark); line-height: 1.55; }
 
-    .obj-header {
-      padding: 22px 22px 16px;
-      border-bottom: 2px solid var(--hcom-red);
-      background: linear-gradient(135deg, var(--hcom-red-light) 0%, var(--white) 100%);
-    }
-    .obj-number {
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--hcom-red);
-      margin-bottom: 8px;
-    }
-    .obj-title {
-      font-size: 15px;
-      font-weight: 700;
-      color: var(--gray-800);
-      line-height: 1.4;
-    }
+  /* ── Right: solutions + coverage ── */
+  .solutions-col { padding: 20px 24px; }
 
-    /* ── Card sections ── */
-    .card-section {
-      padding: 18px 22px;
-      flex: 1;
-    }
-    .card-section + .card-section {
-      border-top: 1px solid var(--gray-100);
-    }
+  .solution-block { margin-bottom: 24px; padding-bottom: 24px; border-bottom: 1px solid var(--border); }
+  .solution-block:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
 
-    .section-label {
-      display: flex;
-      align-items: center;
-      gap: 7px;
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 0.07em;
-      text-transform: uppercase;
-      margin-bottom: 12px;
-    }
-    .section-label .dot {
-      width: 8px; height: 8px;
-      border-radius: 50%;
-      flex-shrink: 0;
-    }
-    .dot-problems { background: var(--gold); }
-    .dot-opportunities { background: var(--blue-mid); }
-    .label-problems { color: var(--gold); }
-    .label-opportunities { color: var(--blue-mid); }
+  .soln-horizon {
+    font-size: 12px; font-weight: 700; color: var(--navy); line-height: 1.5;
+    padding: 10px 14px; background: #eef3ff; border-left: 3px solid var(--blue);
+    border-radius: 0 6px 6px 0; margin-bottom: 14px;
+  }
+  .soln-num { display: inline-block; background: var(--blue); color: #fff; font-size: 10px; font-weight: 800; padding: 2px 8px; border-radius: 4px; margin-bottom: 10px; }
 
-    /* ── Empty state chips ── */
-    .empty-slots {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-    .slot {
-      border-radius: var(--radius-sm);
-      padding: 10px 14px;
-      font-size: 13px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      border: 1.5px dashed;
-      color: var(--gray-400);
-      line-height: 1.4;
-    }
-    .slot-problems {
-      background: var(--gold-light);
-      border-color: rgba(212,160,23,0.35);
-    }
-    .slot-opportunities {
-      background: var(--blue-light);
-      border-color: rgba(44,95,138,0.25);
-    }
-    .slot-icon { font-size: 14px; opacity: 0.6; }
-    .slot-text { font-style: italic; }
+  /* ── Persona sub-sections ── */
+  .persona-hd { font-size: 10px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--subtle); margin: 10px 0 6px; }
 
-    /* ── Add button ── */
-    .add-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      margin-top: 10px;
-      font-size: 12px;
-      font-weight: 600;
-      cursor: pointer;
-      border: none;
-      background: none;
-      padding: 0;
-      border-radius: 4px;
-    }
-    .add-btn-problems { color: var(--gold); }
-    .add-btn-opportunities { color: var(--blue-mid); }
-    .add-btn:hover { text-decoration: underline; }
+  /* ── Coverage table ── */
+  .cov-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .cov-table th { text-align: left; font-size: 10px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--subtle); padding: 4px 8px 4px 0; border-bottom: 1px solid var(--border); }
+  .cov-table td { padding: 6px 8px 6px 0; vertical-align: top; border-bottom: 1px solid #f0f2f5; }
+  .cov-table tr:last-child td { border-bottom: none; }
+  .cov-table td:last-child { white-space: nowrap; }
 
-    /* ── Footer ── */
-    .page-footer {
-      margin-top: 56px;
-      padding: 24px;
-      border-top: 1px solid var(--gray-200);
-      text-align: center;
-      font-size: 12px;
-      color: var(--gray-400);
-    }
-    .page-footer a { color: var(--hcom-red); text-decoration: none; }
-    .page-footer a:hover { text-decoration: underline; }
+  .cap-name { color: var(--dark); font-weight: 500; }
 
-    /* ── Legend ── */
-    .legend {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 24px;
-      flex-wrap: wrap;
-      margin: 24px 0 0;
-      font-size: 12px;
-      color: var(--gray-600);
-    }
-    .legend-item {
-      display: flex;
-      align-items: center;
-      gap: 7px;
-      font-weight: 500;
-    }
-    .legend-swatch {
-      width: 10px; height: 10px;
-      border-radius: 50%;
-    }
-  </style>
+  /* ── Milestone links ── */
+  .ms-links { display: flex; flex-wrap: wrap; gap: 4px; }
+  .ms-link { display: inline-flex; align-items: center; gap: 3px; font-size: 11px; font-weight: 600; color: var(--blue); text-decoration: none; background: #eef3ff; border: 1px solid rgba(61,120,242,0.2); border-radius: 4px; padding: 2px 7px; white-space: nowrap; }
+  .ms-link:hover { background: #dce8ff; }
+  .ms-link.discovery { background: #fdf6e3; border-color: rgba(217,158,20,0.3); color: #8a6000; }
+  .ms-none { font-size: 11px; color: var(--subtle); font-style: italic; }
+
+  /* ── Coverage badges ── */
+  .cov { display: inline-flex; align-items: center; gap: 4px; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 10px; }
+  .cov-ok   { background: #dcfce7; color: #166534; }
+  .cov-warn { background: #fef9c3; color: #854d0e; }
+  .cov-gap  { background: #fee2e2; color: #991b1b; }
+
+  /* ── Unmapped milestones ── */
+  .unmapped-section { margin-top: 20px; padding: 14px 16px; background: #f8f9fa; border: 1px solid var(--border); border-radius: 8px; }
+  .unmapped-hd { font-size: 10px; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; color: var(--subtle); margin-bottom: 10px; }
+  .unmapped-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .unmapped-chip { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; padding: 3px 9px; border-radius: 12px; background: var(--white); border: 1px solid var(--border); color: var(--subtle); }
+
+  /* ── Footer ── */
+  .page-footer { margin-top: 48px; padding-top: 20px; border-top: 1px solid var(--border); font-size: 12px; color: var(--subtle); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+  .page-footer a { color: var(--teal); text-decoration: none; }
+  .page-footer a:hover { text-decoration: underline; }
+</style>
 </head>
 <body>
 
-  <!-- Breadcrumb -->
-  <div class="top-banner">
-    <div class="breadcrumb">
-      <span>Top 10 Priorities</span>
-      <span class="sep">›</span>
-      <span class="current">Priority 7</span>
+<div class="top-bar">
+  <div class="top-bar-left">
+    <h1>Hotels.com &mdash; Top 10 Priorities</h1>
+    <div class="sub">Priority 7 &rsaquo; Objective Coverage Analysis</div>
+  </div>
+  <a href="../">← All pages</a>
+</div>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div class="priority-pill">⭐ Priority 7 of 10</div>
+    <h2>Make Hotels.com the Most Rewarding Way to Book a Hotel</h2>
+    <p>Each early solution perspective is mapped to milestones in Jira. Coverage gaps show where the Priority 7 paper names capabilities that have no delivery milestone yet.</p>
+  </div>
+</div>
+
+<div class="legend-bar">
+  <span class="lbl">Coverage</span>
+  <div class="legend-item"><span class="lbadge lbadge-covered"></span> Covered — milestone exists and explicitly addresses this</div>
+  <div class="legend-item"><span class="lbadge lbadge-partial"></span> Partial — adjacent milestone covers related work; validate scope</div>
+  <div class="legend-item"><span class="lbadge lbadge-gap"></span> Gap — nothing in Jira addresses this yet</div>
+</div>
+
+<div class="content">
+
+  <!-- ═══════════════════════════════════════════════════════ OBJECTIVE 1 -->
+  <div class="objective-block">
+    <div class="obj-title-bar">
+      <div class="obj-num-badge">Obj 1</div>
+      <div class="obj-title-text">Be the best place to plan and book business trips</div>
+    </div>
+    <div class="obj-body">
+
+      <div class="problems-col">
+        <div class="col-hd"><span class="pip pip-problems"></span><span class="col-hd-problems">Customer Problems</span></div>
+        <div class="problem-item"><div class="p-num">1</div><div class="p-text">Small-scale business travelers lack access to bespoke TMC-grade tools, making shopping, booking, and servicing complicated and cumbersome.</div></div>
+        <div class="problem-item"><div class="p-num">2</div><div class="p-text">As a traveler shopping for a hotel, I don't get expert context I need — content is overwhelming and generic regardless of trip intent.</div></div>
+      </div>
+
+      <div class="solutions-col">
+        <div class="col-hd" style="margin-bottom:16px"><span class="pip pip-solutions"></span><span class="col-hd-solutions">Early Solution Perspective → Milestone Coverage</span></div>
+
+        <!-- Solution 1 -->
+        <div class="solution-block">
+          <div class="soln-num">Solution 1</div>
+          <div class="soln-horizon">By 2027, Hotels.com will offer tools that simplify the jobs of self-booking and travel arranger business travelers across shopping, booking, and service — all in the same account they use for leisure.</div>
+
+          <div class="persona-hd">HBT Self-Bookers</div>
+          <table class="cov-table">
+            <tr><th>Capability</th><th>Milestone(s)</th><th>Coverage</th></tr>
+            <tr>
+              <td class="cap-name">Expense management tools</td>
+              <td><div class="ms-links"><a class="ms-link" href="https://expediagroup.atlassian.net/browse/MLSTN1-5694" target="_blank">MLSTN1-5694</a><a class="ms-link" href="https://expediagroup.atlassian.net/browse/MLSTN1-5676" target="_blank">MLSTN1-5676</a></div></td>
+              <td><span class="cov cov-ok">✓ Covered</span></td>
+            </tr>
+            <tr>
+              <td class="cap-name">One-tap rebook of trusted hotels</td>
+              <td><div class="ms-links"><a class="ms-link" href="https://expediagroup.atlassian.net/browse/MLSTN1-5676" target="_blank">MLSTN1-5676</a><a class="ms-link" href="https://expediagroup.atlassian.net/browse/MLSTN1-5679" target="_blank">MLSTN1-5679</a></div></td>
+              <td><span class="cov cov-ok">✓ Covered</span></td>
+            </tr>
+            <tr>
+              <td class="cap-name">For-business recommendations</td>
+              <td><div class="ms-links"><a class="ms-link" href="https://expediagroup.atlassian.net/browse/MLSTN1-3067" target="_blank">MLSTN1-3067</a><a class="ms-link" href="https://expediagroup.atlassian.net/browse/MLSTN1-5679" target="_blank">MLSTN1-5679</a></div></td>
+              <td><span class="cov cov-ok">✓ Covered</span></td>
+            </tr>
+            <tr>
+              <td class="cap-name">Invoice-grade receipts</td>
+              <td><div class="ms-links"><a class="ms-link" href="https://expediagroup.atlassian.net/browse/MLSTN1-5694" target="_blank">MLSTN1-5694</a></div></td>
+              <td><span class="cov cov-ok">✓ Covered</span></td>
+            </tr>
+            <tr>
+              <td class="cap-name">UberEats / WeWork integrations</td>
+              <td><div class="ms-links"><a class="ms-link" href="https://expediagroup.atlassian.net/browse/MLSTN1-5677" target="_blank">MLSTN1-5677</a></div></td>
+              <td><span class="cov cov-ok">✓ Covered</span></td>
+            </tr>
+            <tr>
+              <td class="cap-name">Map-based booking</td>
+              <td><span class="ms-none">Not explicitly scoped — verify MLSTN1-5676</span></td>
+              <td><span class="cov cov-warn">⚠ Partial</span></td>
+            </tr>
+            <tr>
+              <td class="cap-name">Preferred business credit card</td>
+              <td><span class="ms-none">No milestone — Pay Later (MLSTN1-3515) is adjacent but different</span></td>
+              <td><span class="cov cov-gap">✗ Gap</span></td>
+            </tr>
+          </table>
+
+          <div class="persona-hd" style="margin-top:14px">HBT Arrangers</div>
+          <table class="cov-table">
+            <tr><th>Capability</th><th>Milestone(s)</th><th>Coverage</th></tr>
+            <tr>
+              <td class="cap-name">Permission to book / edit for others</td>
+              <td><div class="ms-links"><a class="ms-link discovery" href="https://expediagroup.atlassian.net/browse/MLSTN1-5678" target="_blank">MLSTN1-5678 (discovery)</a></div></td>
+              <td><span class="cov cov-warn">⚠ Discovery only</span></td>
+            </tr>
+            <tr>
+              <td class="cap-name">Roster management</td>
+              <td><div class="ms-links"><a class="ms-link discovery" href="https://expediagroup.atlassian.net/browse/MLSTN1-5678" target="_blank">MLSTN1-5678 (discovery)</a></div></td>
+              <td><span class="cov cov-warn">⚠ Discovery only</span></td>
+            </tr>
+            <tr>
+              <td class="cap-name">Shared payments</td>
+              <td><div class="ms-links"><a class="ms-link discovery" href="https://expediagroup.atlassian.net/browse/MLSTN1-5678" target="_blank">MLSTN1-5678 (discovery)</a></div></td>
+              <td><span class="cov cov-warn">⚠ Discovery only</span></td>
+            </tr>
+            <tr>
+              <td class="cap-name">Pooling of rewards</td>
+              <td><div class="ms-links"><a class="ms-link discovery" href="https://expediagroup.atlassian.net/browse/MLSTN1-5678" target="_blank">MLSTN1-5678 (discovery)</a></div></td>
+              <td><span class="cov cov-warn">⚠ Discovery only</span></td>
+            </tr>
+            <tr>
+              <td class="cap-name">Lightweight duty of care + audit</td>
+              <td><div class="ms-links"><a class="ms-link discovery" href="https://expediagroup.atlassian.net/browse/MLSTN1-5678" target="_blank">MLSTN1-5678 (discovery)</a></div></td>
+              <td><span class="cov cov-warn">⚠ Discovery only</span></td>
+            </tr>
+            <tr>
+              <td class="cap-name">Expense tools (arranger view)</td>
+              <td><div class="ms-links"><a class="ms-link discovery" href="https://expediagroup.atlassian.net/browse/MLSTN1-5678" target="_blank">MLSTN1-5678 (discovery)</a></div></td>
+              <td><span class="cov cov-warn">⚠ Discovery only</span></td>
+            </tr>
+            <tr>
+              <td class="cap-name">Data on travel advisories</td>
+              <td><span class="ms-none">No milestone</span></td>
+              <td><span class="cov cov-gap">✗ Gap</span></td>
+            </tr>
+          </table>
+
+          <div class="persona-hd" style="margin-top:14px">Multi-Hotel Travelers</div>
+          <table class="cov-table">
+            <tr><th>Capability</th><th>Milestone(s)</th><th>Coverage</th></tr>
+            <tr>
+              <td class="cap-name">Plan + book multi-city work swings</td>
+              <td><div class="ms-links"><a class="ms-link" href="https://expediagroup.atlassian.net/browse/MLSTN1-5332" target="_blank">MLSTN1-5332</a></div></td>
+              <td><span class="cov cov-ok">✓ Covered</span></td>
+            </tr>
+            <tr>
+              <td class="cap-name">Price-optimize across hotels</td>
+              <td><div class="ms-links"><a class="ms-link" href="https://expediagroup.atlassian.net/browse/MLSTN1-5332" target="_blank">MLSTN1-5332</a></div></td>
+              <td><span class="cov cov-ok">✓ Covered</span></td>
+            </tr>
+            <tr>
+              <td class="cap-name">Bleisure extensions</td>
+              <td><div class="ms-links"><a class="ms-link" href="https://expediagroup.atlassian.net/browse/MLSTN1-5679" target="_blank">MLSTN1-5679</a></div></td>
+              <td><span class="cov cov-ok">✓ Covered</span></td>
+            </tr>
+            <tr>
+              <td class="cap-name">Service multi-city trips</td>
+              <td><span class="ms-none">No milestone</span></td>
+              <td><span class="cov cov-gap">✗ Gap</span></td>
+            </tr>
+            <tr>
+              <td class="cap-name">Expense multi-city swings</td>
+              <td><span class="ms-none">MLSTN1-5694 covers single-booking only</span></td>
+              <td><span class="cov cov-warn">⚠ Partial</span></td>
+            </tr>
+            <tr>
+              <td class="cap-name">Road trips / intracity hotel-hop</td>
+              <td><span class="ms-none">No milestone</span></td>
+              <td><span class="cov cov-gap">✗ Gap</span></td>
+            </tr>
+          </table>
+        </div>
+
+        <!-- Solution 2 -->
+        <div class="solution-block">
+          <div class="soln-num">Solution 2</div>
+          <div class="soln-horizon">By 2027, Business Travelers will choose Hotels.com because it delivers rich, trip-specific context and expertise that makes decisions about where to stay easy.</div>
+          <table class="cov-table">
+            <tr><th>Capability</th><th>Milestone(s)</th><th>Coverage</th></tr>
+            <tr>
+              <td class="cap-name">Curated 3P + UGC by traveler purpose</td>
+              <td><div class="ms-links"><a class="ms-link" href="https://expediagroup.atlassian.net/browse/MLSTN1-5677" target="_blank">MLSTN1-5677</a></div></td>
+              <td><span class="cov cov-ok">✓ Covered</span></td>
+            </tr>
+            <tr>
+              <td class="cap-name">Trip-aware property comparison tools</td>
+              <td><div class="ms-links"><a class="ms-link" href="https://expediagroup.atlassian.net/browse/MLSTN1-5677" target="_blank">MLSTN1-5677</a><a class="ms-link" href="https://expediagroup.atlassian.net/browse/MLSTN1-5679" target="_blank">MLSTN1-5679</a></div></td>
+              <td><span class="cov cov-ok">✓ Covered</span></td>
+            </tr>
+            <tr>
+              <td class="cap-name">Property Expert Q&amp;A from verified reviews</td>
+              <td><span class="ms-none">No milestone</span></td>
+              <td><span class="cov cov-gap">✗ Gap</span></td>
+            </tr>
+          </table>
+        </div>
+
+        <!-- Unmapped milestones -->
+        <div class="unmapped-section">
+          <div class="unmapped-hd">Milestones not mapped to a named solution capability</div>
+          <div class="unmapped-chips">
+            <span class="unmapped-chip"><a class="ms-link" href="https://expediagroup.atlassian.net/browse/MLSTN1-3515" target="_blank">MLSTN1-3515</a> Launch Pay Later to EG — payment flexibility; verify if covers biz credit card intent</span>
+            <span class="unmapped-chip"><a class="ms-link" href="https://expediagroup.atlassian.net/browse/MLSTN1-3516" target="_blank">MLSTN1-3516</a> Partners Autopay Scale-Up — supply-side infrastructure</span>
+            <span class="unmapped-chip"><a class="ms-link" href="https://expediagroup.atlassian.net/browse/MLSTN1-3572" target="_blank">MLSTN1-3572</a> Evolve Hotels.com Brand Identity — brand credibility</span>
+          </div>
+        </div>
+
+      </div>
     </div>
   </div>
 
-  <!-- Hero -->
-  <div class="hero">
-    <span class="reward-icon">🏆</span>
-    <div class="priority-badge">⭐ Priority 7 of 10</div>
-    <h1>Make Hotels.com the Most Rewarding Way to Book a Hotel</h1>
-    <p class="subtitle">Three strategic objectives ladder up to this priority. Each objective maps to specific customer problems and business opportunities.</p>
+  <!-- ═══════════════════════════════════════════════════════ OBJECTIVE 2 -->
+  <div class="objective-block">
+    <div class="obj-title-bar">
+      <div class="obj-num-badge">Obj 2</div>
+      <div class="obj-title-text">Create stickiness through flexibility, add-ons and servicing for frequent last-minute travelers</div>
+    </div>
+    <div class="obj-body">
+
+      <div class="problems-col">
+        <div class="col-hd"><span class="pip pip-problems"></span><span class="col-hd-problems">Customer Problems</span></div>
+        <div class="problem-item"><div class="p-num">1</div><div class="p-text">As a frequent traveler often shopping for business trips, I find it difficult to find offers and context that match my needs — particularly in last-minute booking scenarios.</div></div>
+      </div>
+
+      <div class="solutions-col">
+        <div class="col-hd" style="margin-bottom:16px"><span class="pip pip-solutions"></span><span class="col-hd-solutions">Early Solution Perspective → Milestone Coverage</span></div>
+
+        <div class="solution-block">
+          <div class="soln-num">Solution 1</div>
+          <div class="soln-horizon">By 2027, Hotels.com will be the place to shop for travelers seeking flexibility, especially in last-minute business scenarios.</div>
+          <table class="cov-table">
+            <tr><th>Mechanism</th><th>Milestone(s)</th><th>Coverage</th></tr>
+            <tr>
+              <td class="cap-name">Biz Rates — gated, flexible, biz-preferred perks</td>
+              <td><div class="ms-links"><a class="ms-link" href="https://expediagroup.atlassian.net/browse/MLSTN1-5676" target="_blank">MLSTN1-5676</a></div></td>
+              <td><span class="cov cov-warn">⚠ Via Obj 1 milestone; no Obj 2–owned milestone</span></td>
+            </tr>
+            <tr>
+              <td class="cap-name">3rd-party CFAR — synthetic flex via insurance bundling</td>
+              <td><div class="ms-links"><a class="ms-link" href="https://expediagroup.atlassian.net/browse/MLSTN1-3593" target="_blank">MLSTN1-3593</a><a class="ms-link" href="https://expediagroup.atlassian.net/browse/MLSTN1-5682" target="_blank">MLSTN1-5682</a><a class="ms-link" href="https://expediagroup.atlassian.net/browse/MLSTN1-5680" target="_blank">MLSTN1-5680</a></div></td>
+              <td><span class="cov cov-ok">✓ Covered</span></td>
+            </tr>
+            <tr>
+              <td class="cap-name">EG-created flex — HCom underwrites risk on non-refundable rooms</td>
+              <td><span class="ms-none">No milestone explicitly owns EG-underwritten rates</span></td>
+              <td><span class="cov cov-gap">✗ Gap</span></td>
+            </tr>
+            <tr>
+              <td class="cap-name">True Change — automate change without cancel/rebook loop</td>
+              <td><div class="ms-links"><a class="ms-link" href="https://expediagroup.atlassian.net/browse/MLSTN1-5883" target="_blank">MLSTN1-5883</a></div></td>
+              <td><span class="cov cov-ok">✓ Covered</span></td>
+            </tr>
+          </table>
+        </div>
+
+        <div class="unmapped-section">
+          <div class="unmapped-hd">Milestones not mapped to a named mechanism — validate placement</div>
+          <div class="unmapped-chips">
+            <span class="unmapped-chip"><a class="ms-link" href="https://expediagroup.atlassian.net/browse/MLSTN1-2085" target="_blank">MLSTN1-2085</a> Become the Hotel Expert (paused) — content quality; not a flexibility mechanism</span>
+            <span class="unmapped-chip"><a class="ms-link" href="https://expediagroup.atlassian.net/browse/MLSTN1-5432" target="_blank">MLSTN1-5432</a> Differentiate VR on HCOM — VR clarity; orthogonal to flexibility</span>
+            <span class="unmapped-chip"><a class="ms-link" href="https://expediagroup.atlassian.net/browse/MLSTN1-3515" target="_blank">MLSTN1-3515</a> Launch Pay Later for ETP Travelers — payment flex; not a rate-type mechanism</span>
+            <span class="unmapped-chip"><a class="ms-link" href="https://expediagroup.atlassian.net/browse/MLSTN1-2887" target="_blank">MLSTN1-2887</a> Pilot VAS Products on Hcom — add-ons; adjacent to CFAR</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
   </div>
 
-  <!-- Connector -->
-  <div class="connector">
-    <div class="connector-line"></div>
-    <div class="connector-label">Strategic Objectives</div>
+  <!-- ═══════════════════════════════════════════════════════ OBJECTIVE 3 -->
+  <div class="objective-block">
+    <div class="obj-title-bar">
+      <div class="obj-num-badge">Obj 3</div>
+      <div class="obj-title-text">Use rewards to bridge business and leisure travel and create rewards flywheel</div>
+    </div>
+    <div class="obj-body">
+
+      <div class="problems-col">
+        <div class="col-hd"><span class="pip pip-problems"></span><span class="col-hd-problems">Customer Problems</span></div>
+        <div class="problem-item"><div class="p-num">1</div><div class="p-text">Travelers don't feel meaningfully rewarded. Loyalty value is unclear, slow to unlock, or too small to influence behavior — disconnected from how they travel across business and leisure.</div></div>
+        <div class="problem-item"><div class="p-num">2</div><div class="p-text">High-frequency US and UK business travelers miss the 10-for-1 value prop and don't find OneKey earn rates meaningful.</div></div>
+        <div class="problem-item"><div class="p-num">3</div><div class="p-text">Tier status benefits don't feel meaningful, clearly differentiated, or reliably delivered — inconsistency erodes status credibility.</div></div>
+      </div>
+
+      <div class="solutions-col">
+        <div class="col-hd" style="margin-bottom:16px"><span class="pip pip-solutions"></span><span class="col-hd-solutions">Early Solution Perspective → Milestone Coverage</span></div>
+
+        <!-- Solution 1 -->
+        <div class="solution-block">
+          <div class="soln-num">Solution 1</div>
+          <div class="soln-horizon">By end of 2026, Hotels.com will use a currency-based program in all markets — earn, burn, refund, gift, save, pool, and "Save Your Way" in Hotels.comCash for business or leisure.</div>
+          <table class="cov-table">
+            <tr><th>Capability</th><th>Milestone(s)</th><th>Coverage</th></tr>
+            <tr>
+              <td class="cap-name">Earn Hotels.comCash</td>
+              <td><div class="ms-links"><a class="ms-link" href="https://expediagroup.atlassian.net/browse/MLSTN1-5686" target="_blank">MLSTN1-5686</a><a class="ms-link" href="https://expediagroup.atlassian.net/browse/MLSTN1-5476" target="_blank">MLSTN1-5476</a></div></td>
+              <td><span class="cov cov-ok">✓ Covered</span></td>
+            </tr>
+            <tr>
+              <td class="cap-name">Burn Hotels.comCash</td>
+              <td><div class="ms-links"><a class="ms-link" href="https://expediagroup.atlassian.net/browse/MLSTN1-5686" target="_blank">MLSTN1-5686</a><a class="ms-link" href="https://expediagroup.atlassian.net/browse/MLSTN1-5674" target="_blank">MLSTN1-5674</a></div></td>
+              <td><span class="cov cov-ok">✓ Covered</span></td>
+            </tr>
+            <tr>
+              <td class="cap-name">Refund into Hotels.comCash</td>
+              <td><div class="ms-links"><a class="ms-link" href="https://expediagroup.atlassian.net/browse/MLSTN1-5674" target="_blank">MLSTN1-5674</a></div></td>
+              <td><span class="cov cov-ok">✓ Covered</span></td>
+            </tr>
+            <tr>
+              <td class="cap-name">Gift Hotels.comCash</td>
+              <td><span class="ms-none">No milestone — Gift Cards (MLSTN1-5672) covers purchase/redemption, not gifting HCC balances</span></td>
+              <td><span class="cov cov-gap">✗ Gap</span></td>
+            </tr>
+            <tr>
+              <td class="cap-name">Save (Save Your Way)</td>
+              <td><div class="ms-links"><a class="ms-link" href="https://expediagroup.atlassian.net/browse/MLSTN1-5476" target="_blank">MLSTN1-5476</a><a class="ms-link" href="https://expediagroup.atlassian.net/browse/MLSTN1-5478" target="_blank">MLSTN1-5478</a></div></td>
+              <td><span class="cov cov-ok">✓ Covered</span></td>
+            </tr>
+            <tr>
+              <td class="cap-name">Pool across household accounts</td>
+              <td><div class="ms-links"><a class="ms-link" href="https://expediagroup.atlassian.net/browse/MLSTN1-5674" target="_blank">MLSTN1-5674</a></div></td>
+              <td><span class="cov cov-ok">✓ Covered</span></td>
+            </tr>
+            <tr>
+              <td class="cap-name">All markets</td>
+              <td><div class="ms-links"><a class="ms-link" href="https://expediagroup.atlassian.net/browse/MLSTN1-608" target="_blank">MLSTN1-608</a><a class="ms-link" href="https://expediagroup.atlassian.net/browse/MLSTN1-4025" target="_blank">MLSTN1-4025</a></div></td>
+              <td><span class="cov cov-ok">✓ Covered</span></td>
+            </tr>
+          </table>
+        </div>
+
+        <!-- Solution 2 -->
+        <div class="solution-block">
+          <div class="soln-num">Solution 2</div>
+          <div class="soln-horizon">In US and UK, an annual paid premium tier restores 10-for-1, enriched with high-value, low-cost benefits tied to business needs.</div>
+          <table class="cov-table">
+            <tr><th>Capability</th><th>Milestone(s)</th><th>Coverage</th></tr>
+            <tr>
+              <td class="cap-name">Paid tier restoring 10-for-1</td>
+              <td><div class="ms-links"><a class="ms-link" href="https://expediagroup.atlassian.net/browse/MLSTN1-5675" target="_blank">MLSTN1-5675</a><a class="ms-link" href="https://expediagroup.atlassian.net/browse/MLSTN1-4025" target="_blank">MLSTN1-4025</a></div></td>
+              <td><span class="cov cov-ok">✓ Covered</span></td>
+            </tr>
+            <tr>
+              <td class="cap-name">Annual CFAR as tier benefit</td>
+              <td><span class="ms-none">CFAR pilot (MLSTN1-3593) exists as a product — not yet defined as a tier entitlement</span></td>
+              <td><span class="cov cov-warn">⚠ Partial</span></td>
+            </tr>
+            <tr>
+              <td class="cap-name">Lightweight annual travel insurance</td>
+              <td><div class="ms-links"><a class="ms-link" href="https://expediagroup.atlassian.net/browse/MLSTN1-5680" target="_blank">MLSTN1-5680</a></div></td>
+              <td><span class="cov cov-warn">⚠ Partial — add-on exists; not yet a tier benefit</span></td>
+            </tr>
+            <tr>
+              <td class="cap-name">Avoidance of rewards expiry</td>
+              <td><div class="ms-links"><a class="ms-link" href="https://expediagroup.atlassian.net/browse/MLSTN1-5657" target="_blank">MLSTN1-5657</a></div></td>
+              <td><span class="cov cov-warn">⚠ Partial — VIPa covers status perk expiry; confirm rewards balance expiry</span></td>
+            </tr>
+            <tr>
+              <td class="cap-name">Automated price-drop cancel/rebook</td>
+              <td><div class="ms-links"><a class="ms-link" href="https://expediagroup.atlassian.net/browse/MLSTN1-5682" target="_blank">MLSTN1-5682</a></div></td>
+              <td><span class="cov cov-ok">✓ Covered (Wave 2)</span></td>
+            </tr>
+          </table>
+        </div>
+
+        <!-- Solution 3 -->
+        <div class="solution-block">
+          <div class="soln-num">Solution 3</div>
+          <div class="soln-horizon">Reward tiers will evolve to include status tier matching of complementary programs (e.g., Hertz President's Circle), on-premises value embedded in rate plans, and status benefits that never expire (like Booking.com Genius).</div>
+          <table class="cov-table">
+            <tr><th>Capability</th><th>Milestone(s)</th><th>Coverage</th></tr>
+            <tr>
+              <td class="cap-name">Status tier matching (e.g., Hertz President's Circle)</td>
+              <td><div class="ms-links"><a class="ms-link" href="https://expediagroup.atlassian.net/browse/MLSTN1-5683" target="_blank">MLSTN1-5683</a></div></td>
+              <td><span class="cov cov-warn">⚠ Partial — Partnerships milestone covers external programs; tier matching not explicitly named</span></td>
+            </tr>
+            <tr>
+              <td class="cap-name">On-premises value embedded in rate plans</td>
+              <td><div class="ms-links"><a class="ms-link" href="https://expediagroup.atlassian.net/browse/MLSTN1-5683" target="_blank">MLSTN1-5683</a></div></td>
+              <td><span class="cov cov-ok">✓ Covered</span></td>
+            </tr>
+            <tr>
+              <td class="cap-name">Status benefits that never expire</td>
+              <td><div class="ms-links"><a class="ms-link" href="https://expediagroup.atlassian.net/browse/MLSTN1-5657" target="_blank">MLSTN1-5657</a><a class="ms-link" href="https://expediagroup.atlassian.net/browse/MLSTN1-5767" target="_blank">MLSTN1-5767</a></div></td>
+              <td><span class="cov cov-warn">⚠ Partial — VIPa restructures perks; verify non-expiry is explicitly in scope</span></td>
+            </tr>
+          </table>
+        </div>
+
+        <!-- Unmapped -->
+        <div class="unmapped-section">
+          <div class="unmapped-hd">Milestones not mapped to a named solution capability</div>
+          <div class="unmapped-chips">
+            <span class="unmapped-chip"><a class="ms-link" href="https://expediagroup.atlassian.net/browse/MLSTN1-5672" target="_blank">MLSTN1-5672</a> Hcom Gift Cards — gift card modernization; adjacent to "gift HCC" but distinct</span>
+            <span class="unmapped-chip"><a class="ms-link" href="https://expediagroup.atlassian.net/browse/MLSTN1-3527" target="_blank">MLSTN1-3527</a> Member-Led Messaging Improvements — enabling; supports all three solutions</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
   </div>
 
-  <!-- Main content -->
-  <div class="main">
-    <div class="objectives-grid">
+  <div class="page-footer">
+    <span>Hotels.com · Priority 7 · May 2026</span>
+    <span><a href="../">← Back to all pages</a></span>
+  </div>
 
-      <!-- Objective 1 -->
-      <div class="objective-card">
-        <div class="obj-header">
-          <div class="obj-number">Objective 1</div>
-          <div class="obj-title">Be the best place to plan and book business trips</div>
-        </div>
-
-        <div class="card-section">
-          <div class="section-label">
-            <span class="dot dot-problems"></span>
-            <span class="label-problems">Customer Problems</span>
-          </div>
-          <div class="empty-slots">
-            <div class="slot slot-problems">
-              <span class="slot-icon">＋</span>
-              <span class="slot-text">No customer problems added yet</span>
-            </div>
-          </div>
-          <button class="add-btn add-btn-problems">＋ Add problem</button>
-        </div>
-
-        <div class="card-section">
-          <div class="section-label">
-            <span class="dot dot-opportunities"></span>
-            <span class="label-opportunities">Opportunities &amp; Requirements</span>
-          </div>
-          <div class="empty-slots">
-            <div class="slot slot-opportunities">
-              <span class="slot-icon">＋</span>
-              <span class="slot-text">No opportunities provided yet</span>
-            </div>
-          </div>
-          <button class="add-btn add-btn-opportunities">＋ Add opportunity</button>
-        </div>
-      </div>
-
-      <!-- Objective 2 -->
-      <div class="objective-card">
-        <div class="obj-header">
-          <div class="obj-number">Objective 2</div>
-          <div class="obj-title">Create stickiness through flexibility, add-ons and servicing for frequent last-minute travelers</div>
-        </div>
-
-        <div class="card-section">
-          <div class="section-label">
-            <span class="dot dot-problems"></span>
-            <span class="label-problems">Customer Problems</span>
-          </div>
-          <div class="empty-slots">
-            <div class="slot slot-problems">
-              <span class="slot-icon">＋</span>
-              <span class="slot-text">No customer problems added yet</span>
-            </div>
-          </div>
-          <button class="add-btn add-btn-problems">＋ Add problem</button>
-        </div>
-
-        <div class="card-section">
-          <div class="section-label">
-            <span class="dot dot-opportunities"></span>
-            <span class="label-opportunities">Opportunities &amp; Requirements</span>
-          </div>
-          <div class="empty-slots">
-            <div class="slot slot-opportunities">
-              <span class="slot-icon">＋</span>
-              <span class="slot-text">No opportunities provided yet</span>
-            </div>
-          </div>
-          <button class="add-btn add-btn-opportunities">＋ Add opportunity</button>
-        </div>
-      </div>
-
-      <!-- Objective 3 -->
-      <div class="objective-card">
-        <div class="obj-header">
-          <div class="obj-number">Objective 3</div>
-          <div class="obj-title">Use rewards to bridge business and leisure travel and create rewards flywheel</div>
-        </div>
-
-        <div class="card-section">
-          <div class="section-label">
-            <span class="dot dot-problems"></span>
-            <span class="label-problems">Customer Problems</span>
-          </div>
-          <div class="empty-slots">
-            <div class="slot slot-problems">
-              <span class="slot-icon">＋</span>
-              <span class="slot-text">No customer problems added yet</span>
-            </div>
-          </div>
-          <button class="add-btn add-btn-problems">＋ Add problem</button>
-        </div>
-
-        <div class="card-section">
-          <div class="section-label">
-            <span class="dot dot-opportunities"></span>
-            <span class="label-opportunities">Opportunities &amp; Requirements</span>
-          </div>
-          <div class="empty-slots">
-            <div class="slot slot-opportunities">
-              <span class="slot-icon">＋</span>
-              <span class="slot-text">No opportunities provided yet</span>
-            </div>
-          </div>
-          <button class="add-btn add-btn-opportunities">＋ Add opportunity</button>
-        </div>
-      </div>
-
-    </div><!-- /objectives-grid -->
-
-    <div class="legend">
-      <div class="legend-item"><span class="legend-swatch" style="background:var(--gold)"></span> Customer Problems — what travelers are struggling with</div>
-      <div class="legend-item"><span class="legend-swatch" style="background:var(--blue-mid)"></span> Opportunities &amp; Requirements — what partners bring</div>
-    </div>
-
-    <div class="page-footer">
-      Hotels.com · Priority 7 · Last updated May 2026 · <a href="/">All Priorities</a>
-    </div>
-
-  </div><!-- /main -->
-
+</div>
 </body>
 </html>

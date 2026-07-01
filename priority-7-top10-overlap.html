@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>P7 vs Top 10 Overlap Audit — Priority 7 Analysis</title>
+<style>
+  :root {
+    --navy: #171c38;
+    --teal: #00a3b5;
+    --blue: #3d78f2;
+    --purple: #784cc7;
+    --amber: #d99e14;
+    --green: #2ea673;
+    --coral: #e56152;
+    --dark: #1e2129;
+    --subtle: #808899;
+    --bg: #f5f7fa;
+    --white: #ffffff;
+    --border: #dce0e8;
+    --shadow: 0 2px 8px rgba(0,0,0,0.06);
+    --strong: #16a34a;
+    --moderate: #d97706;
+    --weak: #dc2626;
+    --gap: #7c3aed;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--dark); line-height: 1.6; }
+
+  .top-bar { background: var(--navy); padding: 14px 40px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; flex-wrap: wrap; gap: 12px; }
+  .top-bar h1 { color: #fff; font-size: 20px; font-weight: 700; }
+  .top-bar .sub { color: #9a9fb8; font-size: 12px; margin-top: 2px; }
+  .top-bar a { color: #9a9fb8; text-decoration: none; font-size: 13px; }
+  .top-bar a:hover { color: #fff; }
+  .top-bar-links { display: flex; gap: 18px; align-items: center; flex-wrap: wrap; }
+
+  .layout { display: flex; max-width: 1400px; margin: 0 auto; }
+  .sidebar { width: 260px; min-width: 260px; background: var(--white); border-right: 1px solid var(--border); padding: 24px 0; position: sticky; top: 52px; height: calc(100vh - 52px); overflow-y: auto; }
+  .sidebar .nav-section { padding: 0 20px; margin-bottom: 20px; }
+  .sidebar .nav-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--subtle); margin-bottom: 8px; }
+  .sidebar a { display: block; padding: 5px 20px; font-size: 13px; color: var(--dark); text-decoration: none; border-left: 3px solid transparent; }
+  .sidebar a:hover { background: var(--bg); border-left-color: var(--teal); }
+  .sidebar a.active { background: #eef6ff; border-left-color: var(--blue); font-weight: 600; }
+
+  .main { flex: 1; padding: 32px 48px; min-width: 0; }
+  .main h1 { font-size: 28px; font-weight: 800; margin-bottom: 8px; color: var(--navy); }
+  .main .subtitle { font-size: 15px; color: var(--subtle); margin-bottom: 32px; }
+  .main h2 { font-size: 20px; font-weight: 700; margin: 40px 0 16px; padding-bottom: 8px; border-bottom: 2px solid var(--border); color: var(--navy); }
+  .main h3 { font-size: 16px; font-weight: 700; margin: 28px 0 12px; color: var(--dark); }
+  .main p { margin-bottom: 12px; font-size: 14px; }
+  .main ul, .main ol { margin: 8px 0 16px 24px; font-size: 14px; }
+  .main li { margin-bottom: 4px; }
+  .main a { color: var(--blue); }
+
+  table { width: 100%; border-collapse: collapse; margin: 12px 0 24px; font-size: 13px; background: var(--white); border-radius: 8px; overflow: hidden; box-shadow: var(--shadow); }
+  th { background: var(--navy); color: #fff; text-align: left; padding: 10px 14px; font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; }
+  td { padding: 10px 14px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: #f8fafc; }
+
+  .callout { background: var(--white); border-left: 4px solid var(--blue); padding: 16px 20px; margin: 16px 0; border-radius: 0 8px 8px 0; box-shadow: var(--shadow); }
+  .callout.info { border-left-color: var(--teal); }
+  .callout .callout-title { font-weight: 700; font-size: 13px; margin-bottom: 4px; }
+
+  @media (max-width: 900px) {
+    .sidebar { display: none; }
+    .main { padding: 20px; }
+  }
+  @media (max-width: 600px) {
+    .top-bar { padding: 12px 16px; }
+    .top-bar h1 { font-size: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <div>
+    <h1>P7 vs Top 10 Overlap Audit</h1>
+    <div class="sub">Child of Priority 7 milestone coverage analysis</div>
+  </div>
+  <div class="top-bar-links">
+    <a href="priority-7-coverage.html">Parent: Milestone coverage</a>
+    <a href="index.html">Back to Portfolio</a>
+  </div>
+</div>
+
+<div class="layout">
+  <nav class="sidebar">
+    <div class="nav-section">
+      <div class="nav-label">Priority 7 analysis</div>
+      <a href="priority-7-coverage.html">Milestone coverage (parent)</a>
+      <a href="#intro" class="active">This page: Top 10 overlap</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-label">On this page</div>
+      <a href="#methodology">Methodology</a>
+      <a href="#how-to-read">How to read this</a>
+      <a href="#signals">Milestone signals</a>
+      <a href="#themes">Story themes</a>
+      <a href="#by-strategy">By strategy</a>
+      <a href="#synthesis">Synthesis</a>
+      <a href="#recommendations">Recommendations</a>
+      <a href="#questions">Open questions</a>
+      <a href="#related">Related artifacts</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-label">Reports</div>
+      <a href="milestone-quality-scores.html">Milestone Quality Scores</a>
+      <a href="hcom-q2-active-milestones.html">Q2 2026 Active Milestones</a>
+      <a href="hcom-q3-milestones.html">Q3 2026 Milestones</a>
+    </div>
+  </nav>
+
+  <main class="main">
+    <section id="intro">
+      <h1>Priority 7 vs Other Top 10 Overlap Audit</h1>
+      <p class="subtitle">Portfolio research published 2026-04-09. Sources: Priority Story and Milestone Map per strategy; P7 objective map synced from Jira 2026-04-07; other nine Top 10 maps synced 2026-04-09.</p>
+
+      <p>Audit of <strong>Make Hotels.com the Most Rewarding Way to Book a Hotel</strong> (STRAT1-1346, Priority 7) against the other nine EG Top 10 priorities. Goal: where Priority 7 story themes and milestones overlap other priorities&rsquo; stories and Jira milestone inventories.</p>
+
+      <div class="callout info">
+        <div class="callout-title">Update (2026-04-09)</div>
+        <p>Priority 7 tracks Hotels.com dedicated servicing under <a href="https://expediagroup.atlassian.net/browse/MLSTN1-5883">MLSTN1-5883</a> (Provide Dedicated Service Solutions). <a href="https://expediagroup.atlassian.net/browse/MLSTN1-5681">MLSTN1-5681</a> is parented under Win the Whole Trip on BEX for BEX family lodging. This audit treats <strong>5883</strong> as the HCOM milestone and <strong>5681</strong> as the BEX-side sibling.</p>
+      </div>
+    </section>
+
+    <section id="methodology">
+      <h2>Methodology</h2>
+      <ul>
+        <li>Read Priority Story and Milestone Map for Priority 7 in the product-portfolio repo.</li>
+        <li>Read each other strategy&rsquo;s Milestone Map (flat list from Jira) and cross-checked priority stories where themes recurred.</li>
+        <li>Classified overlap as <strong>story</strong> (narrative / dependency alignment), <strong>milestone</strong> (same or parallel Jira work), or <strong>platform</strong> (shared capability, single owner).</li>
+      </ul>
+    </section>
+
+    <section id="how-to-read">
+      <h2>How to read this</h2>
+      <ul>
+        <li><strong>Story overlap</strong> &mdash; Same customer problems, capabilities, or dependencies in narrative. Not always the same Jira parent.</li>
+        <li><strong>Milestone overlap</strong> &mdash; Same workstream, mirrored pilots, or one issue appearing under two strategies. Strongest signal when governance is unclear.</li>
+        <li><strong>Platform overlap</strong> &mdash; Intentional: P7 depends on identity, payments, loyalty ledger, OMS, i18n, marketplace foundations. One owner, many consumers.</li>
+      </ul>
+    </section>
+
+    <section id="signals">
+      <h2>Strong milestone-level signals</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Signal</th>
+            <th>Priority 7 (portfolio)</th>
+            <th>Other priority</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Dedicated service &mdash; split Jira parents</strong></td>
+            <td>HCOM scope: <a href="https://expediagroup.atlassian.net/browse/MLSTN1-5883">MLSTN1-5883</a> <em>Provide Dedicated Service Solutions</em></td>
+            <td><strong>P4 BEX:</strong> <a href="https://expediagroup.atlassian.net/browse/MLSTN1-5681">MLSTN1-5681</a> <em>Provide dedicated service solutions for BEX Families lodging</em> &mdash; parallel BEX-owned issue; portfolio tracks P7 on <strong>5883</strong></td>
+          </tr>
+          <tr>
+            <td><strong>Parallel CFAR pilots</strong></td>
+            <td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-3593">MLSTN1-3593</a> <em>Launch CFAR Pilot on Hcom</em></td>
+            <td><strong>P4 BEX:</strong> <a href="https://expediagroup.atlassian.net/browse/MLSTN1-5788">MLSTN1-5788</a> <em>Launch CFAR Pilot on BEX</em> (draft) &mdash; same product pattern, different brand</td>
+          </tr>
+          <tr>
+            <td><strong>One Key / whole-trip value</strong></td>
+            <td>P7 story: earn/burn, paid tier, business&ndash;leisure bridge; milestones include rewards, VIPa</td>
+            <td><strong>P4 BEX:</strong> <a href="https://expediagroup.atlassian.net/browse/MLSTN1-3930">MLSTN1-3930</a> <em>One Key Evolution on BEX (BEX 3.0)</em> &mdash; BEX priority story notes loyalty as a separate Top 10 with deeper structural ownership</td>
+          </tr>
+        </tbody>
+      </table>
+      <p><strong>Takeaway:</strong> <strong>5883 vs 5681</strong> is the corrected framing: P7 retains HCOM servicing under <strong>5883</strong>; <strong>5681</strong> is a <strong>BEX-parented</strong> line item with similar naming. <strong>CFAR</strong> is deliberately parallel (Hcom vs BEX). <strong>One Key</strong> vs <strong>Hotels.comCash</strong> remains a cross-GC alignment topic.</p>
+    </section>
+
+    <section id="themes">
+      <h2>Story-level overlap by theme</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Theme</th>
+            <th>In P7 story</th>
+            <th>Also appears in</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Business travel / UBT</strong></td>
+            <td>HBT, arranger, receipts, one-tap rebook, business rates</td>
+            <td><strong>P6 International</strong> (Expedia + HCOM local relevance); <strong>P4 BEX</strong> (trip completion, family lodging, multi-room)</td>
+          </tr>
+          <tr>
+            <td><strong>Flexibility / cancel / change / insurance</strong></td>
+            <td>Biz rates, CFAR, synthetic flexibility, MoR</td>
+            <td><strong>P4 BEX</strong> (ChFAR, insurance in flights); <strong>P5 CS</strong> (lodging change/cancel, waivers); <strong>P8 Vrbo</strong>; <strong>P9 B2B</strong> (historical CFAR/partner assurance)</td>
+          </tr>
+          <tr>
+            <td><strong>Loyalty / currency / paid tier</strong></td>
+            <td>Hotels.comCash, 10-for-1, pooling, co-brand card</td>
+            <td><strong>P4 BEX</strong> One Key evolution; <strong>P8 Vrbo</strong> OneKey; <strong>P6</strong> One Key in geo; <strong>P1</strong> loyalty-enabled agentic; <strong>P9 B2B</strong> loyalty partner platforms</td>
+          </tr>
+          <tr>
+            <td><strong>Identity &amp; profiles</strong></td>
+            <td>Single profile, business/leisure, arranger, pooling</td>
+            <td><strong>P6</strong> (e.g. Kakao, LINE); <strong>P3</strong> (EG Profile, CDP)</td>
+          </tr>
+          <tr>
+            <td><strong>AI: expert Q&amp;A, compare, personalization</strong></td>
+            <td>Trip-type ML, on-page Q&amp;A, concierge layer</td>
+            <td><strong>P1</strong> Property Expert, AI Compare, Hcom Trip Planner, post-book Property Expert; <strong>P3</strong> NL search on HCOM Web, Golden Queries, segmentation</td>
+          </tr>
+          <tr>
+            <td><strong>Price transparency / consistency</strong></td>
+            <td>Price integrity, meta-to-checkout</td>
+            <td><strong>P3</strong> price summary, SRP&ndash;PDP, price insight; <strong>P4 BEX</strong> lead-with-price; P7 foundations <em>Mitigate Price Inconsistencies</em> / yield</td>
+          </tr>
+          <tr>
+            <td><strong>Globalization</strong></td>
+            <td>Localization, multicurrency, RTL</td>
+            <td><strong>P6</strong> Hcom Korea/Brazil tracks (payments, Save Your Way, UMP, installments)</td>
+          </tr>
+          <tr>
+            <td><strong>Customer service</strong></td>
+            <td>Premium tier support, Hotels.comCash disputes, CFAR claims</td>
+            <td><strong>P5</strong> NVE for HCOM/BEX, lodging change expansion, agent assist</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="by-strategy">
+      <h2>Milestone-level overlap by strategy (examples)</h2>
+
+      <h3>P3 &mdash; Unleash Traveler Marketplace Excellence</h3>
+      <p>HCOM-named work: <strong>Modernise Lodging DLPs / Hotels.com</strong> (<a href="https://expediagroup.atlassian.net/browse/MLSTN1-5182">MLSTN1-5182</a>), <strong>Natural Language Search on HCOM &ndash; Web</strong> (<a href="https://expediagroup.atlassian.net/browse/MLSTN1-5556">MLSTN1-5556</a>), maps as differentiator, side-by-side comparison &mdash; intersects P7 expert tools, map-based booking, and content.</p>
+
+      <h3>P1 &mdash; Accelerate Agentic AI for Travelers</h3>
+      <p><strong>Property Expert</strong>, <strong>AI Compare</strong>, <strong>Hcom Trip Planner</strong> (discovery), <strong>Help Center Hcom lodging cancel</strong>, <strong>Loyalty (AMPLE) for agentic experiences</strong> &mdash; direct overlap with P7 AI and loyalty narrative.</p>
+
+      <h3>P4 &mdash; Win the Whole Trip on BEX</h3>
+      <p><strong>Multi-room / family lodging</strong> vs P7 <strong>Multi-Hotel Shopping</strong>; <strong>VR on BEX</strong> vs P7 <strong>Differentiate VR on HCOM</strong>; <strong>One Key on BEX</strong>; <strong>CFAR on BEX</strong>; <strong>5681</strong> BEX servicing vs P7 <strong>5883</strong> HCOM servicing.</p>
+
+      <h3>P5 &mdash; Make Customer Service a Differentiator and Delighter</h3>
+      <p><strong>NVE MLP for HCOM/BEX</strong> (<a href="https://expediagroup.atlassian.net/browse/MLSTN1-5176">MLSTN1-5176</a>); lodging change/cancel and waivers &mdash; matches P7 service and flexibility themes.</p>
+
+      <h3>P6 &mdash; Expand Internationally</h3>
+      <p><strong>BEX &amp; HCOM</strong> payments (<a href="https://expediagroup.atlassian.net/browse/MLSTN1-3111">MLSTN1-3111</a>); <strong>Hcom</strong> Korea/Brazil milestones including Save Your Way drafts &mdash; aligns with P7 Objective 3 (SYW, payments).</p>
+
+      <h3>P8 &mdash; Vrbo is the Trusted Destination for Groups</h3>
+      <p><strong>Differentiate VR on HCOM</strong> (P7) vs Vrbo-native roadmap; <strong>OneKey Vrbo</strong> parallels P7 loyalty story.</p>
+
+      <h3>P9 &mdash; Power B2B Enterprise</h3>
+      <p>Completed loyalty/CFAR-adjacent B2B milestones indicate <strong>shared loyalty and assurance infrastructure</strong>, not duplicate HCOM consumer milestones.</p>
+
+      <h3>P10 &mdash; Drive EG Advertising Growth</h3>
+      <p>Some HCOM surface/ad history in the map; lighter overlap with P7&rsquo;s three objectives unless monetization of HCOM UX is in scope.</p>
+
+      <h3>P2 &mdash; Empower Supply with Agentic AI</h3>
+      <p>Supplier content, enriched PDP, partner tooling &mdash; aligns with P7 <strong>Content &amp; Supply</strong> dependencies (USP submission, structured content) for hotel-expert differentiation.</p>
+    </section>
+
+    <section id="synthesis">
+      <h2>Synthesis</h2>
+      <p><strong>Yes &mdash; a meaningful slice of Priority 7 is also represented elsewhere</strong>, in two ways:</p>
+      <ol>
+        <li><strong>By design (shared platform):</strong> Identity, payments, loyalty ledger, EG Profile/CDP, merchandising/DLP, NL search, price systems, international rollout. The P7 story lists these teams explicitly.</li>
+        <li><strong>By potential duplication or split ownership (needs GC clarity):</strong>
+          <ul>
+            <li><strong>5883</strong> (HCOM) vs <strong>5681</strong> (BEX) for dedicated service naming/parentage.</li>
+            <li><strong>Dual CFAR pilots</strong> (Hcom vs BEX).</li>
+            <li><strong>One Key / Hotels.comCash / VIPa</strong> vs <strong>BEX One Key evolution</strong> and <strong>Vrbo OneKey</strong>.</li>
+            <li><strong>AI compare / property expert / NL HCOM</strong> under <strong>P1</strong> and <strong>P3</strong> as well as in the P7 story.</li>
+          </ul>
+        </li>
+      </ol>
+    </section>
+
+    <section id="recommendations">
+      <h2>Recommendations</h2>
+      <ol>
+        <li><strong>Jira hygiene:</strong> Keep child initiatives and reporting for HCOM servicing under <strong>MLSTN1-5883</strong>; use <strong>MLSTN1-5681</strong> for BEX family lodging only. Reconcile any stragglers parented to the wrong key.</li>
+        <li><strong>Capability matrix:</strong> For each P7 objective, tag milestones as <strong>HCOM-only</strong>, <strong>Shared platform (single owner)</strong>, or <strong>Parallel brand pilot (explicit dual track)</strong>.</li>
+        <li><strong>Refresh:</strong> Re-run a flat <code>parent = STRAT1-1346</code> export periodically and align the objective-grouped Milestone Map table in the repo.</li>
+      </ol>
+    </section>
+
+    <section id="questions">
+      <h2>Open questions</h2>
+      <ul>
+        <li>Should <strong>5883</strong> and <strong>5681</strong> share a single executive-facing narrative slide, or stay strictly separated by brand?</li>
+        <li>For <strong>CFAR</strong> and <strong>One Key</strong>, where does GC want a single decision forum vs allowed brand divergence?</li>
+      </ul>
+    </section>
+
+    <section id="related">
+      <h2>Related artifacts (repository)</h2>
+      <p>These files live in the <a href="https://github.com/eg-internal/product-portfolio">product-portfolio</a> repo (not rendered on this Pages site):</p>
+      <ul>
+        <li><a href="https://github.com/eg-internal/product-portfolio/blob/main/Strategies/Make%20Hotels.com%20the%20Most%20Rewarding%20Way%20to%20Book%20a%20Hotel/Priority%207%20vs%20Top%2010%20Overlap%20Audit.md">Priority 7 vs Top 10 Overlap Audit.md</a> (source markdown)</li>
+        <li><a href="https://github.com/eg-internal/product-portfolio/blob/main/Strategies/Make%20Hotels.com%20the%20Most%20Rewarding%20Way%20to%20Book%20a%20Hotel/Priority%207%20Paper%20Coverage%20Analysis.md">Priority 7 Paper Coverage Analysis.md</a></li>
+        <li><a href="https://github.com/eg-internal/product-portfolio/blob/main/Strategies/Make%20Hotels.com%20the%20Most%20Rewarding%20Way%20to%20Book%20a%20Hotel/HCOM%20HBT%20Cross-Milestone%20Dependency%20Analysis.md">HCOM HBT Cross-Milestone Dependency Analysis.md</a></li>
+        <li><a href="https://github.com/eg-internal/product-portfolio/blob/main/Strategies/index.md">Strategies index</a> (all Top 10 hubs)</li>
+      </ul>
+    </section>
+  </main>
+</div>
+
+</body>
+</html>

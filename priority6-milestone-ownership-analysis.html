@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Priority 6 Milestone Ownership Analysis — Dream Team Consultation</title>
+<style>
+  :root {
+    --navy: #171c38;
+    --teal: #00a3b5;
+    --blue: #3d78f2;
+    --purple: #784cc7;
+    --amber: #d99e14;
+    --green: #2ea673;
+    --coral: #e56152;
+    --dark: #1e2129;
+    --subtle: #808899;
+    --bg: #f5f7fa;
+    --white: #ffffff;
+    --border: #dce0e8;
+    --shadow: 0 2px 8px rgba(0,0,0,0.06);
+    --own: #2ea673;
+    --track: #3d78f2;
+    --park: #808899;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--dark); line-height: 1.6; }
+
+  .top-bar { background: var(--navy); padding: 14px 40px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; flex-wrap: wrap; gap: 12px; }
+  .top-bar h1 { color: #fff; font-size: 20px; font-weight: 700; }
+  .top-bar .sub { color: #9a9fb8; font-size: 12px; margin-top: 2px; }
+  .top-bar a { color: #9a9fb8; text-decoration: none; font-size: 13px; }
+  .top-bar a:hover { color: #fff; }
+  .top-bar-links { display: flex; gap: 18px; align-items: center; flex-wrap: wrap; }
+
+  .layout { display: flex; max-width: 1400px; margin: 0 auto; }
+  .sidebar { width: 260px; min-width: 260px; background: var(--white); border-right: 1px solid var(--border); padding: 24px 0; position: sticky; top: 52px; height: calc(100vh - 52px); overflow-y: auto; }
+  .sidebar .nav-section { padding: 0 20px; margin-bottom: 20px; }
+  .sidebar .nav-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--subtle); margin-bottom: 8px; }
+  .sidebar a { display: block; padding: 5px 20px; font-size: 13px; color: var(--dark); text-decoration: none; border-left: 3px solid transparent; }
+  .sidebar a:hover { background: var(--bg); border-left-color: var(--teal); }
+  .sidebar a.active { background: #eef6ff; border-left-color: var(--blue); font-weight: 600; }
+
+  .main { flex: 1; padding: 32px 48px; min-width: 0; }
+  .main h1 { font-size: 28px; font-weight: 800; margin-bottom: 8px; color: var(--navy); }
+  .main .subtitle { font-size: 15px; color: var(--subtle); margin-bottom: 32px; }
+  .main h2 { font-size: 20px; font-weight: 700; margin: 40px 0 16px; padding-bottom: 8px; border-bottom: 2px solid var(--border); color: var(--navy); }
+  .main h3 { font-size: 16px; font-weight: 700; margin: 28px 0 12px; color: var(--dark); }
+  .main p { margin-bottom: 12px; font-size: 14px; }
+  .main ul, .main ol { margin: 8px 0 16px 24px; font-size: 14px; }
+  .main li { margin-bottom: 4px; }
+  .main a { color: var(--blue); text-decoration: none; }
+  .main a:hover { text-decoration: underline; }
+
+  .scorecard { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin: 24px 0; }
+  .score-card { background: var(--white); border: 1px solid var(--border); border-radius: 10px; padding: 20px; box-shadow: var(--shadow); }
+  .score-card .label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--subtle); margin-bottom: 6px; }
+  .score-card .value { font-size: 28px; font-weight: 800; color: var(--navy); }
+  .score-card .detail { font-size: 12px; color: var(--subtle); margin-top: 4px; }
+  .score-card.green { border-left: 4px solid var(--green); }
+  .score-card.amber { border-left: 4px solid var(--amber); }
+  .score-card.coral { border-left: 4px solid var(--coral); }
+  .score-card.blue { border-left: 4px solid var(--blue); }
+  .score-card.purple { border-left: 4px solid var(--purple); }
+  .score-card.teal { border-left: 4px solid var(--teal); }
+
+  table { width: 100%; border-collapse: collapse; margin: 12px 0 24px; font-size: 13px; background: var(--white); border-radius: 8px; overflow: hidden; box-shadow: var(--shadow); }
+  th { background: var(--navy); color: #fff; text-align: left; padding: 10px 14px; font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; }
+  td { padding: 10px 14px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: #f8fafc; }
+  td a { color: var(--blue); text-decoration: none; }
+  td a:hover { text-decoration: underline; }
+
+  .badge { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; }
+  .badge-own { background: #e6f7ef; color: #1a7a4c; }
+  .badge-track { background: #e8f0fe; color: #2563b0; }
+  .badge-park { background: #f0f0f3; color: #606878; }
+
+  .callout { background: var(--white); border-left: 4px solid var(--blue); padding: 16px 20px; margin: 16px 0; border-radius: 0 8px 8px 0; box-shadow: var(--shadow); }
+  .callout.warn { border-left-color: var(--coral); }
+  .callout.info { border-left-color: var(--teal); }
+  .callout.success { border-left-color: var(--green); }
+  .callout .callout-title { font-weight: 700; font-size: 13px; margin-bottom: 4px; }
+  .callout p { margin-bottom: 4px; font-size: 13px; }
+
+  .avatar-section { background: var(--white); border: 1px solid var(--border); border-radius: 10px; padding: 24px 28px; margin: 20px 0; box-shadow: var(--shadow); }
+  .avatar-header { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; }
+  .avatar-icon { width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 18px; font-weight: 800; flex-shrink: 0; }
+  .avatar-name { font-size: 18px; font-weight: 800; color: var(--navy); }
+  .avatar-desc { font-size: 12px; color: var(--subtle); }
+  .avatar-section blockquote { border-left: 3px solid var(--border); padding-left: 14px; margin: 12px 0; color: #444; font-style: italic; font-size: 13px; }
+  .avatar-section p { font-size: 14px; margin-bottom: 10px; }
+  .avatar-section strong { color: var(--navy); }
+  .avatar-section ul { margin: 8px 0 12px 20px; font-size: 13px; }
+  .avatar-section li { margin-bottom: 3px; }
+
+  .filter-bar { display: flex; gap: 8px; margin: 16px 0; flex-wrap: wrap; }
+  .filter-btn { padding: 6px 14px; border: 1px solid var(--border); border-radius: 20px; font-size: 12px; font-weight: 600; cursor: pointer; background: var(--white); color: var(--dark); transition: all 0.15s; }
+  .filter-btn:hover { border-color: var(--blue); color: var(--blue); }
+  .filter-btn.active { background: var(--navy); color: #fff; border-color: var(--navy); }
+
+  .synthesis-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 20px 0; }
+  .synth-box { background: var(--white); border: 1px solid var(--border); border-radius: 10px; padding: 20px; box-shadow: var(--shadow); }
+  .synth-box h4 { font-size: 14px; font-weight: 700; color: var(--navy); margin-bottom: 8px; }
+  .synth-box p { font-size: 13px; }
+  .synth-box ul { margin: 6px 0 0 18px; font-size: 13px; }
+  .synth-box li { margin-bottom: 3px; }
+
+  @media (max-width: 1100px) {
+    .synthesis-grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 900px) {
+    .sidebar { display: none; }
+    .main { padding: 20px; }
+  }
+  @media (max-width: 600px) {
+    .top-bar { padding: 12px 16px; }
+    .top-bar h1 { font-size: 16px; }
+  }
+</style>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const filterBtns = document.querySelectorAll('.filter-btn');
+  const rows = document.querySelectorAll('.filterable-row');
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', function() {
+      const filter = this.dataset.filter;
+      filterBtns.forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+      rows.forEach(row => {
+        if (filter === 'all' || row.dataset.category === filter) {
+          row.style.display = '';
+        } else {
+          row.style.display = 'none';
+        }
+      });
+    });
+  });
+});
+</script>
+</head>
+<body>
+
+<div class="top-bar">
+  <div>
+    <h1>Priority 6: Milestone Ownership Analysis</h1>
+    <div class="sub">Dream Team Consultation &middot; Expand Internationally &middot; STRAT1-1340</div>
+  </div>
+  <div class="top-bar-links">
+    <a href="https://expediagroup.atlassian.net/browse/STRAT1-1340" target="_blank">Jira: STRAT1-1340</a>
+    <a href="index.html">Back to Portfolio</a>
+  </div>
+</div>
+
+<div class="layout">
+  <nav class="sidebar">
+    <div class="nav-section">
+      <div class="nav-label">Analysis</div>
+      <a href="#summary" class="active">Executive Summary</a>
+      <a href="#classification">Full Classification</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-label">Expert Perspectives</div>
+      <a href="#cagan">Marty Cagan</a>
+      <a href="#goldratt">Eliyahu Goldratt</a>
+      <a href="#grove">Andy Grove</a>
+      <a href="#nieto">Antonio Nieto-Rodriguez</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-label">Synthesis</div>
+      <a href="#consensus">Consensus &amp; Divergence</a>
+      <a href="#own-list">OWN List</a>
+      <a href="#track-list">TRACK List</a>
+      <a href="#park-list">PARK List</a>
+      <a href="#next-steps">Next Steps</a>
+    </div>
+  </nav>
+
+  <div class="main">
+
+    <h1 id="summary">Which milestones should Priority 6 own vs. track?</h1>
+    <p class="subtitle">Dream Team analysis of 41 milestones under Expand Internationally. Consultation date: April 21, 2026.</p>
+
+    <div class="callout info">
+      <div class="callout-title">The question</div>
+      <p>Priority 6 has 41 non-completed milestones (18 active, 5 backlog, 18 draft). Which should the Priority team own, define, and hand off or build? Which are milestones from other teams' backlogs that we should just track? The current count is too high to manage effectively.</p>
+    </div>
+
+    <div class="scorecard">
+      <div class="score-card green">
+        <div class="label">Own</div>
+        <div class="value">12</div>
+        <div class="detail">Country-specific + capability</div>
+      </div>
+      <div class="score-card blue">
+        <div class="label">Track</div>
+        <div class="value">11</div>
+        <div class="detail">Platform team dependencies</div>
+      </div>
+      <div class="score-card amber">
+        <div class="label">Park</div>
+        <div class="value">18</div>
+        <div class="detail">Draft: no owner, no date</div>
+      </div>
+      <div class="score-card purple">
+        <div class="label">Team</div>
+        <div class="value">4</div>
+        <div class="detail">Cagan, Goldratt, Grove, Nieto-Rodriguez</div>
+      </div>
+      <div class="score-card teal">
+        <div class="label">Pattern</div>
+        <div class="value">Map-Reduce</div>
+        <div class="detail">Parallel perspectives, synthesized</div>
+      </div>
+    </div>
+
+    <div class="callout warn">
+      <div class="callout-title">Core finding: the Peanut Butter Problem</div>
+      <p>All four experts independently concluded that 41 milestones is too many for active management. The Priority 6 team should own 10-15 milestones where local market knowledge is the unique input. Platform team milestones (Payments, 3PI, Content) belong on a lightweight dependency register, not the milestone map. Unassigned drafts are zombies consuming cognitive overhead.</p>
+    </div>
+
+    <!-- EXPERT PERSPECTIVES -->
+
+    <h2 id="cagan">Marty Cagan</h2>
+    <div class="avatar-section">
+      <div class="avatar-header">
+        <div class="avatar-icon" style="background: var(--teal);">MC</div>
+        <div>
+          <div class="avatar-name">Marty Cagan</div>
+          <div class="avatar-desc">Product strategy &mdash; empowered teams, product vision, strategic context</div>
+        </div>
+      </div>
+      <p><strong>Framework: Empowered team ownership test.</strong> For each milestone, ask: does the Priority 6 team own the outcome, or are they requesting a feature from a team that owns the outcome?</p>
+      <blockquote>"The first thing I see is a classic feature team problem dressed up as strategy. Roughly half these milestones are requests to platform teams. Those aren't your milestones. Those are stakeholder requests you've written on behalf of other teams."</blockquote>
+      <p><strong>Classification principle:</strong></p>
+      <ul>
+        <li><strong>OWN</strong> when the team defines the problem, discovers the solution, owns the outcome (country-specific experience, playbooks, measurement).</li>
+        <li><strong>TRACK</strong> when another team owns the outcome and you're providing strategic context (Payments, 3PI, Content, platform Identity integrations).</li>
+      </ul>
+      <blockquote>"If you 'own' a milestone but the engineers building it report to a different team, respond to different OKRs, and prioritize based on their own roadmap &mdash; you don't own anything. You have a Jira ticket with your name on it. That's a feature team masquerading as ownership."</blockquote>
+    </div>
+
+    <h2 id="goldratt">Eliyahu Goldratt</h2>
+    <div class="avatar-section">
+      <div class="avatar-header">
+        <div class="avatar-icon" style="background: var(--purple);">EG</div>
+        <div>
+          <div class="avatar-name">Eliyahu Goldratt</div>
+          <div class="avatar-desc">Theory of Constraints &mdash; constraint identification, throughput optimization</div>
+        </div>
+      </div>
+      <p><strong>Framework: Five Focusing Steps applied to milestone portfolio.</strong></p>
+      <blockquote>"What is THE constraint preventing international growth? It's focused execution in the focus countries. You can only make a brand feel local when you coordinate identity, payments, content, UX, and supply together for that country."</blockquote>
+      <p><strong>Diagnosis:</strong> 41 milestones in progress or planned is bad multitasking. If the team has capacity for 8 milestones of active management, then 33 milestones add zero throughput and infinite distraction.</p>
+      <ol>
+        <li><strong>Identify the constraint:</strong> Coordinated end-to-end country experience delivery.</li>
+        <li><strong>Exploit:</strong> Only own milestones that ARE the coordinated country experience.</li>
+        <li><strong>Subordinate:</strong> Platform teams deliver on their schedule. State requirements, don't manage their milestones.</li>
+        <li><strong>Elevate:</strong> If a platform team can't deliver, that's a dependency escalation, not a milestone you own.</li>
+        <li><strong>Don't let inertia become the constraint:</strong> You created 41 milestones because the system encouraged it. The system is wrong.</li>
+      </ol>
+      <blockquote>"Tracking 20+ platform milestones doesn't make them go faster. It makes YOU go slower."</blockquote>
+    </div>
+
+    <h2 id="grove">Andy Grove</h2>
+    <div class="avatar-section">
+      <div class="avatar-header">
+        <div class="avatar-icon" style="background: var(--coral);">AG</div>
+        <div>
+          <div class="avatar-name">Andy Grove</div>
+          <div class="avatar-desc">Production-minded management &mdash; leverage, TRM, output orientation</div>
+        </div>
+      </div>
+      <p><strong>Framework: Leverage analysis.</strong> High-leverage activities affect many people, occur at critical timing, or require unique knowledge. Low-leverage activities could be done by anyone or your involvement doesn't change the outcome.</p>
+      <blockquote>"What is the output of the Priority 6 team? Every milestone needs to be evaluated on one dimension: does the Priority 6 team's attention on this milestone change the output?"</blockquote>
+      <p><strong>High leverage (OWN):</strong> Country-specific product decisions where you have unique local market knowledge. Playbooks and SLA that define the operating system for future countries. Dashboard that provides measurement.</p>
+      <p><strong>Low leverage (TRACK or drop):</strong> Payments knows how to ship Google Pay. 3PI knows how to onboard partners. Your oversight adds nothing. Actually, <em>negative leverage</em> because every hour managing their milestone is an hour not spent on the high-leverage country work.</p>
+      <p><strong>Recommended indicator pair:</strong></p>
+      <ul>
+        <li><em>Quantity:</em> number of milestones actively managed</li>
+        <li><em>Quality:</em> % of owned milestones with clear success criteria, assigned leads, and dates</li>
+      </ul>
+      <blockquote>"You're running a plant with 41 work orders and capacity for maybe 10. A plant manager doesn't track the steel supplier's internal production schedule. They place the order, set the delivery date, and escalate if it's late."</blockquote>
+    </div>
+
+    <h2 id="nieto">Antonio Nieto-Rodriguez</h2>
+    <div class="avatar-section">
+      <div class="avatar-header">
+        <div class="avatar-icon" style="background: var(--amber);">AN</div>
+        <div>
+          <div class="avatar-name">Antonio Nieto-Rodriguez</div>
+          <div class="avatar-desc">Strategic portfolio management &mdash; focused organization, benefits realization</div>
+        </div>
+      </div>
+      <p><strong>Framework: Purpose Launchpad + Focused Organization.</strong> Three tests for every milestone:</p>
+      <ol>
+        <li><strong>Clear purpose tied to strategy?</strong> Placeholders with quality score 0 fail this test. Kill or return to owning team.</li>
+        <li><strong>Active executive sponsor?</strong> 63% of scored milestones have no assignee. No sponsor = zombie project.</li>
+        <li><strong>Benefits realization measurable?</strong> "Launch Insurance in Japan" is delivery. "Reduce Japanese traveler drop-off at checkout by X%" is benefits. Most milestones are framed as outputs, not outcomes.</li>
+      </ol>
+      <blockquote>"This is the Peanut Butter Problem. 41 milestones spread like a thin layer of peanut butter. Thin on everything. Thick on nothing."</blockquote>
+      <p><strong>Classification:</strong></p>
+      <ul>
+        <li><strong>Strategic Investments (OWN):</strong> 10-15 milestones that directly change the business in focus countries.</li>
+        <li><strong>Run-the-Business Dependencies (TRACK):</strong> Platform capabilities on a dependency register with escalation triggers.</li>
+        <li><strong>Zombie Projects (PARK/KILL):</strong> Every draft with no assignee, no date, no purpose. These create the illusion of a plan.</li>
+      </ul>
+      <blockquote>"Focus is about saying no. Your milestone map should feel uncomfortably small. If it doesn't, you haven't said no enough."</blockquote>
+    </div>
+
+    <!-- SYNTHESIS -->
+
+    <h2 id="consensus">Synthesis: Consensus &amp; Divergence</h2>
+
+    <h3>Where all four experts agree</h3>
+    <div class="synthesis-grid">
+      <div class="synth-box">
+        <h4>41 is far too many</h4>
+        <p>Cagan: feature team coordination pattern. Goldratt: bad multitasking. Grove: negative leverage. Nieto-Rodriguez: Peanut Butter Problem. All agree on 10-15 owned milestones max.</p>
+      </div>
+      <div class="synth-box">
+        <h4>Platform milestones aren't yours</h4>
+        <p>[Payments], [3PI], and Content milestones should not be on your map as owned items. These teams own their outcomes. You provide strategic context and track delivery dates as dependencies.</p>
+      </div>
+      <div class="synth-box">
+        <h4>Unassigned drafts are zombies</h4>
+        <p>12 draft milestones with no assignee, no date, and no purpose consume cognitive overhead for zero return. Park or kill them.</p>
+      </div>
+      <div class="synth-box">
+        <h4>Country experience work is your core</h4>
+        <p>Milestones where the Priority 6 team makes product decisions informed by local market knowledge &mdash; those are yours. This is where all four frameworks converge on ownership.</p>
+      </div>
+    </div>
+
+    <h3>Where the experts diverge</h3>
+    <div class="synthesis-grid">
+      <div class="synth-box">
+        <h4>How much to track</h4>
+        <p><strong>Goldratt</strong> goes further: don't even track most platform dependencies. State requirements, let them manage. <strong>Grove</strong> and <strong>Nieto-Rodriguez</strong> prefer a lightweight tracking mechanism (dashboard check, dependency register).</p>
+      </div>
+      <div class="synth-box">
+        <h4>Discovery ownership</h4>
+        <p><strong>Cagan</strong> raises a deeper question: are the country teams doing real discovery with local customers, or just translating US features? If the latter, even the "own" milestones are feature team work in disguise.</p>
+      </div>
+    </div>
+
+    <!-- FULL CLASSIFICATION -->
+
+    <h2 id="classification">Full Milestone Classification</h2>
+    <p>Every non-completed, non-cancelled milestone classified as OWN, TRACK, or PARK. Filter by category below.</p>
+
+    <div class="filter-bar">
+      <button class="filter-btn active" data-filter="all">All (41)</button>
+      <button class="filter-btn" data-filter="own">OWN (12)</button>
+      <button class="filter-btn" data-filter="track">TRACK (11)</button>
+      <button class="filter-btn" data-filter="park">PARK (18)</button>
+    </div>
+
+    <h3 id="own-list">OWN: Country-specific experience + capability building</h3>
+    <p>The Priority 6 team defines the problem, owns the scope and success criteria, and either builds or hands off with clear specs.</p>
+    <table>
+      <tr><th>Milestone</th><th>Jira</th><th>Status</th><th>Owner</th><th>Category</th><th>Rationale</th></tr>
+      <tr class="filterable-row" data-category="own"><td>BEX UAE: Launch Arabic Language on WEB</td><td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-1810" target="_blank">MLSTN1-1810</a></td><td>in-progress</td><td>Craig Wood</td><td><span class="badge badge-own">OWN</span></td><td>Country-specific launch, unique local knowledge required</td></tr>
+      <tr class="filterable-row" data-category="own"><td>BEX KSA: Web Optimization and Virtual Agent Launch in Arabic</td><td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-3748" target="_blank">MLSTN1-3748</a></td><td>in-progress</td><td>Craig Wood</td><td><span class="badge badge-own">OWN</span></td><td>Country-specific coordinated experience</td></tr>
+      <tr class="filterable-row" data-category="own"><td>Hcom South Korea: evaluating ROI of experiment-driven content generation</td><td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-4509" target="_blank">MLSTN1-4509</a></td><td>in-progress</td><td>Luc&iacute;a Guerrero</td><td><span class="badge badge-own">OWN</span></td><td>Discovery work, country-specific learning</td></tr>
+      <tr class="filterable-row" data-category="own"><td>Hcom South Korea: Multi-Currency Enablement</td><td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-4532" target="_blank">MLSTN1-4532</a></td><td>in-progress</td><td>Richa Aggarwal</td><td><span class="badge badge-own">OWN</span></td><td>Core country experience, outcome ownership</td></tr>
+      <tr class="filterable-row" data-category="own"><td>Playbook: Introduce V1 of Global Experience Uplift Playbook</td><td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-4685" target="_blank">MLSTN1-4685</a></td><td>in-progress</td><td>Jamie Barrett</td><td><span class="badge badge-own">OWN</span></td><td>Capability building, high leverage on future countries</td></tr>
+      <tr class="filterable-row" data-category="own"><td>Playbook: Introduce V1 of Internationalization Playbook</td><td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-5217" target="_blank">MLSTN1-5217</a></td><td>in-progress</td><td>Stefania Russo</td><td><span class="badge badge-own">OWN</span></td><td>Capability building, high leverage on future countries</td></tr>
+      <tr class="filterable-row" data-category="own"><td>Geo Expansion Performance Dashboard</td><td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-5273" target="_blank">MLSTN1-5273</a></td><td>in-progress</td><td>Gautami Hegde</td><td><span class="badge badge-own">OWN</span></td><td>Measurement infrastructure for the entire priority</td></tr>
+      <tr class="filterable-row" data-category="own"><td>Hcom South Korea: Kakao Identity Integration</td><td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-5365" target="_blank">MLSTN1-5365</a></td><td>in-progress</td><td>Chris Megaw</td><td><span class="badge badge-own">OWN</span></td><td>Country-specific local platform integration</td></tr>
+      <tr class="filterable-row" data-category="own"><td>Establish SLA for ROW Bug Resolution and Customer Experience</td><td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-5385" target="_blank">MLSTN1-5385</a></td><td>in-progress</td><td>Jamie Barrett</td><td><span class="badge badge-own">OWN</span></td><td>Quality bar for all countries, cross-cutting</td></tr>
+      <tr class="filterable-row" data-category="own"><td>BEX KSA: App Optimization and Virtual Agent Launch in Arabic</td><td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-4065" target="_blank">MLSTN1-4065</a></td><td>backlog</td><td>Craig Wood</td><td><span class="badge badge-own">OWN</span></td><td>Country-specific, activate when KSA web completes</td></tr>
+      <tr class="filterable-row" data-category="own"><td>Vrbo AU/NZ: Brand Cohesion &mdash; Stayz and Bookabach</td><td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-4432" target="_blank">MLSTN1-4432</a></td><td>backlog</td><td>Lucy Meadow</td><td><span class="badge badge-own">OWN</span></td><td>Country-specific product decision</td></tr>
+      <tr class="filterable-row" data-category="own"><td>Hcom South Korea: Quick Win Enhancements (Localization)</td><td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-5382" target="_blank">MLSTN1-5382</a></td><td>backlog</td><td>Jenna Meulemans</td><td><span class="badge badge-own">OWN</span></td><td>Country-specific localization, outcome ownership</td></tr>
+    </table>
+
+    <h3 id="track-list">TRACK: Platform team dependencies</h3>
+    <p>Another team owns the outcome. Priority 6 provides strategic context and customer requirements, then tracks delivery dates on a dependency register with escalation triggers.</p>
+    <table>
+      <tr><th>Milestone</th><th>Jira</th><th>Status</th><th>Owning Team</th><th>Category</th><th>P6 Role</th></tr>
+      <tr class="filterable-row" data-category="track"><td>[Payments] Deliver Locally-relevant FOPs for BEX &amp; HCOM</td><td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-3111" target="_blank">MLSTN1-3111</a></td><td>in-progress</td><td>Payments</td><td><span class="badge badge-track">TRACK</span></td><td>Provide country requirements</td></tr>
+      <tr class="filterable-row" data-category="track"><td>[2026] Expand content quality to multilingual evaluations</td><td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-3164" target="_blank">MLSTN1-3164</a></td><td>in-progress</td><td>Content</td><td><span class="badge badge-track">TRACK</span></td><td>Stakeholder, provide market priorities</td></tr>
+      <tr class="filterable-row" data-category="track"><td>[2026] In-market non-EN Generation of GenAI Content</td><td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-3209" target="_blank">MLSTN1-3209</a></td><td>in-progress</td><td>Content / AI</td><td><span class="badge badge-track">TRACK</span></td><td>Stakeholder, provide market priorities</td></tr>
+      <tr class="filterable-row" data-category="track"><td>[3PI] Enable 3PI Rates for VIPA Properties</td><td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-4492" target="_blank">MLSTN1-4492</a></td><td>in-progress</td><td>3PI</td><td><span class="badge badge-track">TRACK</span></td><td>Consumer of capability</td></tr>
+      <tr class="filterable-row" data-category="track"><td>[Payments] Promote frictionless payment methods globally</td><td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-4613" target="_blank">MLSTN1-4613</a></td><td>in-progress</td><td>Payments</td><td><span class="badge badge-track">TRACK</span></td><td>Provide country requirements</td></tr>
+      <tr class="filterable-row" data-category="track"><td>[3PI] Improve Content for 3PI Properties</td><td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-5748" target="_blank">MLSTN1-5748</a></td><td>in-progress</td><td>3PI</td><td><span class="badge badge-track">TRACK</span></td><td>Consumer of capability</td></tr>
+      <tr class="filterable-row" data-category="track"><td>[3PI] Technology Platform &mdash; Upgrade Internal Architecture</td><td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-579" target="_blank">MLSTN1-579</a></td><td>in-progress</td><td>3PI</td><td><span class="badge badge-track">TRACK</span></td><td>Consumer of capability</td></tr>
+      <tr class="filterable-row" data-category="track"><td>[3PI] Inventory &mdash; Improve Traveler Shopping Experience</td><td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-582" target="_blank">MLSTN1-582</a></td><td>in-progress</td><td>3PI</td><td><span class="badge badge-track">TRACK</span></td><td>Consumer of capability</td></tr>
+      <tr class="filterable-row" data-category="track"><td>[3PI] Inventory &mdash; Onboard 7 New 3PI Partners</td><td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-585" target="_blank">MLSTN1-585</a></td><td>in-progress</td><td>3PI</td><td><span class="badge badge-track">TRACK</span></td><td>Consumer of capability</td></tr>
+      <tr class="filterable-row" data-category="track"><td>[3PI] Yield management &mdash; Optimize Lodging 3PI markup</td><td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-2467" target="_blank">MLSTN1-2467</a></td><td>backlog</td><td>3PI</td><td><span class="badge badge-track">TRACK</span></td><td>Consumer of capability</td></tr>
+      <tr class="filterable-row" data-category="track"><td>[3PI] Traveler Experience &mdash; Launch 3PI Post-Booking</td><td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-584" target="_blank">MLSTN1-584</a></td><td>backlog</td><td>3PI</td><td><span class="badge badge-track">TRACK</span></td><td>Consumer of capability</td></tr>
+    </table>
+
+    <h3 id="park-list">PARK: Move off milestone map until sponsored</h3>
+    <p>Draft milestones without an assigned sponsor, due date, or clear purpose. These return to the map when someone picks them up. Items marked [Placeholder] or [Pending Review] are included here.</p>
+    <table>
+      <tr><th>Milestone</th><th>Jira</th><th>Owner</th><th>Category</th><th>Action</th></tr>
+      <tr class="filterable-row" data-category="park"><td>Launch secondary languages in high priority geos</td><td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-3301" target="_blank">MLSTN1-3301</a></td><td>unassigned</td><td><span class="badge badge-park">PARK</span></td><td>No owner, no date</td></tr>
+      <tr class="filterable-row" data-category="park"><td>BEX Canada: Enable 3PP CA Bookings</td><td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-3852" target="_blank">MLSTN1-3852</a></td><td>Neetika Gahlot</td><td><span class="badge badge-park">PARK</span></td><td>Draft, no date, unclear scope</td></tr>
+      <tr class="filterable-row" data-category="park"><td>Hcom South Korea: Performance &amp; Speed Improvements</td><td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-4547" target="_blank">MLSTN1-4547</a></td><td>Sushant Ghildyal</td><td><span class="badge badge-park">PARK</span></td><td>Promote to OWN when KR Quick Wins completes</td></tr>
+      <tr class="filterable-row" data-category="park"><td>[Vrbo] E2E experience in primary local language</td><td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-4686" target="_blank">MLSTN1-4686</a></td><td>Matt Esler</td><td><span class="badge badge-park">PARK</span></td><td>Draft, no date</td></tr>
+      <tr class="filterable-row" data-category="park"><td>Develop Self-Serve Launchpad Pages (Wildcard pages)</td><td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-4728" target="_blank">MLSTN1-4728</a></td><td>Jo Toader</td><td><span class="badge badge-park">PARK</span></td><td>Platform capability, assign to Experience Manager team</td></tr>
+      <tr class="filterable-row" data-category="park"><td>[Pending Review] Hcom KR: Investigate decline in bounce rate</td><td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-5338" target="_blank">MLSTN1-5338</a></td><td>unassigned</td><td><span class="badge badge-park">PARK</span></td><td>Pending review, no owner</td></tr>
+      <tr class="filterable-row" data-category="park"><td>BEX Japan: Launch Insurance</td><td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-5343" target="_blank">MLSTN1-5343</a></td><td>Elliott Cox</td><td><span class="badge badge-park">PARK</span></td><td>Promote to TRACK when Japan activated</td></tr>
+      <tr class="filterable-row" data-category="park"><td>BEX Japan: Improve Shopping for Local Lodging Types</td><td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-5344" target="_blank">MLSTN1-5344</a></td><td>unassigned</td><td><span class="badge badge-park">PARK</span></td><td>Promote to OWN when Japan activated</td></tr>
+      <tr class="filterable-row" data-category="park"><td>Vrbo AU/NZ: Launch Partner Platform Experience</td><td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-5378" target="_blank">MLSTN1-5378</a></td><td>Lucy Meadow</td><td><span class="badge badge-park">PARK</span></td><td>Promote to OWN when Brand Cohesion nears completion</td></tr>
+      <tr class="filterable-row" data-category="park"><td>Hcom KR: UMP Support for Kakao</td><td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-5381" target="_blank">MLSTN1-5381</a></td><td>Shivika Mathur</td><td><span class="badge badge-park">PARK</span></td><td>Promote to TRACK after Kakao Identity completes</td></tr>
+      <tr class="filterable-row" data-category="park"><td>BEX Japan: Improve Air Price Competitiveness</td><td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-5389" target="_blank">MLSTN1-5389</a></td><td>unassigned</td><td><span class="badge badge-park">PARK</span></td><td>No owner, future Japan work</td></tr>
+      <tr class="filterable-row" data-category="park"><td>BEX Japan: Improve Traveler Service Standards</td><td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-5390" target="_blank">MLSTN1-5390</a></td><td>unassigned</td><td><span class="badge badge-park">PARK</span></td><td>No owner, future Japan work</td></tr>
+      <tr class="filterable-row" data-category="park"><td>BEX Japan: Performance &amp; Speed, UI Updates, Rail, LINE Identity, Traveler Insights</td><td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-5392" target="_blank">MLSTN1-5392+</a></td><td>various/unassigned</td><td><span class="badge badge-park">PARK</span></td><td>5 Japan drafts. Promote individually when Japan activated</td></tr>
+      <tr class="filterable-row" data-category="park"><td>Hcom KR: Launch Save Your Way</td><td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-5418" target="_blank">MLSTN1-5418</a></td><td>Tsahy Lasry</td><td><span class="badge badge-park">PARK</span></td><td>Quality score 2, needs purpose and requirements</td></tr>
+      <tr class="filterable-row" data-category="park"><td>[Future Consideration] Hcom KR: Local maps support</td><td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-5419" target="_blank">MLSTN1-5419</a></td><td>unassigned</td><td><span class="badge badge-park">PARK</span></td><td>Self-identified as future consideration</td></tr>
+      <tr class="filterable-row" data-category="park"><td>Coupon tool enhancements, Navigation Currency Display, KSA LOBs post-launch, Brazil milestones (6 items), KSA/UAE milestones (4 items), Installments/BNPL/DFY placeholders</td><td>various</td><td>various/unassigned</td><td><span class="badge badge-park">PARK</span></td><td>Placeholders and unscoped drafts. Promote when sponsored</td></tr>
+    </table>
+
+    <!-- NEXT STEPS -->
+
+    <h2 id="next-steps">Recommended Next Steps</h2>
+
+    <div class="callout success">
+      <div class="callout-title">Action plan</div>
+    </div>
+
+    <ol>
+      <li><strong>Restructure the Milestone Map.</strong> Move from a flat list to three sections: OWN (12 milestones with active management), TRACK (11 dependencies on a lightweight register), PARK (holding pen outside the active map).</li>
+      <li><strong>Create a dependency register.</strong> For TRACK milestones, maintain a simple table with: milestone, owning team, expected delivery date, escalation trigger, last status check date. Review monthly, not weekly.</li>
+      <li><strong>Triage drafts with sponsors.</strong> For each PARK milestone, either find a sponsor who will define purpose/requirements/date, or archive it. Set a 30-day deadline: if no sponsor picks it up, it moves to a "future considerations" backlog outside the milestone map.</li>
+      <li><strong>Validate OWN milestones.</strong> Run Cagan's empowerment test on the 12 OWN milestones: is the country team doing real discovery with local customers, or translating US features? If the latter, fix the discovery process before scaling.</li>
+      <li><strong>Set the indicator pair.</strong> Per Grove: track both the count of owned milestones (should stay 10-15) and the quality score of those milestones (target: all above 7/10 on the quality rubric).</li>
+    </ol>
+
+    <div style="margin-top: 48px; padding: 20px 0; border-top: 1px solid var(--border); font-size: 12px; color: var(--subtle);">
+      <p>Analysis generated April 21, 2026 via Dream Team consultation (map-reduce pattern). Experts: Marty Cagan, Eliyahu Goldratt, Andy Grove, Antonio Nieto-Rodriguez. Source data: <a href="https://expediagroup.atlassian.net/browse/STRAT1-1340" target="_blank">STRAT1-1340</a> milestone inventory synced April 9, 2026.</p>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>

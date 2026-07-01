@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HCOM — Tech Readiness Review</title>
+<style>
+  :root {
+    --navy:#171c38; --teal:#00a3b5; --blue:#3d78f2; --bg:#f5f7fa; --border:#dce0e8;
+    --ready:#166534; --ready-bg:#dcfce7; --work:#92400e; --work-bg:#fef3c7;
+    --bad:#991b1b; --bad-bg:#fee2e2; --present:#166534; --partial:#92400e; --missing:#991b1b;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:Inter,-apple-system,sans-serif;background:var(--bg);color:#1e2129;line-height:1.5}
+  .top-bar{background:var(--navy);color:#fff;padding:16px 40px;position:sticky;top:0;z-index:50}
+  .top-bar h1{font-size:22px;font-weight:800}
+  .top-bar .sub{color:#9a9fb8;font-size:12px;margin-top:4px}
+  .page{max-width:1400px;margin:0 auto;padding:28px 40px 64px}
+  .hero{background:#fff;border:1px solid var(--border);border-radius:12px;padding:24px;margin-bottom:24px}
+  .hero-stat{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:16px 0}
+  .stat{background:#fafbfc;border:1px solid var(--border);border-radius:8px;padding:14px;text-align:center}
+  .stat .n{font-size:28px;font-weight:800}
+  .callout{background:#ecfeff;border:1px solid #99f6e4;border-radius:8px;padding:12px 14px;font-size:14px;margin-top:12px}
+  .filters{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:16px;padding:14px;background:#fff;border:1px solid var(--border);border-radius:10px}
+  .filter-btn{padding:8px 12px;border:2px solid var(--border);border-radius:6px;background:#fff;font-size:12px;font-weight:700;cursor:pointer}
+  .filter-btn.active{background:var(--navy);color:#fff;border-color:var(--navy)}
+  #search{flex:1;min-width:200px;padding:8px 10px;border:1px solid var(--border);border-radius:6px}
+  .main-table{width:100%;border-collapse:collapse;font-size:12px;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+  .main-table th{background:#f1f5f9;text-align:left;padding:8px;font-size:10px;text-transform:uppercase;color:#64748b}
+  .main-table > tbody > tr.data-row td{padding:10px 8px;border-bottom:1px solid var(--border);vertical-align:top}
+  .main-table tr.hidden{display:none}
+  .col-intake{min-width:240px;max-width:360px}
+  .col-deps{font-size:11px;line-height:1.5;min-width:200px;max-width:320px}
+  .col-action{font-size:12px;line-height:1.45;max-width:420px}
+  .col-pm{font-weight:700;white-space:nowrap}
+  .dep-line{margin-bottom:4px}
+  .rel{display:inline-block;font-size:9px;font-weight:800;padding:1px 5px;border-radius:3px;text-transform:uppercase}
+  .rel-block{background:#fee2e2;color:#991b1b}
+  .rel-par{background:#d1fae5;color:#065f46}
+  .rel-soft{background:#e0e7ff;color:#3730a3}
+  .rel-context{background:#f3e8ff;color:#6b21a8}
+  .rel-unk{background:#f1f5f9;color:#64748b}
+  .dep-check{color:#92400e;font-weight:700;font-size:11px}
+  .dep-jira{font-size:9px;color:#1e40af;font-weight:700;margin-left:2px}
+  .dep-team{font-weight:700;color:var(--navy)}
+  .dep-rd{font-size:9px;font-weight:700;padding:1px 4px;border-radius:3px}
+  .dep-rd.bad{background:#fee2e2;color:#991b1b}
+  .dep-rd.ok{background:#fce7f3;color:#9d174d}
+  .dep-date{font-size:10px;color:#64748b}
+  .dep-date.missing{color:#991b1b;font-weight:700}
+  .dep-missing{color:#991b1b;font-weight:700;font-size:11px}
+  .dep-more{font-size:10px;color:#64748b}
+  .intake-link{font-weight:700;color:var(--navy);text-decoration:none;display:block;line-height:1.35}
+  .jira-key{font-size:10px}
+  .readiness{display:inline-block;padding:3px 8px;border-radius:4px;font-size:10px;font-weight:800;text-transform:uppercase;white-space:nowrap}
+  .rd-ready{background:var(--ready-bg);color:var(--ready)}
+  .rd-work{background:var(--work-bg);color:var(--work)}
+  .rd-bad{background:var(--bad-bg);color:var(--bad)}
+  tr.data-row.ready td{background:#f0fdf4}
+  tr.data-row.needs_work td{background:#fffbeb}
+  tr.data-row.insufficient td{background:#fef2f2}
+  .nav{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px;font-size:13px}
+  .nav a{text-decoration:none;font-weight:600;color:var(--blue)}
+</style>
+</head>
+<body>
+<div class="top-bar">
+  <h1>HCOM — Tech readiness review</h1>
+  <div class="sub">FA = HCOM (cf[10274]) · PMs: Ashish, Dan, Joyce, Lucy, LaRon, Alishaa · MLSTN1-3067 / 5676 / 5678 · 15 intakes · 29 May 2026</div>
+</div>
+<div class="page">
+  <nav class="nav">
+    <a href="#summary">Summary</a>
+    <a href="hbt-dependency-intake-quality.html">Dependency-team review (v1)</a>
+    <a href="hbt-ubt-h2-sequencing-chart.html">Sequencing chart</a>
+  </nav>
+
+  <section class="hero" id="summary">
+    <p><strong>PM action list</strong> for HBT intakes where Jira <strong>Functional Area</strong> (cf[10274]) = <strong>HCOM</strong>, parent milestone is <strong>MLSTN1-3067</strong>, <strong>5676</strong>, or <strong>5678</strong>, and the owning PM is Ashish, Dan, Joyce, Lucy, LaRon, or Alishaa. Receiving-team sizing: <a href="hbt-dependency-intake-quality.html">dependency review</a>. <strong>13</strong> tickets have at least one action; <strong>13</strong> have dependency or sequencing gaps.</p>
+    <div class="hero-stat">
+      <div class="stat"><div class="n" style="color:var(--ready)">15</div><div>Ready to size</div></div>
+      <div class="stat"><div class="n" style="color:var(--work)">0</div><div>Needs work</div></div>
+      <div class="stat"><div class="n" style="color:var(--bad)">0</div><div>Insufficient</div></div>
+      <div class="stat"><div class="n">15</div><div>Total intakes</div></div>
+    </div>
+  </section>
+
+  <div class="filters">
+    <button type="button" class="filter-btn active" data-r="all">All</button>
+    <button type="button" class="filter-btn" data-r="ready">Ready</button>
+    <button type="button" class="filter-btn" data-r="needs_work">Needs work</button>
+    <button type="button" class="filter-btn" data-r="insufficient">Insufficient</button>
+    <button type="button" class="filter-btn" data-r="action">PM action needed</button>
+    <button type="button" class="filter-btn" data-r="dep_gap">Dep / seq gap</button>
+    <input id="search" type="search" placeholder="Search title, PM, ticket…">
+    <span id="count" style="font-size:12px;color:#64748b;margin-left:auto"></span>
+  </div>
+
+  <table class="main-table">
+    <thead><tr>
+      <th>Intake</th><th>Owner (PM)</th><th>Dependencies / sequencing</th><th>Readiness</th><th>PM action</th>
+    </tr></thead>
+    <tbody>
+      
+<tr class="data-row ready" data-readiness="ready" data-pm="Lucy Meadow" data-key="27086" data-dep-gap="0">
+  <td class="col-intake">
+    <a class="intake-link" href="https://expediagroup.atlassian.net/browse/PRODPLAN1-27086" target="_blank" rel="noopener">[Crawl] [Design] Arranger Persona Research &amp; Journey Mapping</a>
+    <span class="jira-key"><a href="https://expediagroup.atlassian.net/browse/PRODPLAN1-27086" target="_blank">PRODPLAN1-27086</a></span>
+  </td>
+  <td class="col-pm">Lucy Meadow</td>
+  <td class="col-deps">—</td>
+  <td><span class="readiness rd-ready">Ready to size</span></td>
+  <td class="col-action">—</td>
+</tr>
+<tr class="data-row ready" data-readiness="ready" data-pm="LaRon Boykin" data-key="28960" data-dep-gap="1">
+  <td class="col-intake">
+    <a class="intake-link" href="https://expediagroup.atlassian.net/browse/PRODPLAN1-28960" target="_blank" rel="noopener">[Delivery/Discovery] Work Email / Expense System Forwarding</a>
+    <span class="jira-key"><a href="https://expediagroup.atlassian.net/browse/PRODPLAN1-28960" target="_blank">PRODPLAN1-28960</a></span>
+  </td>
+  <td class="col-pm">LaRon Boykin</td>
+  <td class="col-deps"><span class="dep-check" title="Confirm whether this team needs a dependency intake">Identity ?</span><span class="dep-check" title="Confirm whether this team needs a dependency intake">P13N ?</span><div class="dep-line"><span class="rel rel-unk">—</span> <span class="dep-team">UMP</span> <a href="https://expediagroup.atlassian.net/browse/PRODPLAN1-26264" target="_blank" rel="noopener">26264</a> <span class="dep-date">2026-09-30</span></div></td>
+  <td><span class="readiness rd-ready">Ready to size</span></td>
+  <td class="col-action">Dependency ticket(s) linked in Jira: PRODPLAN1-26264 (UMP, currently —). Confirm sequencing (blocks / parallel / soft gate / context) and target ready dates with receiving teams. Confirm whether Identity needs a separate dependency intake for this work. Confirm whether P13N needs a separate dependency intake for this work. Confirm end-to-end dependency sequencing before HCOM commits capacity (planning board + sequencing chart).</td>
+</tr>
+<tr class="data-row ready" data-readiness="ready" data-pm="LaRon Boykin" data-key="29028" data-dep-gap="1">
+  <td class="col-intake">
+    <a class="intake-link" href="https://expediagroup.atlassian.net/browse/PRODPLAN1-29028" target="_blank" rel="noopener">[Delivery] CSV Downloadable Receipts</a>
+    <span class="jira-key"><a href="https://expediagroup.atlassian.net/browse/PRODPLAN1-29028" target="_blank">PRODPLAN1-29028</a></span>
+  </td>
+  <td class="col-pm">LaRon Boykin</td>
+  <td class="col-deps"><span class="dep-check" title="Confirm whether this team needs a dependency intake">Identity ?</span><span class="dep-check" title="Confirm whether this team needs a dependency intake">P13N ?</span><div class="dep-line"><span class="rel rel-unk">—</span> <span class="dep-team">UMP</span> <a href="https://expediagroup.atlassian.net/browse/PRODPLAN1-26264" target="_blank" rel="noopener">26264</a> <span class="dep-date">2026-09-30</span></div></td>
+  <td><span class="readiness rd-ready">Ready to size</span></td>
+  <td class="col-action">Dependency ticket(s) linked in Jira: PRODPLAN1-26264 (UMP, currently —). Confirm sequencing (blocks / parallel / soft gate / context) and target ready dates with receiving teams. Confirm whether Identity needs a separate dependency intake for this work. Confirm whether P13N needs a separate dependency intake for this work. Confirm end-to-end dependency sequencing before HCOM commits capacity (planning board + sequencing chart).</td>
+</tr>
+<tr class="data-row ready" data-readiness="ready" data-pm="LaRon Boykin" data-key="29036" data-dep-gap="1">
+  <td class="col-intake">
+    <a class="intake-link" href="https://expediagroup.atlassian.net/browse/PRODPLAN1-29036" target="_blank" rel="noopener">[Discovery] Direct Link to Quickbooks for Expensing</a>
+    <span class="jira-key"><a href="https://expediagroup.atlassian.net/browse/PRODPLAN1-29036" target="_blank">PRODPLAN1-29036</a></span>
+  </td>
+  <td class="col-pm">LaRon Boykin</td>
+  <td class="col-deps"><span class="dep-check" title="Confirm whether this team needs a dependency intake">Identity ?</span><span class="dep-check" title="Confirm whether this team needs a dependency intake">P13N ?</span><div class="dep-line"><span class="rel rel-unk">—</span> <span class="dep-team">UMP</span> <a href="https://expediagroup.atlassian.net/browse/PRODPLAN1-26264" target="_blank" rel="noopener">26264</a> <span class="dep-date">2026-09-30</span></div></td>
+  <td><span class="readiness rd-ready">Ready to size</span></td>
+  <td class="col-action">Dependency ticket(s) linked in Jira: PRODPLAN1-26264 (UMP, currently —). Confirm sequencing (blocks / parallel / soft gate / context) and target ready dates with receiving teams. Confirm whether Identity needs a separate dependency intake for this work. Confirm whether P13N needs a separate dependency intake for this work. Confirm end-to-end dependency sequencing before HCOM commits capacity (planning board + sequencing chart).</td>
+</tr>
+<tr class="data-row ready" data-readiness="ready" data-pm="LaRon Boykin" data-key="29050" data-dep-gap="1">
+  <td class="col-intake">
+    <a class="intake-link" href="https://expediagroup.atlassian.net/browse/PRODPLAN1-29050" target="_blank" rel="noopener">[Discovery] Concierge for HBTs</a>
+    <span class="jira-key"><a href="https://expediagroup.atlassian.net/browse/PRODPLAN1-29050" target="_blank">PRODPLAN1-29050</a></span>
+  </td>
+  <td class="col-pm">LaRon Boykin</td>
+  <td class="col-deps"><span class="dep-check" title="Confirm whether this team needs a dependency intake">UMP ?</span></td>
+  <td><span class="readiness rd-ready">Ready to size</span></td>
+  <td class="col-action">Confirm whether UMP needs a separate dependency intake for this work. Confirm end-to-end dependency sequencing before HCOM commits capacity (planning board + sequencing chart).</td>
+</tr>
+<tr class="data-row ready" data-readiness="ready" data-pm="LaRon Boykin" data-key="29071" data-dep-gap="1">
+  <td class="col-intake">
+    <a class="intake-link" href="https://expediagroup.atlassian.net/browse/PRODPLAN1-29071" target="_blank" rel="noopener">[Discovery] Additional Value-Added Services for HBTs</a>
+    <span class="jira-key"><a href="https://expediagroup.atlassian.net/browse/PRODPLAN1-29071" target="_blank">PRODPLAN1-29071</a></span>
+  </td>
+  <td class="col-pm">LaRon Boykin</td>
+  <td class="col-deps"><span class="dep-check" title="Confirm whether this team needs a dependency intake">UMP ?</span></td>
+  <td><span class="readiness rd-ready">Ready to size</span></td>
+  <td class="col-action">Confirm whether UMP needs a separate dependency intake for this work. Confirm end-to-end dependency sequencing before HCOM commits capacity (planning board + sequencing chart).</td>
+</tr>
+<tr class="data-row ready" data-readiness="ready" data-pm="LaRon Boykin" data-key="29089" data-dep-gap="1">
+  <td class="col-intake">
+    <a class="intake-link" href="https://expediagroup.atlassian.net/browse/PRODPLAN1-29089" target="_blank" rel="noopener">[Discovery] Bleisure Payment and Receipts</a>
+    <span class="jira-key"><a href="https://expediagroup.atlassian.net/browse/PRODPLAN1-29089" target="_blank">PRODPLAN1-29089</a></span>
+  </td>
+  <td class="col-pm">LaRon Boykin</td>
+  <td class="col-deps"><div class="dep-line"><span class="rel rel-context">context</span> <span class="dep-team">Identity</span> <a href="https://expediagroup.atlassian.net/browse/PRODPLAN1-24343" target="_blank" rel="noopener">24343</a> <span class="dep-jira" title="Referenced in this ticket's Jira description">in Jira</span> <span class="dep-date">2026-07-15</span></div><span class="dep-check" title="Confirm whether this team needs a dependency intake">P13N ?</span><span class="dep-check" title="Confirm whether this team needs a dependency intake">CKO ?</span><div class="dep-line"><span class="rel rel-context">context</span> <span class="dep-team">UMP</span> <a href="https://expediagroup.atlassian.net/browse/PRODPLAN1-26264" target="_blank" rel="noopener">26264</a> <span class="dep-jira" title="Referenced in this ticket's Jira description">in Jira</span> <span class="dep-date">2026-09-30</span></div></td>
+  <td><span class="readiness rd-ready">Ready to size</span></td>
+  <td class="col-action">Dependency ticket(s) linked in Jira: PRODPLAN1-24343 (Identity, currently context); PRODPLAN1-26264 (UMP, currently context). Confirm sequencing (blocks / parallel / soft gate / context) and target ready dates with receiving teams. Confirm whether Identity PRODPLAN1-24343 blocks this intake or is foundational context only. Confirm whether P13N needs a separate dependency intake for this work. Confirm whether CKO needs a separate dependency intake for this work. Confirm whether UMP PRODPLAN1-26264 blocks this intake or is foundational context only. Confirm end-to-end dependency sequencing before HCOM commits capacity (planning board + sequencing chart).</td>
+</tr>
+<tr class="data-row ready" data-readiness="ready" data-pm="Alishaa Hasan" data-key="29215" data-dep-gap="0">
+  <td class="col-intake">
+    <a class="intake-link" href="https://expediagroup.atlassian.net/browse/PRODPLAN1-29215" target="_blank" rel="noopener">Collapse full-screen gallery for UBT sessions on PDP (Q3) - Hcom Differentiators</a>
+    <span class="jira-key"><a href="https://expediagroup.atlassian.net/browse/PRODPLAN1-29215" target="_blank">PRODPLAN1-29215</a></span>
+  </td>
+  <td class="col-pm">Alishaa Hasan</td>
+  <td class="col-deps">—</td>
+  <td><span class="readiness rd-ready">Ready to size</span></td>
+  <td class="col-action">—</td>
+</tr>
+<tr class="data-row ready" data-readiness="ready" data-pm="Joyce Wang" data-key="29474" data-dep-gap="1">
+  <td class="col-intake">
+    <a class="intake-link" href="https://expediagroup.atlassian.net/browse/PRODPLAN1-29474" target="_blank" rel="noopener">[Hcom] Business rates phase 2</a>
+    <span class="jira-key"><a href="https://expediagroup.atlassian.net/browse/PRODPLAN1-29474" target="_blank">PRODPLAN1-29474</a></span>
+  </td>
+  <td class="col-pm">Joyce Wang</td>
+  <td class="col-deps"><span class="dep-check" title="Confirm whether this team needs a dependency intake">Identity ?</span><span class="dep-check" title="Confirm whether this team needs a dependency intake">P13N ?</span></td>
+  <td><span class="readiness rd-ready">Ready to size</span></td>
+  <td class="col-action">Confirm whether Identity needs a separate dependency intake for this work. Confirm whether P13N needs a separate dependency intake for this work. Confirm end-to-end dependency sequencing before HCOM commits capacity (planning board + sequencing chart).</td>
+</tr>
+<tr class="data-row ready" data-readiness="ready" data-pm="Joyce Wang" data-key="29479" data-dep-gap="1">
+  <td class="col-intake">
+    <a class="intake-link" href="https://expediagroup.atlassian.net/browse/PRODPLAN1-29479" target="_blank" rel="noopener">[SRP] Add business rates tagging on SRP card</a>
+    <span class="jira-key"><a href="https://expediagroup.atlassian.net/browse/PRODPLAN1-29479" target="_blank">PRODPLAN1-29479</a></span>
+  </td>
+  <td class="col-pm">Joyce Wang</td>
+  <td class="col-deps"><span class="dep-check" title="Confirm whether this team needs a dependency intake">Search ?</span></td>
+  <td><span class="readiness rd-ready">Ready to size</span></td>
+  <td class="col-action">Confirm whether Search needs a separate dependency intake for this work. Confirm end-to-end dependency sequencing before HCOM commits capacity (planning board + sequencing chart).</td>
+</tr>
+<tr class="data-row ready" data-readiness="ready" data-pm="Joyce Wang" data-key="29486" data-dep-gap="1">
+  <td class="col-intake">
+    <a class="intake-link" href="https://expediagroup.atlassian.net/browse/PRODPLAN1-29486" target="_blank" rel="noopener">[Hcom] Resend magic link for business rates</a>
+    <span class="jira-key"><a href="https://expediagroup.atlassian.net/browse/PRODPLAN1-29486" target="_blank">PRODPLAN1-29486</a></span>
+  </td>
+  <td class="col-pm">Joyce Wang</td>
+  <td class="col-deps"><span class="dep-check" title="Confirm whether this team needs a dependency intake">Identity ?</span></td>
+  <td><span class="readiness rd-ready">Ready to size</span></td>
+  <td class="col-action">Confirm whether Identity needs a separate dependency intake for this work. Confirm end-to-end dependency sequencing before HCOM commits capacity (planning board + sequencing chart).</td>
+</tr>
+<tr class="data-row ready" data-readiness="ready" data-pm="LaRon Boykin" data-key="29810" data-dep-gap="1">
+  <td class="col-intake">
+    <a class="intake-link" href="https://expediagroup.atlassian.net/browse/PRODPLAN1-29810" target="_blank" rel="noopener">[Discovery] OAuth Opportunities for HBTs</a>
+    <span class="jira-key"><a href="https://expediagroup.atlassian.net/browse/PRODPLAN1-29810" target="_blank">PRODPLAN1-29810</a></span>
+  </td>
+  <td class="col-pm">LaRon Boykin</td>
+  <td class="col-deps"><div class="dep-line"><span class="rel rel-context">context</span> <span class="dep-team">Identity</span> <a href="https://expediagroup.atlassian.net/browse/PRODPLAN1-29036" target="_blank" rel="noopener">29036</a> <span class="dep-jira" title="Referenced in this ticket's Jira description">in Jira</span> <span class="dep-date">2026-09-30</span></div><span class="dep-check" title="Confirm whether this team needs a dependency intake">P13N ?</span><span class="dep-check" title="Confirm whether this team needs a dependency intake">UMP ?</span></td>
+  <td><span class="readiness rd-ready">Ready to size</span></td>
+  <td class="col-action">Dependency ticket(s) linked in Jira: PRODPLAN1-29036 (Identity, currently context). Confirm sequencing (blocks / parallel / soft gate / context) and target ready dates with receiving teams. Confirm whether P13N needs a separate dependency intake for this work. Confirm whether UMP needs a separate dependency intake for this work. Confirm end-to-end dependency sequencing before HCOM commits capacity (planning board + sequencing chart).</td>
+</tr>
+<tr class="data-row ready" data-readiness="ready" data-pm="Alishaa Hasan" data-key="29851" data-dep-gap="1">
+  <td class="col-intake">
+    <a class="intake-link" href="https://expediagroup.atlassian.net/browse/PRODPLAN1-29851" target="_blank" rel="noopener">SRP POI Test - Hcom Differentatiors</a>
+    <span class="jira-key"><a href="https://expediagroup.atlassian.net/browse/PRODPLAN1-29851" target="_blank">PRODPLAN1-29851</a></span>
+  </td>
+  <td class="col-pm">Alishaa Hasan</td>
+  <td class="col-deps"><span class="dep-check" title="Confirm whether this team needs a dependency intake">P13N ?</span><span class="dep-check" title="Confirm whether this team needs a dependency intake">Search ?</span></td>
+  <td><span class="readiness rd-ready">Ready to size</span></td>
+  <td class="col-action">Confirm whether P13N needs a separate dependency intake for this work. Confirm whether Search needs a separate dependency intake for this work. Confirm end-to-end dependency sequencing before HCOM commits capacity (planning board + sequencing chart).</td>
+</tr>
+<tr class="data-row ready" data-readiness="ready" data-pm="Alishaa Hasan" data-key="30073" data-dep-gap="1">
+  <td class="col-intake">
+    <a class="intake-link" href="https://expediagroup.atlassian.net/browse/PRODPLAN1-30073" target="_blank" rel="noopener">Promote Property Expert prominence on PDP + removal of static FAQ (Q3) - Hcom Differentiators</a>
+    <span class="jira-key"><a href="https://expediagroup.atlassian.net/browse/PRODPLAN1-30073" target="_blank">PRODPLAN1-30073</a></span>
+  </td>
+  <td class="col-pm">Alishaa Hasan</td>
+  <td class="col-deps"><span class="dep-check" title="Confirm whether this team needs a dependency intake">PDP ?</span></td>
+  <td><span class="readiness rd-ready">Ready to size</span></td>
+  <td class="col-action">Confirm whether PDP needs a separate dependency intake for this work. Confirm end-to-end dependency sequencing before HCOM commits capacity (planning board + sequencing chart).</td>
+</tr>
+<tr class="data-row ready" data-readiness="ready" data-pm="Lucy Meadow" data-key="23997" data-dep-gap="1">
+  <td class="col-intake">
+    <a class="intake-link" href="https://expediagroup.atlassian.net/browse/PRODPLAN1-23997" target="_blank" rel="noopener">Verify proposed UBT account verification flow</a>
+    <span class="jira-key"><a href="https://expediagroup.atlassian.net/browse/PRODPLAN1-23997" target="_blank">PRODPLAN1-23997</a></span>
+  </td>
+  <td class="col-pm">Lucy Meadow</td>
+  <td class="col-deps"><span class="dep-check" title="Confirm whether this team needs a dependency intake">Identity ?</span></td>
+  <td><span class="readiness rd-ready">Ready to size</span></td>
+  <td class="col-action">Confirm whether Identity needs a separate dependency intake for this work. Confirm end-to-end dependency sequencing before HCOM commits capacity (planning board + sequencing chart).</td>
+</tr>
+    </tbody>
+  </table>
+</div>
+<script>
+(function() {
+  let rf = 'all', actionOnly = false, depGapOnly = false, q = '';
+  const dataRows = document.querySelectorAll('tr.data-row');
+  const countEl = document.getElementById('count');
+  function apply() {
+    let n = 0;
+    dataRows.forEach(row => {
+      const r = row.dataset.readiness;
+      const text = row.textContent.toLowerCase();
+      const hasAction = row.querySelector('.col-action')?.textContent.trim() !== '—';
+      const hasDepGap = row.dataset.depGap === '1';
+      let show = true;
+      if (rf !== 'all' && r !== rf) show = false;
+      if (actionOnly && !hasAction) show = false;
+      if (depGapOnly && !hasDepGap) show = false;
+      if (q && !text.includes(q)) show = false;
+      row.classList.toggle('hidden', !show);
+      if (show) n++;
+    });
+    countEl.textContent = 'Showing ' + n + ' intakes';
+  }
+  document.querySelectorAll('[data-r]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('[data-r]').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      actionOnly = btn.dataset.r === 'action';
+      depGapOnly = btn.dataset.r === 'dep_gap';
+      if (actionOnly || depGapOnly) rf = 'all';
+      else { actionOnly = false; depGapOnly = false; rf = btn.dataset.r; }
+      apply();
+    });
+  });
+  document.getElementById('search').addEventListener('input', e => { q = e.target.value.trim().toLowerCase(); apply(); });
+  apply();
+})();
+</script>
+</body>
+</html>

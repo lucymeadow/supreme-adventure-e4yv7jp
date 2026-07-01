@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Priority 7 Paper — Milestone Coverage Analysis</title>
+<style>
+  :root {
+    --navy: #171c38;
+    --teal: #00a3b5;
+    --blue: #3d78f2;
+    --purple: #784cc7;
+    --amber: #d99e14;
+    --green: #2ea673;
+    --coral: #e56152;
+    --dark: #1e2129;
+    --subtle: #808899;
+    --bg: #f5f7fa;
+    --white: #ffffff;
+    --border: #dce0e8;
+    --shadow: 0 2px 8px rgba(0,0,0,0.06);
+    --strong: #16a34a;
+    --moderate: #d97706;
+    --weak: #dc2626;
+    --gap: #7c3aed;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--dark); line-height: 1.6; }
+
+  .top-bar { background: var(--navy); padding: 14px 40px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
+  .top-bar h1 { color: #fff; font-size: 20px; font-weight: 700; }
+  .top-bar .sub { color: #9a9fb8; font-size: 12px; margin-top: 2px; }
+  .top-bar a { color: #9a9fb8; text-decoration: none; font-size: 13px; }
+  .top-bar a:hover { color: #fff; }
+
+  .layout { display: flex; max-width: 1400px; margin: 0 auto; }
+  .sidebar { width: 260px; min-width: 260px; background: var(--white); border-right: 1px solid var(--border); padding: 24px 0; position: sticky; top: 52px; height: calc(100vh - 52px); overflow-y: auto; }
+  .sidebar .nav-section { padding: 0 20px; margin-bottom: 20px; }
+  .sidebar .nav-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--subtle); margin-bottom: 8px; }
+  .sidebar a { display: block; padding: 5px 20px; font-size: 13px; color: var(--dark); text-decoration: none; border-left: 3px solid transparent; }
+  .sidebar a:hover { background: var(--bg); border-left-color: var(--teal); }
+  .sidebar a.active { background: #eef6ff; border-left-color: var(--blue); font-weight: 600; }
+
+  .main { flex: 1; padding: 32px 48px; min-width: 0; }
+  .main h1 { font-size: 28px; font-weight: 800; margin-bottom: 8px; color: var(--navy); }
+  .main .subtitle { font-size: 15px; color: var(--subtle); margin-bottom: 32px; }
+  .main h2 { font-size: 20px; font-weight: 700; margin: 40px 0 16px; padding-bottom: 8px; border-bottom: 2px solid var(--border); color: var(--navy); }
+  .main h3 { font-size: 16px; font-weight: 700; margin: 28px 0 12px; color: var(--dark); }
+  .main h4 { font-size: 14px; font-weight: 700; margin: 20px 0 8px; color: var(--dark); }
+  .main p { margin-bottom: 12px; font-size: 14px; }
+  .main ul, .main ol { margin: 8px 0 16px 24px; font-size: 14px; }
+  .main li { margin-bottom: 4px; }
+
+  .scorecard { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin: 24px 0; }
+  .score-card { background: var(--white); border: 1px solid var(--border); border-radius: 10px; padding: 20px; box-shadow: var(--shadow); }
+  .score-card .label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--subtle); margin-bottom: 6px; }
+  .score-card .value { font-size: 22px; font-weight: 800; color: var(--navy); }
+  .score-card .detail { font-size: 12px; color: var(--subtle); margin-top: 4px; }
+  .score-card.risk { border-left: 4px solid var(--coral); }
+  .score-card.good { border-left: 4px solid var(--green); }
+  .score-card.warn { border-left: 4px solid var(--amber); }
+  .score-card.info { border-left: 4px solid var(--blue); }
+
+  table { width: 100%; border-collapse: collapse; margin: 12px 0 24px; font-size: 13px; background: var(--white); border-radius: 8px; overflow: hidden; box-shadow: var(--shadow); }
+  th { background: var(--navy); color: #fff; text-align: left; padding: 10px 14px; font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; }
+  td { padding: 10px 14px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: #f8fafc; }
+
+  .badge { display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; }
+  .badge.strong { background: #dcfce7; color: #166534; }
+  .badge.moderate { background: #fef3c7; color: #92400e; }
+  .badge.weak { background: #fee2e2; color: #991b1b; }
+  .badge.gap { background: #f3e8ff; color: #6b21a8; }
+  .badge.no-match { background: #f1f5f9; color: #475569; }
+  .badge.ambiguous { background: #fff7ed; color: #9a3412; }
+  .badge.cancelled { background: #fecaca; color: #991b1b; text-decoration: line-through; }
+
+  .phase-badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: 700; text-transform: uppercase; }
+  .phase-badge.crawl { background: #dbeafe; color: #1e40af; }
+  .phase-badge.walk { background: #e0e7ff; color: #3730a3; }
+  .phase-badge.run { background: #fae8ff; color: #86198f; }
+  .phase-badge.foundation { background: #f0fdf4; color: #166534; }
+
+  .status-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; }
+  .status-dot.in-progress { background: var(--teal); }
+  .status-dot.planned { background: var(--amber); }
+  .status-dot.backlog { background: var(--subtle); }
+  .status-dot.draft { background: var(--purple); }
+  .status-dot.cancelled { background: var(--coral); }
+
+  .callout { background: var(--white); border-left: 4px solid var(--blue); padding: 16px 20px; margin: 16px 0; border-radius: 0 8px 8px 0; box-shadow: var(--shadow); }
+  .callout.warning { border-left-color: var(--coral); }
+  .callout.critical { border-left-color: #991b1b; background: #fef2f2; }
+  .callout.info { border-left-color: var(--teal); }
+  .callout .callout-title { font-weight: 700; font-size: 13px; margin-bottom: 4px; }
+  .callout p { margin-bottom: 4px; }
+
+  .obj-header { background: var(--white); border: 1px solid var(--border); border-radius: 10px; padding: 24px; margin: 24px 0; box-shadow: var(--shadow); }
+  .obj-header .obj-title { font-size: 18px; font-weight: 800; color: var(--navy); margin-bottom: 8px; }
+  .obj-header .obj-problem { font-size: 13px; color: var(--dark); margin-bottom: 8px; padding: 10px 14px; background: #fef3c7; border-radius: 6px; }
+  .obj-header .obj-solution { font-size: 13px; color: var(--dark); padding: 10px 14px; background: #dcfce7; border-radius: 6px; }
+
+  .milestone-card { background: var(--white); border: 1px solid var(--border); border-radius: 8px; padding: 20px; margin: 16px 0; box-shadow: var(--shadow); }
+  .milestone-card.cancelled-card { background: #fef2f2; border: 1px solid #fecaca; opacity: 0.85; }
+  .milestone-card .mc-header { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
+  .milestone-card .mc-title { font-size: 15px; font-weight: 700; color: var(--navy); }
+  .milestone-card.cancelled-card .mc-title { text-decoration: line-through; color: var(--subtle); }
+  .milestone-card .mc-jira { font-size: 11px; color: var(--subtle); }
+
+  .tab-container { margin: 24px 0; }
+  .tab-bar { display: flex; gap: 0; border-bottom: 2px solid var(--border); }
+  .tab-btn { padding: 10px 20px; font-size: 13px; font-weight: 600; background: none; border: none; cursor: pointer; color: var(--subtle); border-bottom: 2px solid transparent; margin-bottom: -2px; transition: all 0.15s; }
+  .tab-btn:hover { color: var(--dark); }
+  .tab-btn.active { color: var(--navy); border-bottom-color: var(--blue); }
+  .tab-panel { display: none; padding: 20px 0; }
+  .tab-panel.active { display: block; }
+
+  @media (max-width: 900px) {
+    .sidebar { display: none; }
+    .main { padding: 20px; }
+    .scorecard { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 600px) {
+    .scorecard { grid-template-columns: 1fr; }
+    .top-bar { padding: 12px 16px; }
+    .top-bar h1 { font-size: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <div>
+    <h1>Priority 7 Paper — Milestone Coverage Analysis</h1>
+    <div class="sub">Make Hotels.com the Most Rewarding Way to Book a Hotel</div>
+  </div>
+  <div style="display:flex;gap:18px;align-items:center;flex-wrap:wrap;">
+    <a href="priority-7/objective-2/">Obj 2 Discovery</a>
+    <a href="priority-7-top10-overlap.html">P7 vs Top 10 overlap</a>
+    <a href="index.html">Back to Portfolio</a>
+  </div>
+</div>
+
+<div class="layout">
+  <nav class="sidebar">
+    <div class="nav-section">
+      <div class="nav-label">Priority 7 analysis</div>
+      <a href="priority-7-coverage.html" class="active">Milestone coverage (this page)</a>
+      <a href="priority-7-top10-overlap.html">P7 vs Top 10 overlap audit</a>
+      <a href="priority-7/objective-2/">Obj 2 Discovery Plan</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-label">Overview</div>
+      <a href="#summary">Summary Scorecard</a>
+      <a href="#methodology">Methodology</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-label">Objective Mappings</div>
+      <a href="#obj1">Obj 1: Business Trips</a>
+      <a href="#obj2">Obj 2: Flexibility</a>
+      <a href="#obj3">Obj 3: Rewards</a>
+      <a href="#foundations">Foundations</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-label">Analysis</div>
+      <a href="#gaps">Coverage Gaps</a>
+      <a href="#unmatched">Unmatched Milestones</a>
+      <a href="#structural">Structural Observations</a>
+      <a href="#recommendations">Recommendations</a>
+      <a href="#next-steps">Next Steps: What to Define</a>
+      <a href="#questions">Open Questions</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-label">Deep Dives</div>
+      <a href="hotelscomcash-readiness.html">Hotels.comCash Readiness</a>
+      <a href="dream-team-assessment.html">Dream Team Assessment</a>
+      <a href="cagan-reframing.html">Cagan Reframing</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-label">Reports</div>
+      <a href="milestone-quality-scores.html">Milestone Quality Scores</a>
+      <a href="hcom-q2-active-milestones.html">Q2 2026 Active Milestones</a>
+      <a href="hcom-q3-milestones.html">Q3 2026 Milestones</a>
+      <a href="march-17-investigation.html">Mar 17 CVR Investigation</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-label">Delivery Roadmap</div>
+      <a href="delivery-roadmap/snapshots/">All snapshots</a>
+    </div>
+  </nav>
+
+  <main class="main">
+    <h1>Priority 7 Coverage Analysis</h1>
+    <p class="subtitle">Maps the Priority 7 paper ("Make Hotels.com the Most Rewarding Way to Book a Hotel") against the current milestone inventory. Assesses coverage of customer problems, proposed solutions, and illustrative capabilities. Identifies gaps, structural mismatches, and risk areas. Synced from Jira 2026-04-02.</p>
+
+    <section id="summary">
+      <h2>Summary Scorecard</h2>
+      <div class="scorecard">
+        <div class="score-card warn">
+          <div class="label">Customer Problems</div>
+          <div class="value">5 / 6</div>
+          <div class="detail">Obj 1 Problem 2 (expert context) has no active coverage</div>
+        </div>
+        <div class="score-card warn">
+          <div class="label">Proposed Solutions</div>
+          <div class="value">~85%</div>
+          <div class="detail">Illustrative solutions map to specific milestones</div>
+        </div>
+        <div class="score-card warn">
+          <div class="label">Coverage Gaps</div>
+          <div class="value">8</div>
+          <div class="detail">Paper elements with no milestone home (up from 7)</div>
+        </div>
+        <div class="score-card risk">
+          <div class="label">Cancelled Big Bet</div>
+          <div class="value">Hotel Expert</div>
+          <div class="detail">MLSTN1-2085 cancelled. 1 of 3 "category-defining" bets has no active milestone</div>
+        </div>
+        <div class="score-card risk">
+          <div class="label">Biggest Risk</div>
+          <div class="value">Arranger</div>
+          <div class="detail">Paper implies tools by 2027; milestone is discovery-only</div>
+        </div>
+        <div class="score-card warn">
+          <div class="label">Unmatched Milestones</div>
+          <div class="value">8</div>
+          <div class="detail">Milestones with no paper counterpart (7 in-progress)</div>
+        </div>
+        <div class="score-card info">
+          <div class="label">Metrics Tracked</div>
+          <div class="value">0 / 9</div>
+          <div class="detail">Paper-level metrics not carried in milestones</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="methodology">
+      <h2>Methodology</h2>
+      <p>Extracted every customer problem, proposed solution, illustrative capability, metric, and FAQ element from Priority 7 (April 2026 version). Compared each element against the scope described in all 30 milestone <code>index.md</code> files in the portfolio.</p>
+      <p><strong>Coverage ratings:</strong></p>
+      <ul>
+        <li><span class="badge strong">Strong</span> Milestone explicitly addresses the paper element</li>
+        <li><span class="badge moderate">Moderate</span> Milestone implicitly covers or partially addresses</li>
+        <li><span class="badge weak">Weak</span> Mentioned but not committed</li>
+        <li><span class="badge gap">Gap</span> No milestone home</li>
+      </ul>
+    </section>
+
+    <!-- OBJECTIVE 1 -->
+    <section id="obj1">
+      <h2>Objective 1: Be the Simplest Place to Plan, Book, and Service Business Trips</h2>
+
+      <div class="callout critical">
+        <div class="callout-title">Critical: Hotel Expertise Coverage Lost</div>
+        <p>MLSTN1-2085 (Become the Hotel Expert) was cancelled on 2026-04-02. This milestone was the <strong>sole coverage</strong> for Objective 1's entire second customer problem (expert context, comparison tools, Q&amp;A) and one of the paper's three "genuinely category-defining" bets. No replacement milestone exists.</p>
+      </div>
+
+      <div class="tab-container">
+        <div class="tab-bar">
+          <button class="tab-btn active" onclick="switchTab(this, 'obj1-paper')">Paper &rarr; Milestones</button>
+          <button class="tab-btn" onclick="switchTab(this, 'obj1-milestones')">Milestone &rarr; Paper</button>
+          <button class="tab-btn" onclick="switchTab(this, 'obj1-summary')">Summary</button>
+        </div>
+
+        <div id="obj1-paper" class="tab-panel active">
+          <h3>Customer Problem 1: Small-scale business travelers lack TMC-level tools</h3>
+          <p><em>"Shopping, booking, and servicing is complicated and cumbersome."</em></p>
+
+          <h4>Self-Booker Capabilities</h4>
+          <table>
+            <tr><th>Paper Element</th><th>Covering Milestone(s)</th><th>Coverage</th></tr>
+            <tr><td>Expense management tools</td><td>Comms Thin Slice HBT Expensing (MLSTN1-5694)<br>Build HBT Self Booker MLP (MLSTN1-5676)</td><td><span class="badge strong">Strong</span></td></tr>
+            <tr><td>Map-based booking</td><td>Build HBT Self Booker MLP (MLSTN1-5676)</td><td><span class="badge moderate">Moderate</span><br><small>Within scope but not explicitly named</small></td></tr>
+            <tr><td>One-tap rebook of trusted hotels</td><td>Build HBT Self Booker MLP (MLSTN1-5676)<br>HCOM Home Improvements Phase 1 (MLSTN1-5679)</td><td><span class="badge strong">Strong</span><br><small>Quick rebook explicitly scoped</small></td></tr>
+            <tr><td>Preferred business credit card</td><td>Hotels.com Partnerships (MLSTN1-5683)</td><td><span class="badge strong">Strong</span><br><small>Wells Fargo credit card explicitly scoped</small></td></tr>
+            <tr><td>For-business recommendations</td><td>Identify Business Travelers (MLSTN1-3067)<br>Build HBT Self Booker MLP (MLSTN1-5676)</td><td><span class="badge strong">Strong</span><br><small>Segment-aware shopping is core</small></td></tr>
+            <tr><td>Invoice-grade receipts</td><td>Comms Thin Slice HBT Expensing (MLSTN1-5694)</td><td><span class="badge strong">Strong</span><br><small>Receipt redesign explicitly scoped</small></td></tr>
+            <tr><td>Partner integrations (UberEats, WeWork)</td><td>Integrate Add-On Services (MLSTN1-5680)</td><td><span class="badge strong">Strong</span></td></tr>
+          </table>
+
+          <h4>Arranger Capabilities</h4>
+          <table>
+            <tr><th>Paper Element</th><th>Covering Milestone</th><th>Coverage</th></tr>
+            <tr><td>Roster management</td><td rowspan="7">Create Travel Arranger Persona MLP (MLSTN1-5678)<br><br><small>Milestone is discovery-only: "research, then platform commitment, then validation." None of these capabilities have a build milestone.</small></td><td rowspan="7"><span class="badge moderate">Moderate</span><br><small>Discovery-only; paper implies delivered tools by 2027</small></td></tr>
+            <tr><td>Permission to book/edit for others</td></tr>
+            <tr><td>Shared payments</td></tr>
+            <tr><td>Pooling of rewards</td></tr>
+            <tr><td>Lightweight duty of care &amp; audit tools</td></tr>
+            <tr><td>Expense management tools (arranger)</td></tr>
+            <tr><td>Data on travel advisories</td></tr>
+          </table>
+
+          <div class="callout warning">
+            <div class="callout-title">Arranger Timing Risk</div>
+            <p>The paper lists 7 concrete arranger capabilities. The milestone commits only to validating whether to build them. No "Build Travel Arranger Experience" milestone exists. If the paper implies delivery by 2027, there's a gap between ambition and committed scope.</p>
+          </div>
+
+          <h4>Multi-Hotel Capabilities</h4>
+          <table>
+            <tr><th>Paper Element</th><th>Covering Milestone</th><th>Coverage</th></tr>
+            <tr><td>Plan, price-optimize, book, service, expense multi-city swings</td><td>Multi-Hotel Shopping (MLSTN1-5332)</td><td><span class="badge strong">Strong</span></td></tr>
+            <tr><td>Bleisure extensions, road trips, hotel-hop vacations</td><td>Multi-Hotel Shopping (MLSTN1-5332)</td><td><span class="badge moderate">Moderate</span><br><small>Milestone covers the mechanic; paper names these use cases</small></td></tr>
+          </table>
+
+          <h3>Customer Problem 2: Content is overwhelming and generic regardless of trip intent</h3>
+          <p><em>"I don't get the expert context I need to help me make the right decision."</em></p>
+
+          <table>
+            <tr><th>Paper Element</th><th>Covering Milestone</th><th>Coverage</th></tr>
+            <tr><td>Curated 3rd-party and UGC content relevant to purpose</td><td><s>Become the Hotel Expert (MLSTN1-2085)</s> &mdash; cancelled</td><td><span class="badge gap">Gap</span><br><small>MLSTN1-2085 cancelled, no replacement</small></td></tr>
+            <tr><td>Property comparison tools</td><td><s>Become the Hotel Expert (MLSTN1-2085)</s> &mdash; cancelled</td><td><span class="badge gap">Gap</span><br><small>MLSTN1-2085 cancelled, no replacement</small></td></tr>
+            <tr><td>Property Expert Q&amp;A grounded in verified reviews</td><td><s>Become the Hotel Expert (MLSTN1-2085)</s> &mdash; cancelled</td><td><span class="badge gap">Gap</span><br><small>MLSTN1-2085 cancelled, no replacement</small></td></tr>
+          </table>
+
+          <div class="callout critical">
+            <div class="callout-title">Entire Customer Problem Uncovered</div>
+            <p>MLSTN1-2085 (Become the Hotel Expert) was cancelled. It was the <strong>sole coverage</strong> for all three elements of Objective 1's second customer problem. There is no active milestone addressing expert context, property comparison, or Q&amp;A. This is also one of the paper's three "genuinely category-defining" bets.</p>
+          </div>
+
+          <h3>Paper Metrics (Objective 1)</h3>
+          <table>
+            <tr><th>Metric</th><th>Tracked in Milestones?</th></tr>
+            <tr><td>Grow business persona room nights by X%+ YoY</td><td><span class="badge gap">Not tracked</span></td></tr>
+            <tr><td>Increase MAU of core personas by X%+ YoY</td><td><span class="badge gap">Not tracked</span></td></tr>
+            <tr><td>Increase CLV by Z%</td><td><span class="badge gap">Not tracked</span></td></tr>
+          </table>
+        </div>
+
+        <div id="obj1-milestones" class="tab-panel">
+          <h3>Milestones That Map to Paper Elements</h3>
+
+          <div class="milestone-card">
+            <div class="mc-header">
+              <span class="mc-title">Build HBT Self Booker MLP</span>
+              <span class="phase-badge crawl">Crawl</span>
+              <span><span class="status-dot planned"></span>planned</span>
+              <span class="mc-jira">MLSTN1-5676</span>
+            </div>
+            <p>Builds trip-type intelligence, business rates, quick rebook, and segment-aware shopping. Covers: expense tools (partial), map-based booking (implicit), one-tap rebook, for-business recommendations, business rates.</p>
+            <p><strong>Does NOT cover:</strong> preferred business credit card (Partnerships), invoice-grade receipts (Comms Thin Slice), partner integrations like UberEats/WeWork (Add-On Services).</p>
+          </div>
+
+          <div class="milestone-card">
+            <div class="mc-header">
+              <span class="mc-title">Identify Business Travelers and Capture Preferences</span>
+              <span class="phase-badge crawl">Crawl</span>
+              <span><span class="status-dot in-progress"></span>in-progress</span>
+              <span class="mc-jira">MLSTN1-3067</span>
+            </div>
+            <p>The intelligence layer. Trip-type detection and preference-driven personalization. Covers: for-business recommendations (foundational), trip-type intelligence from the paper's AI section. Every self-booker tool depends on this milestone.</p>
+          </div>
+
+          <div class="milestone-card">
+            <div class="mc-header">
+              <span class="mc-title">Comms Thin Slice HBT Expensing</span>
+              <span class="phase-badge crawl">Crawl</span>
+              <span><span class="status-dot in-progress"></span>in-progress</span>
+              <span class="mc-jira">MLSTN1-5694</span>
+            </div>
+            <p>Redesigned receipt separating business view (policy-compliant spend, itemized for expense) from traveler value view. Covers: expense management tools, invoice-grade receipts. Tight alignment with paper.</p>
+          </div>
+
+          <div class="milestone-card">
+            <div class="mc-header">
+              <span class="mc-title">Build Self Booker Extended Experience</span>
+              <span class="phase-badge walk">Walk</span>
+              <span><span class="status-dot planned"></span>planned</span>
+              <span class="mc-jira">MLSTN1-5677</span>
+            </div>
+            <p>"AI-powered tools, price intelligence, and integrations." Post-MLP evolution. Likely home for the paper's most ambitious capabilities but the milestone description is thin and doesn't commit to specifics. AI concierge for on-trip recommendations could live here but isn't explicitly scoped.</p>
+          </div>
+
+          <div class="milestone-card">
+            <div class="mc-header">
+              <span class="mc-title">Create Travel Arranger Persona MLP</span>
+              <span class="phase-badge walk">Walk</span>
+              <span><span class="status-dot planned"></span>planned</span>
+              <span class="mc-jira">MLSTN1-5678</span>
+            </div>
+            <p>Discovery-only: "research, then platform commitment, then validation." Covers all 7 arranger capabilities from the paper but only commits to validating them. No build milestone follows.</p>
+          </div>
+
+          <div class="milestone-card">
+            <div class="mc-header">
+              <span class="mc-title">Multi-Hotel Shopping</span>
+              <span class="phase-badge walk">Walk</span>
+              <span><span class="status-dot in-progress"></span>in-progress</span>
+              <span class="mc-jira">MLSTN1-5332</span>
+            </div>
+            <p>Unified multi-hotel shopping and booking experience. One of the paper's three "genuinely category-defining" bets ("Hotel Hopping"). Tight alignment.</p>
+          </div>
+
+          <h3>Milestones Without Paper Match</h3>
+
+          <div class="milestone-card" style="border-left: 4px solid var(--subtle);">
+            <div class="mc-header">
+              <span class="mc-title">HCOM Home Improvements Phase 1</span>
+              <span class="phase-badge crawl">Crawl</span>
+              <span><span class="status-dot in-progress"></span>in-progress</span>
+              <span class="mc-jira">MLSTN1-5679</span>
+              <span class="badge no-match">No paper match</span>
+            </div>
+            <p>Segment-aware homepage utility, contextual merchandising, trip-phase quick actions. The paper never says "improve the homepage." It's an implementation vehicle for the segment-aware vision, not a solution the paper describes.</p>
+          </div>
+
+          <div class="milestone-card" style="border-left: 4px solid var(--subtle);">
+            <div class="mc-header">
+              <span class="mc-title">Evolve Hotels.com Brand Identity</span>
+              <span class="phase-badge crawl">Crawl</span>
+              <span><span class="status-dot in-progress"></span>in-progress</span>
+              <span class="mc-jira">MLSTN1-3572</span>
+              <span class="badge no-match">No paper match</span>
+            </div>
+            <p>Visual rebrand: logo, color palette, typography, pictograms, illustrations, photography, tone of voice. The paper describes what Hotels.com should <em>become</em> but never lists brand identity evolution as a solution to any customer problem.</p>
+          </div>
+
+          <div class="milestone-card" style="border-left: 4px solid var(--subtle);">
+            <div class="mc-header">
+              <span class="mc-title">Launch Pay Later to EG</span>
+              <span class="phase-badge crawl">Crawl</span>
+              <span><span class="status-dot in-progress"></span>in-progress</span>
+              <span class="mc-jira">MLSTN1-3515</span>
+              <span class="badge no-match">No paper match</span>
+            </div>
+            <p>Platform payments capability. Not mentioned anywhere in the Priority 7 paper.</p>
+          </div>
+
+          <div class="milestone-card" style="border-left: 4px solid var(--subtle);">
+            <div class="mc-header">
+              <span class="mc-title">Partners Autopay Scale-Up</span>
+              <span class="phase-badge crawl">Crawl</span>
+              <span><span class="status-dot in-progress"></span>in-progress</span>
+              <span class="mc-jira">MLSTN1-3516</span>
+              <span class="badge no-match">No paper match</span>
+            </div>
+            <p>Supply-side partner payout modernization. Not mentioned anywhere in the Priority 7 paper.</p>
+          </div>
+        </div>
+
+        <div id="obj1-summary" class="tab-panel">
+          <table>
+            <tr><th>Category</th><th>Count</th><th>Detail</th></tr>
+            <tr><td>Paper elements with Strong coverage</td><td>7 of 14</td><td>Expense tools, one-tap rebook, credit card, recommendations, receipts, partner integrations, multi-hotel</td></tr>
+            <tr><td>Paper elements with Moderate coverage</td><td>2 of 14</td><td>Map-based booking (implicit in MLP), arrangers (discovery-only)</td></tr>
+            <tr><td>Paper elements with Gap (no coverage)</td><td>3 of 14</td><td>Curated content, property comparison, Q&amp;A (all lost when MLSTN1-2085 was cancelled)</td></tr>
+            <tr><td>Arranger capabilities with no build commitment</td><td>5 of 7</td><td>Roster, permissions, shared payments, pooling, duty of care</td></tr>
+            <tr><td>Milestones with no paper match</td><td>4</td><td>Home Improvements, Brand Identity, Pay Later, Partners Autopay</td></tr>
+            <tr><td>Cross-objective dependencies</td><td>1 (now broken)</td><td>Become the Hotel Expert (Obj 2) was sole coverage for Obj 1's second customer problem &mdash; now cancelled</td></tr>
+            <tr><td>Paper metrics tracked in milestones</td><td>0 of 3</td><td>Room nights, MAU, CLV not carried in any milestone</td></tr>
+          </table>
+
+          <h3>Key Risks</h3>
+          <ol>
+            <li><strong style="color: #991b1b;">Hotel Expertise has no active milestone.</strong> MLSTN1-2085 was cancelled. The paper's entire second customer problem for Objective 1 and one of three "category-defining" bets now has zero coverage.</li>
+            <li>Arranger persona has 7 capabilities in the paper but only a discovery milestone. No build milestone exists.</li>
+            <li>Four in-progress milestones consume capacity on work the paper doesn't justify.</li>
+            <li>Build Self Booker Extended Experience is thin on specifics and is the likely home for the paper's most ambitious capabilities.</li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <!-- OBJECTIVE 2 -->
+    <section id="obj2">
+      <h2>Objective 2: Create Sticky Flexibility for Frequent Last-Minute Travelers</h2>
+
+      <div class="obj-header">
+        <div class="obj-problem"><strong>Customer Problem:</strong> Frequent travelers find it difficult to find offers and context that match their needs, particularly in last-minute booking scenarios.</div>
+        <div class="obj-solution"><strong>Early Solution:</strong> By 2027, Hotels.com will be the place to shop for travelers seeking flexibility, especially in last-minute business scenarios.</div>
+      </div>
+
+      <h3>Paper &rarr; Milestone Mapping</h3>
+      <table>
+        <tr><th>Paper Element</th><th>Covering Milestone(s)</th><th>Coverage</th></tr>
+        <tr><td>Biz Rates (fenced business rates for verified customers)</td><td>Build HBT Self Booker MLP (MLSTN1-5676) &mdash; "business rates" explicit<br>Deliver for Flexibility and Stickiness (MLSTN1-5682)</td><td><span class="badge strong">Strong</span></td></tr>
+        <tr><td>3rd party CFAR (bundled cancel-for-any-reason insurance)</td><td>Integrate Add-On Services (MLSTN1-5680)<br>Launch CFAR Pilot on Hcom (MLSTN1-3593)</td><td><span class="badge strong">Strong</span><br><small>CFAR now has both pilot and scale milestones</small></td></tr>
+        <tr><td>EG-created synthetic refundable rates (Hotels.com underwrites risk)</td><td>Deliver for Flexibility and Stickiness (MLSTN1-5682) &mdash; "novel offer types"</td><td><span class="badge moderate">Moderate</span><br><small>Concept is ambitious; milestone description is broad</small></td></tr>
+        <tr><td>True Change without cancel/rebook</td><td>Provide Dedicated Service Solutions (MLSTN1-5883)<br>Deliver for Flexibility and Stickiness (MLSTN1-5682)</td><td><span class="badge strong">Strong</span><br><small>True Change explicitly named</small></td></tr>
+      </table>
+
+      <h3>Milestone &rarr; Paper Mapping</h3>
+
+      <div class="milestone-card">
+        <div class="mc-header">
+          <span class="mc-title">Integrate Add-On Services</span>
+          <span class="phase-badge crawl">Crawl</span>
+          <span><span class="status-dot in-progress"></span>in-progress</span>
+          <span class="mc-jira">MLSTN1-5680</span>
+        </div>
+        <p>CFAR, ground transport, activities, expense tool integrations. Maps to paper's CFAR description and partner integrations (UberEats, WeWork). Strong alignment.</p>
+      </div>
+
+      <div class="milestone-card">
+        <div class="mc-header">
+          <span class="mc-title">Launch CFAR Pilot on Hcom</span>
+          <span class="phase-badge crawl">Crawl</span>
+          <span><span class="status-dot in-progress"></span>in-progress</span>
+          <span class="mc-jira">MLSTN1-3593</span>
+          <span class="badge strong">New</span>
+        </div>
+        <p>CFAR pilot for select hotels. Validates cancel-for-any-reason insurance before scale rollout via MLSTN1-5680. CFAR now has both a pilot milestone and a scale milestone.</p>
+      </div>
+
+      <div class="milestone-card">
+        <div class="mc-header">
+          <span class="mc-title">Pilot VAS Products on Hcom</span>
+          <span class="phase-badge crawl">Crawl</span>
+          <span><span class="status-dot in-progress"></span>in-progress</span>
+          <span class="mc-jira">MLSTN1-2887</span>
+          <span class="badge strong">New</span>
+        </div>
+        <p>Value-added services pilot: eSIM, telemedicine, concierge. Extends the add-on services portfolio beyond insurance into traveler utility services.</p>
+      </div>
+
+      <div class="milestone-card">
+        <div class="mc-header">
+          <span class="mc-title">Provide Dedicated Service Solutions</span>
+          <span class="phase-badge crawl">Crawl</span>
+          <span><span class="status-dot in-progress"></span>in-progress</span>
+          <span class="mc-jira">MLSTN1-5883</span>
+        </div>
+        <p>True changes, duty of care, premium support tiers, arranger/multi-user support. Priority 7 tracks HCOM under MLSTN1-5883; MLSTN1-5681 is the BEX-parented sibling for family lodging. Maps to paper's True Change and service implications. Strong alignment.</p>
+      </div>
+
+      <div class="milestone-card">
+        <div class="mc-header">
+          <span class="mc-title">Deliver for Flexibility and Stickiness</span>
+          <span class="phase-badge walk">Walk</span>
+          <span><span class="status-dot in-progress"></span>in-progress</span>
+          <span class="mc-jira">MLSTN1-5682</span>
+        </div>
+        <p>Pricing confidence, novel offer types, smart re-engagement, assistive intelligence. Maps to biz rates, EG-created synthetic rates, True Change. Moderate on synthetic rates &mdash; the concept is ambitious but the milestone is broad.</p>
+      </div>
+
+      <div class="milestone-card cancelled-card" style="border-left: 4px solid var(--coral);">
+        <div class="mc-header">
+          <span class="mc-title">Become the Hotel Expert</span>
+          <span class="phase-badge walk">Walk</span>
+          <span><span class="status-dot cancelled"></span>cancelled</span>
+          <span class="mc-jira">MLSTN1-2085</span>
+          <span class="badge cancelled">Cancelled</span>
+        </div>
+        <p>USPs, reasons to book, AI-summarized reviews, property comparison, Q&amp;A. Was the sole coverage for Objective 1's second customer problem and one of the paper's three "genuinely category-defining" bets. <strong>Cancelled 2026-04-02. No replacement milestone exists.</strong></p>
+      </div>
+
+      <div class="milestone-card" style="border-left: 4px solid #f59e0b;">
+        <div class="mc-header">
+          <span class="mc-title">Differentiate VR on HCOM</span>
+          <span class="phase-badge run">Run</span>
+          <span><span class="status-dot in-progress"></span>in-progress</span>
+          <span class="mc-jira">MLSTN1-5432</span>
+          <span class="badge ambiguous">Ambiguous</span>
+        </div>
+        <p>VR appears in the paper's "What we're NOT doing" section: <em>"Vacation rental investment... We're a hotels pure play."</em> The milestone's scope (containment, labeling, transparency) is consistent with that stance, but VR differentiation isn't a proposed solution. It's a defensive quality measure.</p>
+      </div>
+    </section>
+
+    <!-- OBJECTIVE 3 -->
+    <section id="obj3">
+      <h2>Objective 3: Use Rewards to Bridge Business and Leisure Travel</h2>
+
+      <div class="obj-header">
+        <div class="obj-problem"><strong>Customer Problem 1:</strong> Travelers don't feel meaningfully rewarded. Value is unclear, slow to unlock, too small to influence behavior.</div>
+        <div class="obj-problem"><strong>Customer Problem 2:</strong> High-frequency US and UK travelers miss the 10-for-1 value prop; OneKey earn rates feel unmeaningful.</div>
+        <div class="obj-problem"><strong>Customer Problem 3:</strong> Tier status benefits don't feel meaningful, clearly differentiated, or reliably delivered.</div>
+      </div>
+
+      <h3>Paper &rarr; Milestone Mapping</h3>
+
+      <h4>Problem 1: Loyalty feels unrewarding</h4>
+      <table>
+        <tr><th>Paper Element</th><th>Covering Milestone(s)</th><th>Coverage</th></tr>
+        <tr><td>Hotels.comCash currency (earn, burn, refund, gift, save, pool)</td><td>Redesign Hotels.comCash Loyalty Program (MLSTN1-5686)</td><td><span class="badge strong">Strong</span></td></tr>
+        <tr><td>Save Your Way (immediate discount vs. banked cash)</td><td>Save Your Way 2026 (MLSTN1-5476) <span class="status-dot in-progress" style="margin-left:4px"></span><small>in-progress</small><br>Save Your Way HBT Evolution (MLSTN1-5478) <span class="status-dot in-progress" style="margin-left:4px"></span><small>in-progress</small></td><td><span class="badge strong">Strong</span></td></tr>
+        <tr><td>Currency in all markets</td><td>HCOM Rewards Optimization RoW (MLSTN1-608)</td><td><span class="badge strong">Strong</span></td></tr>
+      </table>
+
+      <h4>Problem 2: 10-for-1 is gone</h4>
+      <table>
+        <tr><th>Paper Element</th><th>Covering Milestone(s)</th><th>Coverage</th></tr>
+        <tr><td>Restore 10-for-1 in UK</td><td>Hcom 10 to 100 UK (MLSTN1-4025)</td><td><span class="badge strong">Strong</span></td></tr>
+        <tr><td>Paid premium tier restoring 10-for-1 in US</td><td>Loyalty Primum Paid Loyalty (MLSTN1-5675)</td><td><span class="badge strong">Strong</span></td></tr>
+        <tr><td>Premium tier enriched with CFAR, insurance, expiry avoidance, price-drop rebook</td><td>Loyalty Primum Paid Loyalty (MLSTN1-5675)</td><td><span class="badge moderate">Moderate</span><br><small>Tier concept exists; enrichment details sparse</small></td></tr>
+      </table>
+
+      <h4>Problem 3: Tier benefits don't feel real</h4>
+      <table>
+        <tr><th>Paper Element</th><th>Covering Milestone(s)</th><th>Coverage</th></tr>
+        <tr><td>Simplified, restructured VIP perks</td><td>VIPa 2.0 Phase 1 (MLSTN1-5657)</td><td><span class="badge strong">Strong</span></td></tr>
+        <tr><td>Automated perk delivery, booking-time confirmation</td><td>VIPa 2.0 Phase 2 (MLSTN1-5767)</td><td><span class="badge strong">Strong</span></td></tr>
+        <tr><td>Status tier matching (e.g., Hertz President's Circle)</td><td>Hotels.com Partnerships (MLSTN1-5683)</td><td><span class="badge moderate">Moderate</span><br><small>Partnerships milestone is broad; tier matching is one item</small></td></tr>
+        <tr><td>Non-expiring status benefits (Genius-style)</td><td>VIPa 2.0 Phase 1/2</td><td><span class="badge weak">Weak</span><br><small>Not explicitly committed in milestone descriptions</small></td></tr>
+      </table>
+
+      <h4>Other Objective 3 elements</h4>
+      <table>
+        <tr><th>Paper Element</th><th>Covering Milestone(s)</th><th>Coverage</th></tr>
+        <tr><td>Co-branded Wells Fargo credit card</td><td>Hotels.com Partnerships (MLSTN1-5683)</td><td><span class="badge strong">Strong</span></td></tr>
+        <tr><td>Gift cards ($109M program, $200M opportunity)</td><td>Hcom Gift Cards (MLSTN1-5672)</td><td><span class="badge strong">Strong</span></td></tr>
+        <tr><td>Buy HCC, refund into HCC, pool across household</td><td>Loyalty Vault Save Now Travel Later (MLSTN1-5674)</td><td><span class="badge strong">Strong</span></td></tr>
+        <tr><td>Loyalty messaging: expiration, transparency, tier clarity</td><td>Member-Led Messaging Improvements (MLSTN1-3527)</td><td><span class="badge strong">Strong</span></td></tr>
+      </table>
+
+      <h3>Paper Metrics (Objective 3)</h3>
+      <table>
+        <tr><th>Metric</th><th>Tracked?</th></tr>
+        <tr><td>Increase repeat booking rate by X%</td><td><span class="badge gap">Not tracked</span></td></tr>
+        <tr><td>Reduce effective CAC for loyalty members vs. non-members</td><td><span class="badge gap">Not tracked</span></td></tr>
+        <tr><td>Paid tier: enrollment target and 12-month retention rate</td><td><span class="badge gap">Not tracked</span></td></tr>
+      </table>
+    </section>
+
+    <!-- FOUNDATIONS -->
+    <section id="foundations">
+      <h2>Foundations / Cross-Cutting Milestones</h2>
+      <p>These milestones don't map to a single objective but underpin execution across the strategy. Added from Jira sync on 2026-04-02.</p>
+
+      <div class="milestone-card" style="border-left: 4px solid var(--green);">
+        <div class="mc-header">
+          <span class="mc-title">Yield Management: Optimize Room &amp; Rates Display</span>
+          <span class="phase-badge foundation">Foundation</span>
+          <span><span class="status-dot in-progress"></span>in-progress</span>
+          <span class="mc-jira">MLSTN1-2349</span>
+          <span class="badge strong">New</span>
+        </div>
+        <p>Optimizes how rooms and rates are presented to travelers. Foundational to the pricing confidence and flexibility themes across Objectives 1 and 2. Supports the paper's vision of transparent, purposeful shopping.</p>
+      </div>
+
+      <div class="milestone-card" style="border-left: 4px solid var(--green);">
+        <div class="mc-header">
+          <span class="mc-title">Mitigate Price Inconsistencies</span>
+          <span class="phase-badge foundation">Foundation</span>
+          <span><span class="status-dot in-progress"></span>in-progress</span>
+          <span class="mc-jira">MLSTN1-2567</span>
+          <span class="badge strong">New</span>
+        </div>
+        <p>Addresses meta-to-checkout price drift and cross-channel inconsistencies. Directly relevant to the paper's FAQ on "Price transparency eliminates 'hidden fee' complaints. Consistent meta-to-checkout pricing."</p>
+      </div>
+
+      <div class="milestone-card" style="border-left: 4px solid var(--green);">
+        <div class="mc-header">
+          <span class="mc-title">mWeb Device Strategy</span>
+          <span class="phase-badge foundation">Foundation</span>
+          <span><span class="status-dot in-progress"></span>in-progress</span>
+          <span class="mc-jira">MLSTN1-3942</span>
+          <span class="badge strong">New</span>
+        </div>
+        <p>Mobile web platform strategy. Cross-cutting enabler for the last-minute booking scenarios emphasized in Objective 2 and the self-booker tools in Objective 1.</p>
+      </div>
+    </section>
+
+    <!-- GAPS -->
+    <section id="gaps">
+      <h2>Coverage Gaps</h2>
+      <p>Items in the Priority 7 paper with no clear milestone home.</p>
+      <table>
+        <tr><th>Gap</th><th>Paper Reference</th><th>Severity</th></tr>
+        <tr style="background: #fef2f2;"><td><strong>Hotel expertise (curated content, comparison, Q&amp;A)</strong></td><td>Obj 1 Problem 2: "I don't get the expert context I need." MLSTN1-2085 (Become the Hotel Expert) was the sole coverage and has been cancelled. One of the paper's three "genuinely category-defining" bets now has no active milestone.</td><td><span class="badge weak">Critical</span></td></tr>
+        <tr><td><strong>MoR for 100% of transactions</strong></td><td>FAQ: "Shift to MoR for 100% of transactions &mdash; improves our ability to service transactions directly ourselves." Significant infrastructure shift enabling service control and CFAR mechanics.</td><td><span class="badge weak">High</span></td></tr>
+        <tr><td><strong>Price transparency / all-in pricing</strong></td><td>FAQ: "Price transparency eliminates 'hidden fee' complaints. Consistent meta-to-checkout pricing." Also regulatory compliance (FTC, CMA, EU).</td><td><span class="badge moderate">Medium</span></td></tr>
+        <tr><td><strong>Go-to-market channel strategy</strong></td><td>FAQ: "Go-to-market will need to contemplate traditional channels (SEO, SEM) and AI discovery techniques like GEO and AEO."</td><td><span class="badge moderate">Medium</span></td></tr>
+        <tr><td><strong>AI concierge for on-trip recommendations</strong></td><td>Obj 1 and FAQ: "AI concierge for on-trip recommendations is architected as a contextual recommendation layer."</td><td><span class="badge moderate">Medium</span></td></tr>
+        <tr><td><strong>Custom service policies by tier/value</strong></td><td>FAQ: "We do not have differentiated policies to drive recognition or retention."</td><td><span class="badge moderate">Medium</span></td></tr>
+        <tr><td><strong>Non-expiring status benefits</strong></td><td>Obj 3: "Status benefits never expire (e.g., like Booking.com's Genius)."</td><td><span class="badge no-match">Low</span></td></tr>
+        <tr><td><strong>Hotels.comCash dispute/fraud handling</strong></td><td>FAQ: "A full-featured loyalty currency introduces new contact types &mdash; balance disputes, gift/pool issues."</td><td><span class="badge no-match">Low</span></td></tr>
+      </table>
+    </section>
+
+    <!-- UNMATCHED -->
+    <section id="unmatched">
+      <h2>Milestones Without Paper Counterparts</h2>
+      <p>Eight milestones exist that don't trace to any customer problem, solution, or capability in the Priority 7 paper. Seven of the eight are currently in-progress.</p>
+      <table>
+        <tr><th>Milestone</th><th>Objective</th><th>Phase</th><th>Status</th><th>Why No Paper Match</th></tr>
+        <tr><td><strong>Launch Pay Later to EG</strong><br><small>MLSTN1-3515</small></td><td>Obj 1</td><td><span class="phase-badge crawl">Crawl</span></td><td><span class="status-dot in-progress"></span>in-progress</td><td>Platform payments capability. Paper never mentions pay-later or deferred payment.</td></tr>
+        <tr><td><strong>Partners Autopay Scale-Up</strong><br><small>MLSTN1-3516</small></td><td>Obj 1</td><td><span class="phase-badge crawl">Crawl</span></td><td><span class="status-dot in-progress"></span>in-progress</td><td>Supply-side infrastructure: virtual card improvements, automated bank transfers. No customer problem maps here.</td></tr>
+        <tr><td><strong>Evolve Hotels.com Brand Identity</strong><br><small>MLSTN1-3572</small></td><td>Obj 1</td><td><span class="phase-badge crawl">Crawl</span></td><td><span class="status-dot in-progress"></span>in-progress</td><td>Visual rebrand. Paper describes what Hotels.com should become but never lists brand identity as a solution to any customer problem.</td></tr>
+        <tr><td><strong>HCOM Home Improvements Phase 1</strong><br><small>MLSTN1-5679</small></td><td>Obj 1</td><td><span class="phase-badge crawl">Crawl</span></td><td><span class="status-dot in-progress"></span>in-progress</td><td>Homepage isn't a paper element. It's an implementation vehicle for segment-aware vision.</td></tr>
+        <tr><td><strong>Differentiate VR on HCOM</strong><br><small>MLSTN1-5432</small></td><td>Obj 2</td><td><span class="phase-badge run">Run</span></td><td><span class="status-dot in-progress"></span>in-progress</td><td>VR appears in "What we're NOT doing." Milestone is defensive quality, consistent with paper stance, but not a proposed solution.</td></tr>
+        <tr><td><strong>Yield Management: Optimize Room &amp; Rates Display</strong><br><small>MLSTN1-2349</small></td><td>Foundations</td><td><span class="phase-badge foundation">Foundation</span></td><td><span class="status-dot in-progress"></span>in-progress</td><td>Room/rates display optimization. Supports pricing vision but is operational infrastructure, not a paper-described solution.</td></tr>
+        <tr><td><strong>Mitigate Price Inconsistencies</strong><br><small>MLSTN1-2567</small></td><td>Foundations</td><td><span class="phase-badge foundation">Foundation</span></td><td><span class="status-dot in-progress"></span>in-progress</td><td>Price consistency across channels. Partially related to price transparency gap but not a paper-described solution. May partially close the price transparency gap.</td></tr>
+        <tr><td><strong>mWeb Device Strategy</strong><br><small>MLSTN1-3942</small></td><td>Foundations</td><td><span class="phase-badge foundation">Foundation</span></td><td><span class="status-dot in-progress"></span>in-progress</td><td>Mobile web platform work. Enables delivery channels but the paper doesn't prescribe a mobile web strategy.</td></tr>
+      </table>
+    </section>
+
+    <!-- STRUCTURAL -->
+    <section id="structural">
+      <h2>Structural Observations</h2>
+
+      <div class="callout critical">
+        <div class="callout-title">Cancelled Big Bet: Hotel Expertise Has No Active Milestone</div>
+        <p>The paper calls out three "genuinely category-defining" bets. One &mdash; "Hotels as experts/connoisseurs" &mdash; has no active milestone after MLSTN1-2085's cancellation. This leaves the paper's vision for expert content, property comparison, and Q&amp;A entirely unresourced. It also breaks the sole coverage for Objective 1's second customer problem.</p>
+      </div>
+
+      <div class="callout info">
+        <div class="callout-title">Cross-Objective Placement (Now Moot)</div>
+        <p>"Become the Hotel Expert" sat under Objective 2 in the milestone map but solved Objective 1's second customer problem. This cross-objective dependency is now moot because the milestone has been cancelled entirely &mdash; but the underlying problem remains: who owns expert content?</p>
+      </div>
+
+      <div class="callout warning">
+        <div class="callout-title">Arranger Timing Risk</div>
+        <p>The paper lists 7 concrete arranger capabilities. The milestone commits only to discovery. No build milestone follows. Stakeholders reading the paper will expect delivered tools, not research findings, by end of 2027.</p>
+      </div>
+
+      <div class="callout">
+        <div class="callout-title">"Three Big Bets" Coverage</div>
+        <p>The paper calls out three "genuinely category-defining" bets:</p>
+        <ol>
+          <li><strong>Hotels.comCash as a lifestyle currency</strong> &mdash; distributed across 4 milestones (Redesign, Vault, Partnerships, Primum) with no single owner for the unified vision.</li>
+          <li><strong>Hotel Hopping (multi-hotel)</strong> &mdash; covered by Multi-Hotel Shopping (now in-progress). Tight alignment.</li>
+          <li><strong style="color: #991b1b;">Hotels as experts/connoisseurs</strong> &mdash; <strong>no active milestone.</strong> MLSTN1-2085 (Become the Hotel Expert) was cancelled. This bet is unresourced.</li>
+        </ol>
+      </div>
+
+      <div class="callout info">
+        <div class="callout-title">"What We're NOT Doing" Alignment</div>
+        <p>The paper's not-doing list aligns well. No milestones invest in flights, cars, packages, enterprise TMC, or VR-first features. The Differentiate VR on HCOM milestone maintains the "hotels pure play" positioning.</p>
+      </div>
+    </section>
+
+    <!-- RECOMMENDATIONS -->
+    <section id="recommendations">
+      <h2>Recommendations</h2>
+      <ol>
+        <li><strong style="color: #991b1b;">Decide on Hotel Expertise.</strong> MLSTN1-2085's cancellation leaves an entire customer problem and a "category-defining" bet with zero coverage. Either create a replacement milestone, redistribute the scope to existing milestones, or revise the paper to remove the bet.</li>
+        <li><strong>Decide on MoR 100%.</strong> Either create a milestone or explicitly assign it as scope within an existing milestone. This is the highest-severity infrastructure gap.</li>
+        <li><strong>Decide on price transparency.</strong> Same treatment. The new Mitigate Price Inconsistencies milestone (MLSTN1-2567) may partially address this &mdash; make the relationship explicit.</li>
+        <li><strong>Acknowledge the Arranger timing gap.</strong> Either adjust the paper's implied delivery timeline or plan a build milestone after discovery.</li>
+        <li><strong>Consider a go-to-market milestone or plan.</strong> GEO and AEO need product investment (structured data, schema markup, LLM-optimized content).</li>
+        <li><strong>Make "non-expiring status" explicit.</strong> Either commit in VIPa 2.0 scope or remove from the paper.</li>
+      </ol>
+    </section>
+
+    <!-- NEXT STEPS: WHAT TO DEFINE -->
+    <section id="next-steps">
+      <h2>Next Steps: Which Milestones to Make Concrete</h2>
+      <p>Milestones ranked by how thin their definition is, how much downstream work they block, and how much strategic weight they carry. Focus on the milestones where definition work now prevents rework later.</p>
+
+      <h3>Assessment Criteria</h3>
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 28px;">
+        <div class="card" style="text-align: center;">
+          <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--subtle); margin-bottom: 4px;">Definition Level</div>
+          <div style="font-size: 13px;">Does it have initiative breakdowns, team assignments, dates, and success signals?</div>
+        </div>
+        <div class="card" style="text-align: center;">
+          <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--subtle); margin-bottom: 4px;">Dependency Weight</div>
+          <div style="font-size: 13px;">How many other milestones are blocked or shaped by this one?</div>
+        </div>
+        <div class="card" style="text-align: center;">
+          <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--subtle); margin-bottom: 4px;">Effort to Concretize</div>
+          <div style="font-size: 13px;">Is it a clarification exercise, a scoping exercise, or a full discovery?</div>
+        </div>
+      </div>
+
+      <h3 style="color: var(--coral);">Tier 1: Tackle First</h3>
+
+      <div class="card" style="border-left: 4px solid var(--coral); margin-bottom: 16px;">
+        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 8px;">
+          <div>
+            <h4 style="margin: 0;">1. VIPa 2.0 Phase 1</h4>
+            <span style="font-size: 12px; color: var(--subtle);"><a href="https://expediagroup.atlassian.net/browse/MLSTN1-5657" style="color: var(--blue); text-decoration: none;">MLSTN1-5657</a> &middot; backlog &middot; Obj 3</span>
+          </div>
+          <div style="display: flex; gap: 6px;">
+            <span class="badge" style="background: #fef2f2; color: #991b1b;">Low definition</span>
+            <span class="badge" style="background: #fef9c3; color: #854d0e;">High dependency</span>
+          </div>
+        </div>
+        <p>Has deliverables and team requirements but <strong>no initiative breakdown, no dates, no Jira initiatives</strong>. Blocks both Phase 2 (MLSTN1-5767) and Loyalty Primum (MLSTN1-5675). Primum can't define perk bundling until Phase 1's perk catalog is finalized.</p>
+        <p><strong>Why now:</strong> It's the next domino in the loyalty chain. Redesign (MLSTN1-5686) is Critical Path #1 and already well-defined. VIPa Phase 1 is the first thing that needs to be ready once Redesign Crawl lands. Currency architecture with no perk delivery infrastructure is a stranded asset.</p>
+        <p><strong>Effort:</strong> Medium. Scope is clear (simplify 21 perks to 6, align with tiers). Needs initiative breakdown by team, timeline, and partner commitment.</p>
+      </div>
+
+      <div class="card" style="border-left: 4px solid var(--coral); margin-bottom: 16px;">
+        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 8px;">
+          <div>
+            <h4 style="margin: 0;">2. Loyalty Primum Paid Loyalty</h4>
+            <span style="font-size: 12px; color: var(--subtle);"><a href="https://expediagroup.atlassian.net/browse/MLSTN1-5675" style="color: var(--blue); text-decoration: none;">MLSTN1-5675</a> &middot; draft &middot; Obj 3 Run</span>
+          </div>
+          <div style="display: flex; gap: 6px;">
+            <span class="badge" style="background: #fef2f2; color: #991b1b;">Low definition</span>
+            <span class="badge" style="background: #f3e8ff; color: #6b21a8;">Big Bet</span>
+          </div>
+        </div>
+        <p>Has overview and dependencies but <strong>no initiative breakdown, no phasing, no dates, no team sizing</strong>. One of the paper's three "category-defining bets" (restoring 10-for-1 via paid tier). Shapes how Redesign Walk A defines its tier structure &mdash; the paid tier needs to be designed in parallel so free tiers make sense alongside it.</p>
+        <p><strong>Why now:</strong> Even though it's blocked by Redesign Crawl + Walk A, definition work should happen <em>in parallel</em> because it informs how Walk A structures tiers. Defining tiers without knowing the paid tier shape guarantees rework.</p>
+        <p><strong>Effort:</strong> Medium-high. Needs subscription economics from Finance, pricing model validation, team-level initiative breakdown, and a US vs US+UK launch decision.</p>
+      </div>
+
+      <div class="card" style="border-left: 4px solid var(--coral); margin-bottom: 16px;">
+        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 8px;">
+          <div>
+            <h4 style="margin: 0;">3. CFAR Scope Clarification</h4>
+            <span style="font-size: 12px; color: var(--subtle);"><a href="https://expediagroup.atlassian.net/browse/MLSTN1-3593" style="color: var(--blue); text-decoration: none;">MLSTN1-3593</a> vs <a href="https://expediagroup.atlassian.net/browse/MLSTN1-5682" style="color: var(--blue); text-decoration: none;">MLSTN1-5682</a> Wave 1</span>
+          </div>
+          <div style="display: flex; gap: 6px;">
+            <span class="badge" style="background: #fef2f2; color: #991b1b;">No portfolio file</span>
+            <span class="badge" style="background: #fef9c3; color: #854d0e;">Scope overlap</span>
+          </div>
+        </div>
+        <p>MLSTN1-3593 (Launch CFAR Pilot) has <strong>no portfolio file</strong>. Meanwhile, MLSTN1-5682 Wave 1 is extensively defined with 12 team-level initiatives covering CFAR. Both are in-progress. These appear to cover the same work.</p>
+        <p><strong>Why now:</strong> Both are in-progress. Double-counting the same scope creates confusion in coverage analysis and stakeholder reporting.</p>
+        <p><strong>Effort:</strong> Low. Primarily a clarification exercise &mdash; are they the same work in two tickets, or is one the pilot and one the scale infrastructure?</p>
+      </div>
+
+      <h3 style="color: var(--amber);">Tier 2: Tackle Next</h3>
+
+      <div class="card" style="border-left: 4px solid var(--amber); margin-bottom: 16px;">
+        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 8px;">
+          <div>
+            <h4 style="margin: 0;">4. Pilot VAS Products on Hcom</h4>
+            <span style="font-size: 12px; color: var(--subtle);"><a href="https://expediagroup.atlassian.net/browse/MLSTN1-2887" style="color: var(--blue); text-decoration: none;">MLSTN1-2887</a> &middot; in-progress &middot; Obj 2</span>
+          </div>
+          <span class="badge" style="background: #fef2f2; color: #991b1b;">No portfolio file</span>
+        </div>
+        <p>Jira description is fairly concrete (eSIM, telemedicine, concierge, 4+ touchpoints, Q1 pilot). Needs a portfolio index.md with initiative breakdown and team assignments.</p>
+        <p><strong>Effort:</strong> Low-medium. The Jira ticket provides solid starting material.</p>
+      </div>
+
+      <div class="card" style="border-left: 4px solid var(--amber); margin-bottom: 16px;">
+        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 8px;">
+          <div>
+            <h4 style="margin: 0;">5. Hcom Gift Cards</h4>
+            <span style="font-size: 12px; color: var(--subtle);"><a href="https://expediagroup.atlassian.net/browse/MLSTN1-5672" style="color: var(--blue); text-decoration: none;">MLSTN1-5672</a> &middot; backlog &middot; Obj 3</span>
+          </div>
+          <span class="badge" style="background: #fef9c3; color: #854d0e;">Moderate definition</span>
+        </div>
+        <p>Has deliverables and team requirements but no initiative breakdown or dates. Relatively independent work stream (TDS migration from CashStar/Fiserv). Doesn't block other milestones, but the $109M current / $200M opportunity makes it worth scoping.</p>
+        <p><strong>Effort:</strong> Medium.</p>
+      </div>
+
+      <div class="card" style="border-left: 4px solid var(--amber); margin-bottom: 16px;">
+        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 8px;">
+          <div>
+            <h4 style="margin: 0;">6. Loyalty Vault Save Now Travel Later</h4>
+            <span style="font-size: 12px; color: var(--subtle);"><a href="https://expediagroup.atlassian.net/browse/MLSTN1-5674" style="color: var(--blue); text-decoration: none;">MLSTN1-5674</a> &middot; backlog &middot; Obj 3 Run</span>
+          </div>
+          <span class="badge" style="background: #fef2f2; color: #991b1b;">Low definition</span>
+        </div>
+        <p>Overview and dependencies but no initiative breakdown. Fully blocked by Redesign Crawl. Worth defining because it shares the group identity dependency (Gap 3.4) with both Arranger (MLSTN1-5678) and Redesign Run &mdash; aligning all three teams on that shared gap early saves rework later.</p>
+        <p><strong>Effort:</strong> Medium.</p>
+      </div>
+
+      <h3 style="color: var(--green);">Tier 3: Can Wait</h3>
+
+      <table>
+        <thead><tr><th>Milestone</th><th>Jira</th><th>Status</th><th>Why It Can Wait</th></tr></thead>
+        <tbody>
+          <tr><td>VIPa 2.0 Phase 2</td><td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-5767" style="color: var(--blue);">MLSTN1-5767</a></td><td>draft</td><td>Blocked by Phase 1. Thin definition is appropriate at this stage.</td></tr>
+          <tr><td>Yield Management</td><td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-2349" style="color: var(--blue);">MLSTN1-2349</a></td><td>in-progress</td><td>Cross-cutting, not blocking downstream milestones.</td></tr>
+          <tr><td>Mitigate Price Inconsistencies</td><td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-2567" style="color: var(--blue);">MLSTN1-2567</a></td><td>in-progress</td><td>Cross-cutting, not blocking downstream milestones.</td></tr>
+          <tr><td>mWeb Device Strategy</td><td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-3942" style="color: var(--blue);">MLSTN1-3942</a></td><td>in-progress</td><td>Channel optimization, not blocking downstream milestones.</td></tr>
+          <tr><td>Save Your Way HBT Evolution</td><td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-5478" style="color: var(--blue);">MLSTN1-5478</a></td><td>in-progress</td><td>Discovery-focused, reasonably well-defined for its stage. Multiple upstream deps.</td></tr>
+        </tbody>
+      </table>
+
+      <div class="callout" style="margin-top: 24px;">
+        <strong>Key insight:</strong> Start with VIPa Phase 1 and Loyalty Primum as a pair. They're connected, both thin, and together they shape the loyalty tier structure that Redesign Walk A needs to build toward. The CFAR scope clarification is a quick win that should happen alongside.
+      </div>
+    </section>
+
+    <!-- OPEN QUESTIONS -->
+    <section id="questions">
+      <h2>Open Questions</h2>
+      <ul>
+        <li>Why was MLSTN1-2085 (Become the Hotel Expert) cancelled? Is the work being absorbed elsewhere, or is the bet being abandoned?</li>
+        <li>Should "Hotels as experts/connoisseurs" be removed from the paper's three big bets, or does it need a new milestone?</li>
+        <li>Do the three new Foundations milestones (Yield Mgmt, Price Inconsistencies, mWeb) belong in this strategy or in a separate platform strategy?</li>
+        <li>Do the remaining unmatched in-progress milestones belong in this strategy or in a separate platform/infrastructure strategy? If they stay, should the paper acknowledge them?</li>
+        <li>Is the Hotels.comCash "lifestyle currency" vision cohesive enough when distributed across four milestones, or does it need a single owner?</li>
+        <li>Where does MoR 100% live organizationally? Is it a Hotels.com milestone or a platform initiative?</li>
+      </ul>
+    </section>
+
+  </main>
+</div>
+
+<script>
+function switchTab(btn, panelId) {
+  const container = btn.closest('.tab-container');
+  container.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  container.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById(panelId).classList.add('active');
+}
+
+document.querySelectorAll('.sidebar a').forEach(link => {
+  link.addEventListener('click', function() {
+    document.querySelectorAll('.sidebar a').forEach(l => l.classList.remove('active'));
+    this.classList.add('active');
+  });
+});
+
+window.addEventListener('scroll', () => {
+  const sections = document.querySelectorAll('section[id]');
+  let current = '';
+  sections.forEach(section => {
+    const top = section.offsetTop - 100;
+    if (window.scrollY >= top) current = section.id;
+  });
+  document.querySelectorAll('.sidebar a').forEach(link => {
+    link.classList.remove('active');
+    if (link.getAttribute('href') === '#' + current) link.classList.add('active');
+  });
+});
+</script>
+
+</body>
+</html>

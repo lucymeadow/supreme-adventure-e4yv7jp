@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cross Brand Priorities — BEX × Hotels.com × Vrbo</title>
+<meta name="description" content="Six customer outcomes BEX, Hotels.com, and Vrbo all need solved, framed as an opening agenda for joint discovery with Core Platform.">
+<style>
+  :root {
+    --navy: #171c38;
+    --navy-soft: #2a3158;
+    --teal: #00a3b5;
+    --blue: #3d78f2;
+    --purple: #784cc7;
+    --amber: #d99e14;
+    --green: #2ea673;
+    --coral: #e56152;
+    --dark: #1e2129;
+    --subtle: #808899;
+    --bg: #f5f7fa;
+    --white: #ffffff;
+    --border: #dce0e8;
+    --shadow: 0 2px 8px rgba(0,0,0,0.06);
+    --shadow-lg: 0 6px 24px rgba(23,28,56,0.08);
+
+    --bex-blue: #1668e3;
+    --bex-soft: #e8efff;
+    --hcom-red: #c8102e;
+    --hcom-soft: #fff0f2;
+    --vrbo-teal: #00b3e3;
+    --vrbo-soft: #e3f7fc;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--dark); line-height: 1.6; }
+  a { color: var(--blue); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* ── Top bar ── */
+  .top-bar { background: var(--navy); padding: 14px 40px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
+  .top-bar-left h1 { color: #fff; font-size: 18px; font-weight: 700; letter-spacing: -0.01em; }
+  .top-bar-left .sub { color: #9a9fb8; font-size: 11px; margin-top: 2px; letter-spacing: 0.04em; }
+  .top-bar a { color: #9a9fb8; text-decoration: none; font-size: 13px; }
+  .top-bar a:hover { color: #fff; }
+
+  /* ── Hero (cross-brand gradient: BEX blue → teal → HCOM red) ── */
+  .hero {
+    background: linear-gradient(110deg, var(--bex-blue) 0%, #1e5acc 35%, var(--vrbo-teal) 65%, var(--hcom-red) 100%);
+    color: #fff; padding: 56px 48px 48px;
+    position: relative; overflow: hidden;
+  }
+  .hero::before { content: ''; position: absolute; top: -120px; right: -120px; width: 400px; height: 400px; border-radius: 50%; background: rgba(255,255,255,0.06); }
+  .hero::after { content: ''; position: absolute; bottom: -80px; left: -60px; width: 240px; height: 240px; border-radius: 50%; background: rgba(255,255,255,0.04); }
+  .hero-inner { max-width: 1100px; margin: 0 auto; position: relative; }
+  .priority-pill { display: inline-flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.28); border-radius: 24px; padding: 5px 16px; font-size: 11px; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase; margin-bottom: 18px; }
+  .hero h2 { font-size: clamp(24px, 3.4vw, 36px); font-weight: 800; line-height: 1.15; max-width: 720px; margin-bottom: 16px; letter-spacing: -0.015em; }
+  .hero .lede { font-size: 15px; opacity: 0.92; max-width: 640px; line-height: 1.65; }
+  .hero-brands { margin-top: 24px; display: flex; gap: 22px; flex-wrap: wrap; align-items: center; }
+  .hero-brands .lbl { font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; opacity: 0.7; }
+  .hero-brand { font-size: 13px; font-weight: 700; padding: 3px 10px; border-radius: 4px; background: rgba(255,255,255,0.18); }
+
+  /* ── Sequencing strip ── */
+  .sequencing { background: var(--white); border-bottom: 1px solid var(--border); padding: 14px 48px; }
+  .sequencing-inner { max-width: 1100px; margin: 0 auto; display: flex; align-items: center; gap: 18px; flex-wrap: wrap; font-size: 12.5px; }
+  .seq-lbl { font-size: 10px; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase; color: var(--subtle); }
+  .seq-step { display: inline-flex; align-items: center; gap: 6px; }
+  .seq-num { display: inline-flex; align-items: center; justify-content: center; width: 18px; height: 18px; border-radius: 50%; background: var(--navy); color: #fff; font-size: 10px; font-weight: 800; }
+  .seq-arrow { color: var(--subtle); font-weight: 700; }
+  .seq-deferred { margin-left: auto; font-size: 11.5px; color: var(--subtle); }
+
+  /* ── Content ── */
+  .content { max-width: 1100px; margin: 0 auto; padding: 48px 48px 40px; }
+
+  /* ── Framing callout ── */
+  .framing {
+    background: linear-gradient(135deg, #f8fafe 0%, #fff 100%);
+    border: 1px solid var(--border); border-left: 4px solid var(--blue);
+    border-radius: 8px; padding: 22px 26px; margin-bottom: 44px;
+    box-shadow: var(--shadow);
+  }
+  .framing h3 { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--blue); margin-bottom: 10px; font-weight: 800; }
+  .framing p { font-size: 14.5px; line-height: 1.7; color: var(--dark); }
+  .framing p + p { margin-top: 10px; }
+  .framing strong { color: var(--navy); }
+
+  /* ── Section heading ── */
+  .section-hd {
+    font-size: 11px; font-weight: 800; letter-spacing: 0.13em; text-transform: uppercase;
+    color: var(--subtle); margin: 0 0 14px; display: flex; align-items: center; gap: 10px;
+  }
+  .section-hd::before { content: ''; width: 24px; height: 2px; background: var(--navy); }
+
+  /* ── Agenda cards ── */
+  .agenda-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 56px; }
+  @media (max-width: 900px) { .agenda-grid { grid-template-columns: 1fr; } }
+  .agenda-card {
+    background: var(--white); border: 1px solid var(--border); border-radius: 10px;
+    padding: 22px 22px 24px; position: relative; box-shadow: var(--shadow);
+  }
+  .agenda-card .q-num {
+    position: absolute; top: -10px; left: 22px;
+    background: var(--navy); color: #fff; font-size: 10px; font-weight: 800;
+    letter-spacing: 0.1em; padding: 4px 12px; border-radius: 12px;
+  }
+  .agenda-card h4 { font-size: 15px; color: var(--navy); margin: 12px 0 10px; font-weight: 800; letter-spacing: -0.005em; }
+  .agenda-card p { font-size: 13px; line-height: 1.6; color: var(--dark); }
+
+  /* ── Category card ── */
+  .cat { margin-bottom: 52px; border-radius: 12px; overflow: hidden; box-shadow: var(--shadow-lg); background: var(--white); }
+  .cat-hd {
+    display: flex; align-items: center; gap: 16px;
+    padding: 22px 28px;
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-soft) 100%);
+    color: #fff;
+  }
+  .cat-rank {
+    flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center;
+    width: 44px; height: 44px; border-radius: 10px;
+    background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.18);
+    font-size: 19px; font-weight: 800;
+  }
+  .cat-letter { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; opacity: 0.75; font-weight: 700; }
+  .cat-title { font-size: 19px; font-weight: 800; margin-top: 2px; letter-spacing: -0.012em; }
+
+  .cat-body { padding: 26px 28px 28px; }
+
+  /* ── Outcome banner ── */
+  .outcome {
+    background: #f0faf3; border: 1px solid #cce8d6; border-left: 3px solid var(--green);
+    border-radius: 0 6px 6px 0; padding: 14px 18px; margin-bottom: 16px;
+  }
+  .outcome .lbl { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--green); font-weight: 800; margin-bottom: 6px; }
+  .outcome p { font-size: 13.5px; line-height: 1.6; color: #1f4d35; }
+
+  .why { font-size: 13.5px; color: var(--dark); line-height: 1.65; margin-bottom: 22px; }
+  .why strong { color: var(--navy); }
+
+  /* ── Brand columns ── */
+  .brands { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 22px; }
+  @media (max-width: 900px) { .brands { grid-template-columns: 1fr; } }
+  .brand-col { border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+  .brand-col-hd { padding: 8px 14px; font-size: 11px; font-weight: 800; letter-spacing: 0.08em; color: #fff; }
+  .brand-col-hd.bex { background: var(--bex-blue); }
+  .brand-col-hd.hcom { background: var(--hcom-red); }
+  .brand-col-hd.vrbo { background: var(--vrbo-teal); }
+  .brand-col ul { padding: 12px 14px 14px 28px; list-style: none; }
+  .brand-col li { position: relative; font-size: 12.5px; line-height: 1.55; color: var(--dark); margin-bottom: 7px; }
+  .brand-col li:last-child { margin-bottom: 0; }
+  .brand-col li::before { content: '•'; position: absolute; left: -14px; top: 0; font-size: 14px; }
+  .brand-col li.bex::before { color: var(--bex-blue); }
+  .brand-col li.hcom::before { color: var(--hcom-red); }
+  .brand-col li.vrbo::before { color: var(--vrbo-teal); }
+  .brand-col .rank { font-size: 10px; font-weight: 700; color: var(--subtle); margin-left: 4px; }
+
+  /* ── Scope split ── */
+  .scope { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 22px; }
+  @media (max-width: 700px) { .scope { grid-template-columns: 1fr; } }
+  .scope-col { border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px 16px; }
+  .scope-col.q3 { background: #f7fcf9; border-left: 3px solid var(--green); }
+  .scope-col.q4 { background: #fdf9f2; border-left: 3px solid var(--amber); }
+  .scope-hd { font-size: 10px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 8px; }
+  .scope-col.q3 .scope-hd { color: var(--green); }
+  .scope-col.q4 .scope-hd { color: var(--amber); }
+  .scope-col ul { padding: 0 0 0 16px; list-style: disc; }
+  .scope-col li { font-size: 12px; line-height: 1.55; color: var(--dark); margin-bottom: 4px; }
+
+  /* ── Chips row (platform deps) ── */
+  .deps { margin-bottom: 18px; }
+  .deps-hd { font-size: 10px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: var(--subtle); margin-bottom: 8px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip {
+    display: inline-flex; align-items: center; padding: 3px 11px; border-radius: 14px;
+    font-size: 11.5px; font-weight: 600;
+    background: #eef2f7; border: 1px solid #d6dee8; color: var(--navy);
+  }
+
+  /* ── Open question ── */
+  .openq {
+    background: #faf7ff; border: 1px solid #e2d6f7; border-left: 3px solid var(--purple);
+    border-radius: 0 6px 6px 0; padding: 12px 16px; margin-bottom: 18px;
+  }
+  .openq .lbl { font-size: 10px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: var(--purple); margin-bottom: 6px; }
+  .openq p { font-size: 13px; line-height: 1.6; color: #2d1b56; }
+
+  /* ── Materials links ── */
+  .materials-hd { font-size: 10px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: var(--subtle); margin-bottom: 8px; }
+  .materials { display: flex; flex-wrap: wrap; gap: 6px; }
+  .mat-link {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 11.5px; font-weight: 600; padding: 3px 10px; border-radius: 4px;
+    background: #eef3ff; color: var(--blue); border: 1px solid rgba(61,120,242,0.2);
+  }
+  .mat-link:hover { background: #dce8ff; text-decoration: none; }
+  .mat-link.figma { background: #fdf2fb; color: #b32e8a; border-color: rgba(179,46,138,0.2); }
+  .mat-link.confluence { background: #ecf6ff; color: #0052cc; border-color: rgba(0,82,204,0.18); }
+  .mat-link.doc { background: #f3f3f3; color: #444; border-color: #ddd; }
+  .mat-tag { font-size: 9px; font-weight: 800; letter-spacing: 0.06em; opacity: 0.7; }
+
+  /* ── Footer ── */
+  .page-footer {
+    max-width: 1100px; margin: 0 auto; padding: 28px 48px 60px;
+    border-top: 1px solid var(--border); font-size: 12.5px; color: var(--subtle);
+    display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px;
+  }
+  .page-footer a { color: var(--teal); }
+  .page-footer .meta { font-size: 11.5px; }
+  .page-footer .meta strong { color: var(--dark); font-weight: 700; }
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <div class="top-bar-left">
+    <h1>Cross Brand Priorities</h1>
+    <div class="sub">BEX × Hotels.com × Vrbo &mdash; joint discovery</div>
+  </div>
+  <a href="../">← All pages</a>
+</div>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div class="priority-pill">🤝 Joint Discovery with Core Platform</div>
+    <h2>Cross Brand Priorities</h2>
+    <p class="lede">Six customer problems that BEX, Hotels.com, and Vrbo all need solved.</p>
+    <div class="hero-brands">
+      <span class="lbl">Aligned across</span>
+      <span class="hero-brand">BEX</span>
+      <span class="hero-brand">Hotels.com</span>
+      <span class="hero-brand">Vrbo</span>
+    </div>
+  </div>
+</div>
+
+<div class="sequencing">
+  <div class="sequencing-inner">
+    <span class="seq-lbl">Recommended meeting sequence</span>
+    <span class="seq-step"><span class="seq-num">1</span> Discovery</span>
+    <span class="seq-arrow">→</span>
+    <span class="seq-step"><span class="seq-num">2</span> Merchandising</span>
+    <span class="seq-arrow">→</span>
+    <span class="seq-step"><span class="seq-num">3</span> Price Trust</span>
+    <span class="seq-arrow">→</span>
+    <span class="seq-step"><span class="seq-num">4</span> Marketplace Trust</span>
+    <span class="seq-arrow">→</span>
+    <span class="seq-step"><span class="seq-num">5</span> Loyalty</span>
+    <span class="seq-arrow">→</span>
+    <span class="seq-step"><span class="seq-num">6</span> Config / Payments / Servicing</span>
+    <span class="seq-deferred">CRM &amp; Search ranking deferred</span>
+  </div>
+</div>
+
+<div class="content">
+
+  <div class="framing">
+    <h3>How to use this document</h3>
+    <p>This is a starting point for joint discovery between Core Platform and the three partner brands. The three brands have aligned on <strong>six customer problems we all need to solve</strong>. We want Core Platform in the conversation as a peer team that can shape and propose solutions, not as a vendor receiving an order.</p>
+    <p>We expect Core Platform to push back, reframe, and bring their own view of which problems they're best positioned to lead on, which they want to enable as a tenant model, and which we've misframed. The six categories are evidence. The three questions below are the agenda.</p>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════ AGENDA -->
+  <h3 class="section-hd">The agenda — three questions to anchor the conversation</h3>
+  <div class="agenda-grid">
+    <div class="agenda-card">
+      <span class="q-num">QUESTION 1</span>
+      <h4>Drive or enable?</h4>
+      <p>For each category, where does Core Platform see itself driving customer outcomes directly, and where does it see itself enabling brand-tenant configurability? What's owned at the platform layer versus what's a configurable surface?</p>
+    </div>
+    <div class="agenda-card">
+      <span class="q-num">QUESTION 2</span>
+      <h4>Migrations or parallel work?</h4>
+      <p>Which categories are coordinated cross-brand migrations that unlock all three brands at once, and which are parallel brand-level work that happens to share platform surfaces? Migrations compound. Parallel work doesn't. Sequence migrations first.</p>
+    </div>
+    <div class="agenda-card">
+      <span class="q-num">QUESTION 3</span>
+      <h4>Loyalty alignment?</h4>
+      <p>Three brands are pursuing divergent loyalty plays for 2026 (HCOM Rewards optimization, One Key on BEX, Vrbo OneKey rollout). Core Platform owns the loyalty surface. What's Core Platform's view on cross-brand loyalty alignment given that divergence?</p>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════ THE SIX CATEGORIES -->
+  <h3 class="section-hd">The six categories</h3>
+
+  <!-- ───────── 1. Right-Fit Discovery & Personalization ───────── -->
+  <div class="cat">
+    <div class="cat-hd">
+      <div class="cat-rank">1</div>
+      <div>
+        <div class="cat-letter">Category A</div>
+        <div class="cat-title">Right-Fit Discovery &amp; Personalization</div>
+      </div>
+    </div>
+    <div class="cat-body">
+      <div class="outcome">
+        <div class="lbl">Measurable outcome</div>
+        <p>Travelers find what genuinely fits them faster. Segment-cut lodging CVR (family, business, returning member) closes the gap to the highest-converting cohort. Family-fit filter adoption rises. HBT signal coverage and downstream personalization usage are measurable.</p>
+      </div>
+      <p class="why"><strong>Why cross-brand.</strong> All three brands have a "find the right thing fast" problem from different angles, and the platform muscle is the same: turn intent signals into a more relevant experience.</p>
+
+      <div class="brands">
+        <div class="brand-col">
+          <div class="brand-col-hd bex">BEX</div>
+          <ul>
+            <li class="bex">Accelerate Search Relevance <span class="rank">#1</span></li>
+            <li class="bex">Property Listings Discovery on Destination LPs <span class="rank">#1</span></li>
+            <li class="bex">Trip-Context Aware Personalization</li>
+            <li class="bex">Family-aware Filters <span class="rank">#55</span></li>
+            <li class="bex">Property Highlights contextual signals</li>
+          </ul>
+        </div>
+        <div class="brand-col">
+          <div class="brand-col-hd hcom">Hotels.com</div>
+          <ul>
+            <li class="hcom">HBT Self-Booker MLP <span class="rank">#2</span></li>
+            <li class="hcom">HBT identify business travelers <span class="rank">#4</span></li>
+            <li class="hcom">Singular Segmentation Platform <span class="rank">#10</span></li>
+            <li class="hcom">Korea Localization Quick Wins <span class="rank">#19</span></li>
+          </ul>
+        </div>
+        <div class="brand-col">
+          <div class="brand-col-hd vrbo">Vrbo</div>
+          <ul>
+            <li class="vrbo">Audience-Targeted Pricing <span class="rank">#4</span></li>
+            <li class="vrbo">Predicted Stay Quality <span class="rank">#5</span></li>
+            <li class="vrbo">Natural Language Search R1.5</li>
+            <li class="vrbo">Vrbo Homepage context-aware evolution <span class="rank">#6</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="scope">
+        <div class="scope-col q3">
+          <div class="scope-hd">Proposed Q3 scope</div>
+          <ul>
+            <li>BEX: Property Listings Discovery on Destination LPs</li>
+            <li>BEX: Repairing Search Fundamentals (price perception on sort)</li>
+            <li>BEX: Search Entry modernise</li>
+            <li>BEX: Property Highlights relevance</li>
+            <li>HCOM: Build HBT Self-Booker MLP</li>
+            <li>Vrbo: Audience-Targeted Pricing</li>
+            <li>Vrbo: Predicted Stay Quality launch</li>
+          </ul>
+        </div>
+        <div class="scope-col q4">
+          <div class="scope-hd">Proposed Q4+ scope</div>
+          <ul>
+            <li>BEX: Accelerate Search Core Ranking</li>
+            <li>BEX: Trip-Context Aware Personalization</li>
+            <li>BEX: Predictive Guidance &amp; Next-Action Intelligence</li>
+            <li>HCOM: HBT identify business travelers (signal flow)</li>
+            <li>HCOM: Segmentation Platform (real-time, on-site + off-site)</li>
+            <li>HCOM: Korea Localization</li>
+            <li>Vrbo: Natural Language Search R1.5</li>
+            <li>Vrbo: Homepage context-aware evolution</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="deps">
+        <div class="deps-hd">Platform dependencies</div>
+        <div class="chips">
+          <span class="chip">Personalization (P13N)</span>
+          <span class="chip">Identity (signals)</span>
+          <span class="chip">Search &amp; Recs (configurable layer)</span>
+          <span class="chip">Filters (Domain + Experience)</span>
+          <span class="chip">Maps</span>
+          <span class="chip">Data Platform</span>
+        </div>
+      </div>
+
+      <div class="openq">
+        <div class="lbl">Open question for Core Platform</div>
+        <p>Is segment-aware personalization a platform-driven outcome (Core Platform owns the ranking adaptation logic), or a tenant-configured experience (brands compose their own using shared primitives)? The three brand roadmaps don't show a consistent answer.</p>
+      </div>
+
+      <div class="materials-hd">Core materials</div>
+      <div class="materials">
+        <a class="mat-link" href="https://expediagroup.atlassian.net/browse/STRAT1-1390" target="_blank"><span class="mat-tag">JIRA</span> STRAT1-1390 Unleash Traveler Marketplace Excellence</a>
+        <a class="mat-link" href="https://expediagroup.atlassian.net/browse/STRAT1-1346" target="_blank"><span class="mat-tag">JIRA</span> STRAT1-1346 Make Hotels.com the Most Rewarding</a>
+        <a class="mat-link" href="https://expediagroup.atlassian.net/browse/STRAT1-1336" target="_blank"><span class="mat-tag">JIRA</span> STRAT1-1336 Vrbo Trusted for Groups</a>
+        <a class="mat-link" href="https://expediagroup.atlassian.net/browse/MLSTN1-5372" target="_blank"><span class="mat-tag">JIRA</span> MLSTN1-5372 Family Lodging Discovery</a>
+        <a class="mat-link confluence" href="https://expediagroup.atlassian.net/wiki/spaces/BWT/pages/1064960047" target="_blank"><span class="mat-tag">CONF</span> BEX Stay-Led Trips Platform Dependencies</a>
+        <a class="mat-link figma" href="https://www.figma.com/design/6dHliH495QiaNuWgR8VNJu" target="_blank"><span class="mat-tag">FIG</span> BEX Families journey</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ───────── 2. Merchandising & Value Presentation ───────── -->
+  <div class="cat">
+    <div class="cat-hd">
+      <div class="cat-rank">2</div>
+      <div>
+        <div class="cat-letter">Category B</div>
+        <div class="cat-title">Merchandising &amp; Value Presentation</div>
+      </div>
+    </div>
+    <div class="cat-body">
+      <div class="outcome">
+        <div class="lbl">Measurable outcome</div>
+        <p>Promotions, savings, and value claims feel credible and consistent across brands. Cross-brand merchandising configurability ratio (% of merchandising surfaces brands can configure without code change) rises. Members see earn-and-redemption value in context. Partners can target the right segment.</p>
+      </div>
+      <p class="why"><strong>Why cross-brand.</strong> Each brand merchandises differently today on top of a shared platform layer that's underconfigured. The underlying gaps are shared: configurable merchandising on Home, consistent offer display logic, AI-driven incentive targeting, configurable UI patterns.</p>
+
+      <div class="brands">
+        <div class="brand-col">
+          <div class="brand-col-hd bex">BEX</div>
+          <ul>
+            <li class="bex">Tiered Merchandising on Home</li>
+            <li class="bex">BEX Summer Sale Configurable Merch</li>
+            <li class="bex">Configurable UI Patterns (cross-brand)</li>
+            <li class="bex">Sale moments on Home</li>
+          </ul>
+        </div>
+        <div class="brand-col">
+          <div class="brand-col-hd hcom">Hotels.com</div>
+          <ul>
+            <li class="hcom">Merchandizing Priority Improvements Q2/Q3 <span class="rank">#25</span></li>
+            <li class="hcom">AI/ML Smart Incentives &amp; Offers <span class="rank">#17</span></li>
+            <li class="hcom">Member-Led Messaging <span class="rank">brand #20</span></li>
+          </ul>
+        </div>
+        <div class="brand-col">
+          <div class="brand-col-hd vrbo">Vrbo</div>
+          <ul>
+            <li class="vrbo">Automate Incentives &amp; Self-Serve Campaigns <span class="rank">#10</span></li>
+            <li class="vrbo">Foundations: App Home Native Containers adoption <span class="rank">#4</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="scope">
+        <div class="scope-col q3">
+          <div class="scope-hd">Proposed Q3 scope</div>
+          <ul>
+            <li>BEX: Tiered Merchandising on Home</li>
+            <li>BEX: Summer Sale Configurable Merch experience</li>
+            <li>HCOM: Merchandizing Priority Improvements (Q2/Q3)</li>
+            <li>Cross-brand: Configurable UI Patterns rollout</li>
+          </ul>
+        </div>
+        <div class="scope-col q4">
+          <div class="scope-hd">Proposed Q4+ scope</div>
+          <ul>
+            <li>BEX: Sale moments on Home</li>
+            <li>HCOM: AI/ML Smart Incentives &amp; Offers</li>
+            <li>HCOM: Member-Led Messaging</li>
+            <li>Vrbo: Automate Incentives &amp; Self-Serve Campaigns</li>
+            <li>Cross-brand: Continued configurability extension</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="deps">
+        <div class="deps-hd">Platform dependencies</div>
+        <div class="chips">
+          <span class="chip">Merchandising / Offers</span>
+          <span class="chip">Pricing Display</span>
+          <span class="chip">Loyalty (offer presentation)</span>
+          <span class="chip">Configurable UI components</span>
+          <span class="chip">Homepage Ecosystem</span>
+          <span class="chip">Communications (member-aware)</span>
+        </div>
+      </div>
+
+      <div class="openq">
+        <div class="lbl">Open question for Core Platform</div>
+        <p>What's the configurability roadmap for merchandising surfaces? Is the goal to have brands configure within shared primitives, or to consolidate the merchandising logic itself?</p>
+      </div>
+
+      <div class="materials-hd">Core materials</div>
+      <div class="materials">
+        <a class="mat-link" href="https://expediagroup.atlassian.net/browse/STRAT1-1390" target="_blank"><span class="mat-tag">JIRA</span> STRAT1-1390 Unleash Traveler Marketplace Excellence</a>
+        <a class="mat-link" href="https://expediagroup.atlassian.net/browse/STRAT1-1360" target="_blank"><span class="mat-tag">JIRA</span> STRAT1-1360 Unlock Scalable Loyalty Solutions</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ───────── 3. Price Trust & Value Clarity ───────── -->
+  <div class="cat">
+    <div class="cat-hd">
+      <div class="cat-rank">3</div>
+      <div>
+        <div class="cat-letter">Category C</div>
+        <div class="cat-title">Price Trust &amp; Value Clarity</div>
+      </div>
+    </div>
+    <div class="cat-body">
+      <div class="outcome">
+        <div class="lbl">Measurable outcome</div>
+        <p>The price the traveler sees is the price they pay, consistently across meta, landing, shopping, and checkout. Meta-to-landing price discrepancy closes from 18% to 10% (HCOM/BEX cited target, $2.8M GP unlock). Vrbo pre-booking quote-change rate trends down. Compliance maintained at 100% across brands.</p>
+      </div>
+      <p class="why"><strong>Why cross-brand.</strong> Price inconsistency hurts CVR (HCOM and BEX cite the same Meta gap), erodes brand trust on Vrbo (Quote Edit, FX confusion, refundable-rate parity), and compliance is a non-negotiable floor for every brand.</p>
+
+      <div class="brands">
+        <div class="brand-col">
+          <div class="brand-col-hd bex">BEX</div>
+          <ul>
+            <li class="bex">Repairing Search Fundamentals (price perception) <span class="rank">#2</span></li>
+            <li class="bex">Bookability 92% by EOY <span class="rank">#16</span></li>
+            <li class="bex">Yield management: airline-funded discounts</li>
+          </ul>
+        </div>
+        <div class="brand-col">
+          <div class="brand-col-hd hcom">Hotels.com</div>
+          <ul>
+            <li class="hcom">Legally compliant price display <span class="rank">#0 (P0)</span></li>
+            <li class="hcom">Pricing Insights push to Google <span class="rank">#1</span></li>
+            <li class="hcom">3PI Yield Management <span class="rank">#9</span></li>
+            <li class="hcom">Price Insight Lodging platform expansion <span class="rank">#32</span></li>
+          </ul>
+        </div>
+        <div class="brand-col">
+          <div class="brand-col-hd vrbo">Vrbo</div>
+          <ul>
+            <li class="vrbo">Quote Edit fix <span class="rank">#12</span></li>
+            <li class="vrbo">FX Monetization <span class="rank">#16</span></li>
+            <li class="vrbo">Vrbo pricing trust &amp; merchandising</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="scope">
+        <div class="scope-col q3">
+          <div class="scope-hd">Proposed Q3 scope</div>
+          <ul>
+            <li>HCOM: Maintain Legally Compliant Price Display (P0)</li>
+            <li>HCOM: Pricing Insights to Google (HCOM + BEX)</li>
+            <li>BEX: Repairing Search Fundamentals (price perception on sort)</li>
+            <li>Vrbo: Quote Edit fix</li>
+          </ul>
+        </div>
+        <div class="scope-col q4">
+          <div class="scope-hd">Proposed Q4+ scope</div>
+          <ul>
+            <li>BEX: Bookability 92% by EOY</li>
+            <li>HCOM: 3PI Yield Management ($13.4M GBV uplift)</li>
+            <li>HCOM: Price Insight Lodging platform expansion</li>
+            <li>Vrbo: FX Monetization (local currency checkout)</li>
+            <li>Vrbo: Pricing trust + merchandising broader programme</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="deps">
+        <div class="deps-hd">Platform dependencies</div>
+        <div class="chips">
+          <span class="chip">Pricing</span>
+          <span class="chip">Pricing Display</span>
+          <span class="chip">Compliance</span>
+          <span class="chip">Offers</span>
+          <span class="chip">Meta integration (Google Hotels/VR)</span>
+          <span class="chip">Payments (FX)</span>
+        </div>
+      </div>
+
+      <div class="openq">
+        <div class="lbl">Open question for Core Platform</div>
+        <p>Where does pricing transparency sit on Core Platform's roadmap given that all three brands name it in their top 5? Is there a unified pricing-display platform play we should be coordinating around?</p>
+      </div>
+
+      <div class="materials-hd">Core materials</div>
+      <div class="materials">
+        <a class="mat-link" href="https://expediagroup.atlassian.net/browse/STRAT1-1355" target="_blank"><span class="mat-tag">JIRA</span> STRAT1-1355 Evolve Compliance Experience</a>
+        <a class="mat-link" href="https://expediagroup.atlassian.net/browse/STRAT1-1390" target="_blank"><span class="mat-tag">JIRA</span> STRAT1-1390 Unleash Traveler Marketplace Excellence</a>
+        <a class="mat-link" href="https://expediagroup.atlassian.net/browse/STRAT1-1393" target="_blank"><span class="mat-tag">JIRA</span> STRAT1-1393 Industry-Leading Booking Platform</a>
+        <a class="mat-link" href="https://expediagroup.atlassian.net/browse/STRAT1-1336" target="_blank"><span class="mat-tag">JIRA</span> STRAT1-1336 Vrbo Trusted for Groups</a>
+        <a class="mat-link" href="https://expediagroup.atlassian.net/browse/MLSTN1-5373" target="_blank"><span class="mat-tag">JIRA</span> MLSTN1-5373 Budget Confidence &amp; Value</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ───────── 4. Confidence & Marketplace Trust ───────── -->
+  <div class="cat">
+    <div class="cat-hd">
+      <div class="cat-rank">4</div>
+      <div>
+        <div class="cat-letter">Category D</div>
+        <div class="cat-title">Confidence &amp; Marketplace Trust</div>
+      </div>
+    </div>
+    <div class="cat-body">
+      <div class="outcome">
+        <div class="lbl">Measurable outcome</div>
+        <p>Listing content, reviews, and quality signals match the lived experience. Vrbo host-cancel rate, denied-entry rate, and cleanliness scores trend down to defined targets. HCOM 3PI content completeness and CVR close the gap to 1PI. BEX property-highlight relevance is measurable and improving.</p>
+      </div>
+      <p class="why"><strong>Why cross-brand.</strong> All three brands lose GP to "what I booked isn't what I got." Vrbo most acutely. HCOM via 3PI inventory quality. BEX via property storytelling and family-fit confidence. JT named merchandising and price perception as platform priorities. Trust signals are the third leg of that stool.</p>
+
+      <div class="brands">
+        <div class="brand-col">
+          <div class="brand-col-hd bex">BEX</div>
+          <ul>
+            <li class="bex">Property Highlights relevance via contextualised signals</li>
+            <li class="bex">Property Storytelling on PDP</li>
+            <li class="bex">Reviews relevancy (2026)</li>
+            <li class="bex">PDP room filtering and recommended rooms <span class="rank">#21</span></li>
+          </ul>
+        </div>
+        <div class="brand-col">
+          <div class="brand-col-hd hcom">Hotels.com</div>
+          <ul>
+            <li class="hcom">3PI Inventory quality <span class="rank">#3</span></li>
+            <li class="hcom">3PI Platform Modernization <span class="rank">#8</span></li>
+            <li class="hcom">3PI Onboard 7 new partners</li>
+          </ul>
+        </div>
+        <div class="brand-col">
+          <div class="brand-col-hd vrbo">Vrbo</div>
+          <ul>
+            <li class="vrbo">MPH Predicted Stay Quality <span class="rank">#5</span></li>
+            <li class="vrbo">MPH Below Minimum Standards <span class="rank">#7</span></li>
+            <li class="vrbo">MPH Offer Strength Score <span class="rank">#6</span></li>
+            <li class="vrbo">MPH Cleanliness Ranking</li>
+            <li class="vrbo">MPH Cancel Reasons standardization <span class="rank">#1</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="scope">
+        <div class="scope-col q3">
+          <div class="scope-hd">Proposed Q3 scope</div>
+          <ul>
+            <li>Vrbo: Predicted Stay Quality launch</li>
+            <li>Vrbo: Below Minimum Standards launch</li>
+            <li>Vrbo: Offer Strength Score launch</li>
+            <li>Vrbo: Denied Entry Cancel Fees extension</li>
+            <li>BEX: Property Highlights contextual signals</li>
+          </ul>
+        </div>
+        <div class="scope-col q4">
+          <div class="scope-hd">Proposed Q4+ scope</div>
+          <ul>
+            <li>Vrbo: Cleanliness Ranking Metric</li>
+            <li>Vrbo: Supplier Responsiveness framework extension</li>
+            <li>Vrbo: Cancel Reasons standardization</li>
+            <li>Vrbo: Enhanced property media appeal</li>
+            <li>Vrbo: Content Quality Coaching</li>
+            <li>Vrbo: Reviews Overview revamp</li>
+            <li>HCOM: 3PI Inventory quality</li>
+            <li>HCOM: 3PI Platform Modernization</li>
+            <li>HCOM: 3PI Partner onboarding</li>
+            <li>BEX: Property Storytelling on PDP</li>
+            <li>BEX: Reviews relevancy</li>
+            <li>BEX: PDP room filtering</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="deps">
+        <div class="deps-hd">Platform dependencies</div>
+        <div class="chips">
+          <span class="chip">Content / PDP</span>
+          <span class="chip">Reviews</span>
+          <span class="chip">Marketplace Trust signals</span>
+          <span class="chip">Property Highlights</span>
+          <span class="chip">3PI quality systems</span>
+          <span class="chip">Universal Messaging</span>
+        </div>
+      </div>
+
+      <div class="openq">
+        <div class="lbl">Open question for Core Platform</div>
+        <p>How does Core Platform view Marketplace Trust as a cross-brand investment area? Active work is concentrated on Vrbo today, but customer impact is cross-brand.</p>
+      </div>
+
+      <div class="materials-hd">Core materials</div>
+      <div class="materials">
+        <a class="mat-link" href="https://expediagroup.atlassian.net/browse/STRAT1-1336" target="_blank"><span class="mat-tag">JIRA</span> STRAT1-1336 Vrbo Trusted for Groups (MPH parent)</a>
+        <a class="mat-link" href="https://expediagroup.atlassian.net/browse/STRAT1-1390" target="_blank"><span class="mat-tag">JIRA</span> STRAT1-1390 Unleash Traveler Marketplace Excellence</a>
+        <a class="mat-link" href="https://expediagroup.atlassian.net/browse/STRAT1-1340" target="_blank"><span class="mat-tag">JIRA</span> STRAT1-1340 Expand Internationally (3PI)</a>
+        <a class="mat-link" href="https://expediagroup.atlassian.net/browse/MLSTN1-5864" target="_blank"><span class="mat-tag">JIRA</span> MLSTN1-5864 Know Before You Go</a>
+        <a class="mat-link confluence" href="https://expediagroup.atlassian.net/wiki/spaces/BWT/pages/1064960047" target="_blank"><span class="mat-tag">CONF</span> BEX Stay-Led Trips Platform Dependencies</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ───────── 5. Loyalty Platform Alignment ───────── -->
+  <div class="cat">
+    <div class="cat-hd">
+      <div class="cat-rank">5</div>
+      <div>
+        <div class="cat-letter">Category F</div>
+        <div class="cat-title">Loyalty Platform Alignment</div>
+      </div>
+    </div>
+    <div class="cat-body">
+      <div class="outcome">
+        <div class="lbl">Measurable outcome</div>
+        <p>Each brand runs its differentiated loyalty play on top of shared platform capabilities. Cross-brand active member CVR vs. non-member is measurable. Earn-and-burn fluidity for members shopping across brands is measurable. Loyalty-driven NBV by brand against defined targets.</p>
+      </div>
+      <p class="why"><strong>Why cross-brand.</strong> Each brand is investing significantly in loyalty for 2026 with divergent plays on top of a shared Core Platform loyalty surface. Three brands building on diverging primitives risks paying three times, confusing cross-brand members, and fragmenting the platform roadmap. This is the most explicit "what is the cross-brand strategy?" question in this document.</p>
+
+      <div class="brands">
+        <div class="brand-col">
+          <div class="brand-col-hd bex">BEX</div>
+          <ul>
+            <li class="bex">One Key Evolution / BEX 3.0 <span class="rank">#7</span></li>
+            <li class="bex">Move BEX group 4 off legacy <span class="rank">#14</span></li>
+          </ul>
+        </div>
+        <div class="brand-col">
+          <div class="brand-col-hd hcom">Hotels.com</div>
+          <ul>
+            <li class="hcom">Rewards 10:1 optimization <span class="rank">#10</span></li>
+            <li class="hcom">Save Your Way HBT 2026 <span class="rank">#7</span></li>
+            <li class="hcom">AI/ML Smart Incentives <span class="rank">#17</span></li>
+            <li class="hcom">External Loyalty Partnerships</li>
+            <li class="hcom">Gift Cards / Loyalty Vault / VIPa 2.0</li>
+          </ul>
+        </div>
+        <div class="brand-col">
+          <div class="brand-col-hd vrbo">Vrbo</div>
+          <ul>
+            <li class="vrbo">OneKey to remaining markets</li>
+            <li class="vrbo">Automate Incentives &amp; Self-Serve Campaigns <span class="rank">#10</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="scope">
+        <div class="scope-col q3">
+          <div class="scope-hd">Proposed Q3 scope</div>
+          <ul>
+            <li>BEX: One Key Evolution / BEX 3.0 launch</li>
+            <li>Vrbo: OneKey to remaining focus markets</li>
+          </ul>
+        </div>
+        <div class="scope-col q4">
+          <div class="scope-hd">Proposed Q4+ scope</div>
+          <ul>
+            <li>HCOM: Rewards program 10:1 optimization across markets</li>
+            <li>HCOM: Save Your Way HBT 2026 usage &amp; adoption</li>
+            <li>HCOM: AI/ML Smart Incentive &amp; Offers</li>
+            <li>HCOM: Member-Led Messaging improvements</li>
+            <li>HCOM: External Partnerships, Gift Cards, Loyalty Vault, VIPa 2.0</li>
+            <li>Vrbo: Automate Incentives &amp; Self-Serve Campaigns</li>
+            <li>BEX: Migrate BEX group 4 off legacy loyalty platform</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="deps">
+        <div class="deps-hd">Platform dependencies</div>
+        <div class="chips">
+          <span class="chip">Loyalty (One Key, member identity, earn / burn)</span>
+          <span class="chip">Incentive Platform</span>
+          <span class="chip">Member Identity</span>
+          <span class="chip">Configurable UI (member context)</span>
+          <span class="chip">Communications (member-aware)</span>
+        </div>
+      </div>
+
+      <div class="openq">
+        <div class="lbl">Open question for Core Platform — this is Agenda Question 3</div>
+        <p>Three brands are pursuing divergent loyalty plays on a shared platform. What's the platform's view of cross-brand loyalty strategy? If there isn't one yet, this conversation may be premature and we'd want to schedule a dedicated session with Loyalty leadership.</p>
+      </div>
+
+      <div class="materials-hd">Core materials</div>
+      <div class="materials">
+        <a class="mat-link" href="https://expediagroup.atlassian.net/browse/STRAT1-1360" target="_blank"><span class="mat-tag">JIRA</span> STRAT1-1360 Unlock Scalable Loyalty Solutions</a>
+        <a class="mat-link" href="https://expediagroup.atlassian.net/browse/STRAT1-1346" target="_blank"><span class="mat-tag">JIRA</span> STRAT1-1346 Make Hotels.com the Most Rewarding</a>
+        <a class="mat-link" href="https://expediagroup.atlassian.net/browse/STRAT1-1336" target="_blank"><span class="mat-tag">JIRA</span> STRAT1-1336 Vrbo Trusted for Groups</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ───────── 6. Flexible Configuration, Payments & Reliable Servicing ───────── -->
+  <div class="cat">
+    <div class="cat-hd">
+      <div class="cat-rank">6</div>
+      <div>
+        <div class="cat-letter">Category E</div>
+        <div class="cat-title">Flexible Configuration, Payments &amp; Reliable Servicing</div>
+      </div>
+    </div>
+    <div class="cat-body">
+      <div class="outcome">
+        <div class="lbl">Measurable outcome</div>
+        <p>Travelers shape the trip to their real situation and feel supported when plans change. Multi-room booking CVR lift for family bookings. Korea multi-currency adoption and downstream conversion. Self-service cancel rate replacing call deflection at target. Global BNPL adoption and incremental conversion.</p>
+      </div>
+      <p class="why"><strong>Why cross-brand.</strong> This is where BEX's Whole Trip thesis, Vrbo's payment-and-flex parity push, and HCOM's H+H + CFAR + HBT-arranger work converge. It also absorbs the parallel servicing rebuild every brand is doing.</p>
+
+      <div class="brands">
+        <div class="brand-col">
+          <div class="brand-col-hd bex">BEX</div>
+          <ul>
+            <li class="bex">100% BEX US Flights on Modern Checkout <span class="rank">#3</span></li>
+            <li class="bex">Decouple BEX Checkout from Expweb <span class="rank">#3</span></li>
+            <li class="bex">E2E Multi-room for families and groups <span class="rank">#7</span></li>
+            <li class="bex">ChFAR for Flights <span class="rank">#19</span></li>
+            <li class="bex">Personalize Trip Completion NBA <span class="rank">#3</span></li>
+          </ul>
+        </div>
+        <div class="brand-col">
+          <div class="brand-col-hd hcom">Hotels.com</div>
+          <ul>
+            <li class="hcom">Korea Multi-Currency <span class="rank">#5</span></li>
+            <li class="hcom">CFAR Pilot on HCOM <span class="rank">#6</span></li>
+            <li class="hcom">Locally-relevant FOPs (BEX + HCOM)</li>
+            <li class="hcom">Pre-self-service entry points <span class="rank">#14</span></li>
+            <li class="hcom">CL International POSa migration <span class="rank">#16</span></li>
+            <li class="hcom">Real-time refund status <span class="rank">#22</span></li>
+            <li class="hcom">H+H multi-hotel <span class="rank">#13</span></li>
+          </ul>
+        </div>
+        <div class="brand-col">
+          <div class="brand-col-hd vrbo">Vrbo</div>
+          <ul>
+            <li class="vrbo">Migrate Vrbo US to Modern Checkout <span class="rank">#2</span></li>
+            <li class="vrbo">Self-service cancel path <span class="rank">#3</span></li>
+            <li class="vrbo">Refundable / Non-Refundable rates <span class="rank">#5</span></li>
+            <li class="vrbo">Flexible Cancel Policies parity with ABB <span class="rank">#13</span></li>
+            <li class="vrbo">Global BNPL (Affirm/Afterpay/Klarna) <span class="rank">#15</span></li>
+            <li class="vrbo">Vrbo Intl POSa Modern Checkout <span class="rank">#14</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="scope">
+        <div class="scope-col q3">
+          <div class="scope-hd">Proposed Q3 scope</div>
+          <ul>
+            <li>BEX: Decouple BEX Checkout from Expweb</li>
+            <li>BEX: Migrate Hotwire Cars Retail E2E to BEX Stack</li>
+            <li>HCOM: Korea Multi-Currency enablement</li>
+            <li>HCOM: CFAR Pilot launch</li>
+            <li>HCOM: CL International POSa completion</li>
+            <li>Vrbo: Migrate 100% Vrbo US to Modern Checkout</li>
+            <li>Vrbo: Refundable / Non-Refundable rate parity</li>
+            <li>Vrbo: Flexible Cancel Policies parity with ABB</li>
+          </ul>
+        </div>
+        <div class="scope-col q4">
+          <div class="scope-hd">Proposed Q4+ scope</div>
+          <ul>
+            <li>BEX: E2E Multi-Room for families &amp; groups</li>
+            <li>BEX: ChFAR for Flights</li>
+            <li>BEX: 100% BEX US Flights on Modern Checkout</li>
+            <li>BEX: Personalize Trip Completion NBA</li>
+            <li>HCOM: Locally-relevant FOPs (BEX + HCOM)</li>
+            <li>HCOM: Pre-self-service entry points</li>
+            <li>HCOM: AI Servicing dead-end elimination</li>
+            <li>HCOM: Real-time refund status visibility</li>
+            <li>HCOM: H+H multi-hotel shopping</li>
+            <li>Vrbo: Global BNPL (Affirm/Afterpay/Klarna)</li>
+            <li>Vrbo: VR Traveler payment capabilities</li>
+            <li>Vrbo: Vrbo Intl POSa Modern Checkout migration</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="deps">
+        <div class="deps-hd">Platform dependencies</div>
+        <div class="chips">
+          <span class="chip">Multi-Product Shopping</span>
+          <span class="chip">CKO / Modern Checkout</span>
+          <span class="chip">Payments (BNPL, FX, locally relevant FOPs)</span>
+          <span class="chip">Post-Booking &amp; Servicing</span>
+          <span class="chip">Insurance (CFAR / ChFAR)</span>
+          <span class="chip">Universal Messaging</span>
+        </div>
+      </div>
+
+      <div class="openq">
+        <div class="lbl">Open question for Core Platform</div>
+        <p>Are these three brand-level needs better served by one coordinated Core Platform investment per surface, or by Core Platform enabling brand-led variants? Today's pattern (each brand in flight on parallel work) suggests the latter, but we'd like Core Platform's read.</p>
+      </div>
+
+      <div class="materials-hd">Core materials</div>
+      <div class="materials">
+        <a class="mat-link" href="https://expediagroup.atlassian.net/browse/STRAT1-1393" target="_blank"><span class="mat-tag">JIRA</span> STRAT1-1393 Industry-Leading Booking Platform</a>
+        <a class="mat-link" href="https://expediagroup.atlassian.net/browse/STRAT1-1391" target="_blank"><span class="mat-tag">JIRA</span> STRAT1-1391 Win the Whole Trip on BEX</a>
+        <a class="mat-link" href="https://expediagroup.atlassian.net/browse/STRAT1-1356" target="_blank"><span class="mat-tag">JIRA</span> STRAT1-1356 Make Customer Service a Differentiator</a>
+        <a class="mat-link" href="https://expediagroup.atlassian.net/browse/STRAT1-1340" target="_blank"><span class="mat-tag">JIRA</span> STRAT1-1340 Expand Internationally</a>
+        <a class="mat-link" href="https://expediagroup.atlassian.net/browse/STRAT1-1392" target="_blank"><span class="mat-tag">JIRA</span> STRAT1-1392 InsurTech</a>
+        <a class="mat-link" href="https://expediagroup.atlassian.net/browse/MLSTN1-3138" target="_blank"><span class="mat-tag">JIRA</span> MLSTN1-3138 Flexible config for families</a>
+        <a class="mat-link" href="https://expediagroup.atlassian.net/browse/MLSTN1-5681" target="_blank"><span class="mat-tag">JIRA</span> MLSTN1-5681 Dependable servicing</a>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="page-footer">
+  <div class="meta">
+    <strong>Source.</strong> <a href="https://github.com/eg-internal/product-portfolio/blob/main/Strategies/Make%20Hotels.com%20the%20Most%20Rewarding%20Way%20to%20Book%20a%20Hotel/Core%20Platform%20Cross-Brand%20Priorities.md">Core Platform Cross-Brand Priorities</a> &middot;
+    <strong>Author.</strong> Lucy Meadow &middot;
+    <strong>Created.</strong> 2026-05-15 &middot;
+    <strong>Status.</strong> Draft for joint discovery
+  </div>
+  <div>
+    <a href="../">← All pages</a>
+  </div>
+</div>
+
+</body>
+</html>

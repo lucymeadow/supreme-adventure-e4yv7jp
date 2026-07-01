@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Logo placement ownership (HCOM / Vrbo pattern)</title>
+  <style>
+    :root {
+      --navy: #171c38;
+      --bg: #f5f7fa;
+      --dark: #1e2129;
+      --subtle: #5c6570;
+      --border: #dce0e8;
+      --white: #fff;
+      --accent: #0d6efd;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--dark);
+      line-height: 1.55;
+      font-size: 15px;
+    }
+    header {
+      background: var(--navy);
+      color: var(--white);
+      padding: 1rem 1.5rem;
+    }
+    header h1 { font-size: 1.25rem; font-weight: 700; }
+    header p { font-size: 0.85rem; opacity: 0.85; margin-top: 0.35rem; }
+    header a { color: #a8c4ff; text-decoration: none; }
+    header a:hover { text-decoration: underline; }
+    main { max-width: 1200px; margin: 0 auto; padding: 1.5rem; }
+    .note {
+      background: #fff8e6;
+      border: 1px solid #e8d48a;
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      margin-bottom: 1.5rem;
+      font-size: 0.9rem;
+    }
+    h2 {
+      font-size: 1.1rem;
+      color: var(--navy);
+      margin: 2rem 0 0.75rem;
+      padding-bottom: 0.35rem;
+      border-bottom: 2px solid var(--border);
+    }
+    h2:first-of-type { margin-top: 0.5rem; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--white);
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+      margin-bottom: 0.5rem;
+      font-size: 0.88rem;
+    }
+    th, td { padding: 0.65rem 0.75rem; text-align: left; vertical-align: top; border-bottom: 1px solid var(--border); }
+    th {
+      background: var(--navy);
+      color: var(--white);
+      font-weight: 600;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: #f8fafc; }
+    .glossary {
+      margin-top: 2rem;
+      padding: 1rem 1.25rem;
+      background: var(--white);
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      font-size: 0.88rem;
+    }
+    .glossary h3 { font-size: 0.95rem; margin-bottom: 0.5rem; color: var(--navy); }
+    .glossary ul { margin-left: 1.25rem; }
+    .glossary li { margin-bottom: 0.35rem; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Logo placement ownership</h1>
+    <p>Pattern from HCOM and Vrbo Q1 brand identity refresh (Confluence visual identity space, EGDS / Brand Delivery). EGDS-owned rows first.</p>
+    <p><a href="https://supreme-adventure-e4yv7jp.pages.github.io/">Parent site (GitHub Pages)</a></p>
+  </header>
+  <main>
+    <div class="note">
+      <strong>Deploy path:</strong> For this site, place this file at the root of your published branch (or under <code>docs/</code> if that is your Jekyll source) so it is available at
+      <code>https://supreme-adventure-e4yv7jp.pages.github.io/logo-placement-ownership.html</code>.
+      If you use a subpath (project Pages with <code>baseurl</code>), adjust the parent link in the header and asset paths accordingly.
+    </div>
+
+    <h2>EGDS-owned placements</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Logo or mark placement</th>
+          <th>Primary owner</th>
+          <th>How it is usually managed</th>
+          <th>Typical mechanism</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>EGDS global footer chiclet</td>
+          <td>EGDS</td>
+          <td>EGDS component plus brand marks</td>
+          <td>Token, CDN (hosted marks)</td>
+        </tr>
+        <tr>
+          <td>Identity: profile dashboard, profile communications, login terms and conditions (flows that use EGDS marks per Q1 hub)</td>
+          <td>EGDS (Identity consumes EGDS)</td>
+          <td>Mark set and theming from EGDS</td>
+          <td>Token, CDN marks</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>Travelstore-led placements</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Logo or mark placement</th>
+          <th>Primary owner</th>
+          <th>How it is usually managed</th>
+          <th>Typical mechanism</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Universal nav header (wordmark plus mark)</td>
+          <td>Travelstore</td>
+          <td>Page and nav authoring; theme from EGDS tokens</td>
+          <td>Travelstore, token; marks often CDN</td>
+        </tr>
+        <tr>
+          <td>Modern checkout header (inherits global nav)</td>
+          <td>Travelstore plus Checkout</td>
+          <td>Nav from Travelstore; CKO also used hardcoded theme work in Q1</td>
+          <td>Travelstore, token, manual where themes hardcode</td>
+        </tr>
+        <tr>
+          <td>UMP: landing-page logos inside email</td>
+          <td>Travelstore</td>
+          <td>Travelstore-managed email placements</td>
+          <td>Travelstore, CDN</td>
+        </tr>
+        <tr>
+          <td>App static splash (go-live static)</td>
+          <td>Travelstore (with XP and App for ship)</td>
+          <td>Static splash asset</td>
+          <td>Travelstore, CDN or packaged manual assets</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>Other team-owned placements</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Logo or mark placement</th>
+          <th>Primary owner</th>
+          <th>How it is usually managed</th>
+          <th>Typical mechanism</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Identity: login custom header, delete-account flow</td>
+          <td>Identity</td>
+          <td>Custom assets, not EGDS mark set</td>
+          <td>Manual SVG</td>
+        </tr>
+        <tr>
+          <td>Identity and UMP: login and OTP email artwork</td>
+          <td>Identity plus UMP</td>
+          <td>Template and creative</td>
+          <td>Manual, CDN URLs; DNS if BIMI</td>
+        </tr>
+        <tr>
+          <td>UMP: BIMI, Apple branded mail, generic headers, footer favicon, lockups inside images</td>
+          <td>UMP plus partners</td>
+          <td>Hub marked many as not Travelstore</td>
+          <td>Manual; BIMI uses DNS, VMC, hosted mark</td>
+        </tr>
+        <tr>
+          <td>Classic or legacy checkout (Vrbo partial scope on hub)</td>
+          <td>Checkout</td>
+          <td>Top-left logo scope per program decision</td>
+          <td>Manual and token mix</td>
+        </tr>
+        <tr>
+          <td>Phone home-screen icon, app push icon</td>
+          <td>Native and Apps</td>
+          <td>Store and OS assets</td>
+          <td>Manual per platform</td>
+        </tr>
+        <tr>
+          <td>Marketing, TEaL, SEM, metasearch, social, ASO</td>
+          <td>Marketing</td>
+          <td>Creative and vendor surfaces</td>
+          <td>Manual, CDN</td>
+        </tr>
+        <tr>
+          <td>Virtual Agent (window logo, favicon)</td>
+          <td>Virtual Agent or TCP</td>
+          <td>Tracker used TCP tickets, manual URLs</td>
+          <td>Manual, CDN</td>
+        </tr>
+        <tr>
+          <td>DMS-served surfaces (example staging login in tracker)</td>
+          <td>DMS owning team</td>
+          <td>Product-specific messaging surface</td>
+          <td>DMS, CDN or manual asset refs</td>
+        </tr>
+        <tr>
+          <td>Rewards nav or legacy hub</td>
+          <td>Loyalty</td>
+          <td>Tracker: CDN link updates</td>
+          <td>Manual (CDN)</td>
+        </tr>
+        <tr>
+          <td>Partner help or EPC (favicons, marks)</td>
+          <td>EPC or Partner</td>
+          <td>Partner-owned properties</td>
+          <td>Manual</td>
+        </tr>
+        <tr>
+          <td>Affiliates child sites (nav versus logo contrast)</td>
+          <td>Affiliates</td>
+          <td>Child site theme fixes</td>
+          <td>Token or manual</td>
+        </tr>
+        <tr>
+          <td>Self-service help centre; MeSo non-nav placements</td>
+          <td>Self Service or MeSo</td>
+          <td>Tokens plus MeSo-specific build</td>
+          <td>Token, manual</td>
+        </tr>
+        <tr>
+          <td>USNF or custom SRP controls (histogram, compare, and similar)</td>
+          <td>Owning squad</td>
+          <td>EGDS advises only</td>
+          <td>Manual code, optional token alignment</td>
+        </tr>
+        <tr>
+          <td>Map pins</td>
+          <td>Maps</td>
+          <td>Hub deferred to Q2 (PRODPLAN1-25940)</td>
+          <td>Token or CDN when delivered</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="glossary">
+      <h3>Mechanism glossary</h3>
+      <ul>
+        <li><strong>Token</strong> — Semantic colour and type tokens (and sometimes mark variant selection via theme) from EGDS and DTS.</li>
+        <li><strong>CDN</strong> — Binary mark from the EGDS or brand CDN path, or another approved CDN URL.</li>
+        <li><strong>Travelstore</strong> — Content and layout authoring for traveler-facing pages and some email placements (Q1 hub).</li>
+        <li><strong>Manual</strong> — Hand-edited SVG or PNG, email HTML, app binary, partner CMS, or hardcoded path outside token-only updates.</li>
+        <li><strong>DNS</strong> — Mostly BIMI and similar inbox brand indicators, not the main site logo.</li>
+        <li><strong>DMS</strong> — Dynamic messaging or campaign surfaces configured outside the core EGDS nav path (per issue tracker examples).</li>
+      </ul>
+    </div>
+  </main>
+</body>
+</html>

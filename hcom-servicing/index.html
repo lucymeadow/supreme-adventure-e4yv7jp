@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HCOM Servicing — Requirement Landing Map</title>
+<style>
+  :root {
+    --navy: #171c38;
+    --teal: #00a3b5;
+    --blue: #3d78f2;
+    --purple: #784cc7;
+    --amber: #d99e14;
+    --green: #2ea673;
+    --coral: #e56152;
+    --dark: #1e2129;
+    --subtle: #808899;
+    --bg: #f5f7fa;
+    --white: #ffffff;
+    --border: #dce0e8;
+    --shadow: 0 2px 8px rgba(0,0,0,0.06);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--dark); line-height: 1.6; }
+
+  .top-bar { background: var(--navy); padding: 14px 40px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
+  .top-bar .brand h1 { color: #fff; font-size: 19px; font-weight: 700; }
+  .top-bar .brand .sub { color: #9a9fb8; font-size: 12px; margin-top: 2px; }
+  .top-bar a { color: #9a9fb8; text-decoration: none; font-size: 13px; }
+  .top-bar a:hover { color: #fff; }
+
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 32px 40px 64px; }
+  h1.page { font-size: 28px; font-weight: 800; margin-bottom: 6px; color: var(--navy); }
+  .subtitle { font-size: 15px; color: var(--subtle); margin-bottom: 28px; }
+  h2 { font-size: 20px; font-weight: 700; margin: 40px 0 14px; padding-bottom: 8px; border-bottom: 2px solid var(--border); color: var(--navy); }
+  p { margin-bottom: 12px; font-size: 14px; }
+  .lead { font-size: 15px; color: var(--dark); }
+
+  .scorecard { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin: 24px 0; }
+  .score-card { background: var(--white); border: 1px solid var(--border); border-radius: 10px; padding: 18px 20px; box-shadow: var(--shadow); }
+  .score-card .label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--subtle); margin-bottom: 6px; }
+  .score-card .value { font-size: 26px; font-weight: 800; color: var(--navy); }
+  .score-card .detail { font-size: 12px; color: var(--subtle); margin-top: 4px; }
+  .score-card.good { border-left: 4px solid var(--green); }
+  .score-card.warn { border-left: 4px solid var(--amber); }
+  .score-card.gap { border-left: 4px solid var(--purple); }
+  .score-card.info { border-left: 4px solid var(--blue); }
+
+  table { width: 100%; border-collapse: collapse; margin: 12px 0 24px; font-size: 13px; background: var(--white); border-radius: 8px; overflow: hidden; box-shadow: var(--shadow); }
+  th { background: var(--navy); color: #fff; text-align: left; padding: 10px 12px; font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; }
+  td { padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  tbody tr:hover td { background: #f8fafc; }
+  td.num { color: var(--subtle); font-weight: 700; text-align: right; width: 28px; }
+  td .req { font-weight: 600; color: var(--navy); }
+  a.jira { color: var(--blue); text-decoration: none; font-family: ui-monospace, 'SF Mono', Menlo, monospace; font-size: 12px; }
+  a.jira:hover { text-decoration: underline; }
+
+  .badge { display: inline-block; padding: 2px 9px; border-radius: 12px; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; white-space: nowrap; }
+  .badge.captured { background: #dcfce7; color: #166534; }
+  .badge.partial { background: #fef3c7; color: #92400e; }
+  .badge.gap { background: #f3e8ff; color: #6b21a8; }
+  .badge.none { background: #f1f5f9; color: #475569; }
+
+  .theme-tag { display: inline-block; padding: 1px 7px; border-radius: 4px; font-size: 11px; font-weight: 600; }
+  .theme-tag.a { background: #dbeafe; color: #1e40af; }
+  .theme-tag.b { background: #e0e7ff; color: #3730a3; }
+  .theme-tag.c { background: #ccfbf1; color: #0f766e; }
+  .theme-tag.shared { background: #f0fdf4; color: #166534; }
+  .theme-tag.out { background: #fee2e2; color: #991b1b; }
+
+  .callout { background: var(--white); border-left: 4px solid var(--blue); padding: 14px 18px; margin: 14px 0; border-radius: 0 8px 8px 0; box-shadow: var(--shadow); }
+  .callout .ct { font-weight: 700; font-size: 13px; margin-bottom: 4px; color: var(--navy); }
+  .callout p { margin-bottom: 4px; font-size: 13px; }
+
+  .legend { display: flex; flex-wrap: wrap; gap: 14px; margin: 8px 0 20px; font-size: 12px; color: var(--subtle); }
+  .legend span { display: inline-flex; align-items: center; gap: 6px; }
+
+  .footer { margin-top: 48px; padding-top: 18px; border-top: 1px solid var(--border); font-size: 12px; color: var(--subtle); }
+
+  @media (max-width: 760px) {
+    .wrap { padding: 20px; }
+    .top-bar { padding: 12px 16px; }
+    table { font-size: 12px; }
+    th, td { padding: 8px; }
+  }
+</style>
+</head>
+<body>
+  <div class="top-bar">
+    <div class="brand">
+      <h1>HCOM Servicing — Requirement Landing Map</h1>
+      <div class="sub">Where every servicing requirement landed: captured, partial, or gap</div>
+    </div>
+    <a href="/product-portfolio/">&larr; Product Portfolio</a>
+  </div>
+
+  <div class="wrap">
+    <h1 class="page">HCOM Servicing: Requirement Landing Map</h1>
+    <div class="subtitle">Working reference for the HCOM business + Core Product Service conversation &middot; June 2026 &middot; Sources: Customer Service BRD HCOM 2026, HLT Offsite March 2026, Servicing SteerCo 2026-06, Jira audit (2026-06-04)</div>
+
+    <h2>Theme model</h2>
+    <p>Updated after the 2026-06-04 working session. The HCOM-owned differentiation is now two themes. Supplier-waiver flexibility (the former Theme B) is already captured under Rachel Nichols' waivers workstream, so it is no longer a standalone HCOM theme.</p>
+    <p><strong>Tier 1 &mdash; HCOM brand differentiation (HCOM owns the opportunity).</strong> <span class="theme-tag a">Theme A</span> Differentiated and personalized service (human agent + self-service), organized around customer segments (international, last-minute, high tier, business) that drive use cases. <span class="theme-tag c">Theme C</span> Communication: communicate service benefits through product surfaces and CRM rather than traditional marketing, a joint product and marketing effort.</p>
+    <p><strong>Tier 2 &mdash; Shared platform and supply (HCOM contributes requirements, maps to existing milestones).</strong> Agent effectiveness routes into Agent Assist MLP (<a class="jira" href="https://expediagroup.atlassian.net/browse/MLSTN1-5684">MLSTN1-5684</a>). Lodging conditions splits across relocation/overbooking, supplier accountability, and content-accuracy milestones. HCOM does not build parallel versions.</p>
+
+    <p class="lead">Every requirement from the BRD, the offsite deck, and the June SteerCo, mapped to its coverage status, the theme it belongs to, its Jira home, owner, and the next action for HCOM. The headline: the expensive foundations are already captured and in flight. The real work for HCOM is the differentiation themes (A and C) where a business case is still needed.</p>
+
+    <div class="scorecard">
+      <div class="score-card good"><div class="label">Captured</div><div class="value">8</div><div class="detail">In a backlog, in progress or committed</div></div>
+      <div class="score-card warn"><div class="label">Partial</div><div class="value">4</div><div class="detail">Discovery, operational, or scaled version missing</div></div>
+      <div class="score-card gap"><div class="label">Gap</div><div class="value">6</div><div class="detail">No product/platform home yet</div></div>
+      <div class="score-card info"><div class="label">Requirements</div><div class="value">18</div><div class="detail">Across BRD, offsite, SteerCo</div></div>
+    </div>
+
+    <h2>The landing map</h2>
+    <div class="legend">
+      <span><span class="badge captured">Captured</span> already funded &amp; in flight</span>
+      <span><span class="badge partial">Partial</span> exists but a gap remains</span>
+      <span><span class="badge gap">Gap</span> needs a home / business case</span>
+      <span><span class="theme-tag a">Theme A</span> Differentiated &amp; personalized service</span>
+      <span><span class="theme-tag c">Theme C</span> Communication (product surfaces + CRM)</span>
+      <span><span class="theme-tag shared">Shared</span> platform / supply</span>
+      <span><span class="theme-tag out">Not product</span> marketing / policy</span>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Requirement (BRD / offsite / SteerCo)</th>
+          <th>Status</th>
+          <th>Theme / bucket</th>
+          <th>Jira home / existing work</th>
+          <th>Owner</th>
+          <th>HCOM next action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="num">1</td>
+          <td><span class="req">Tier/value-aware service routing and SLA differentiation</span> (Silver/Gold routing)</td>
+          <td><span class="badge gap">Gap</span></td>
+          <td><span class="theme-tag a">Theme A</span></td>
+          <td>None committed. Tier-routing dependency under <a class="jira" href="https://expediagroup.atlassian.net/browse/MLSTN1-5883">MLSTN1-5883</a> Wave 2</td>
+          <td>HCOM to define; platform TBD</td>
+          <td>Build the opportunity brief and business case. Lead with Gold-ROW (~$899 GP)</td>
+        </tr>
+        <tr>
+          <td class="num">2</td>
+          <td><span class="req">Establish ROW Premium Service</span> (routing to premium support)</td>
+          <td><span class="badge gap">Gap</span></td>
+          <td><span class="theme-tag a">Theme A</span> (routing); staffing is TPSP ops</td>
+          <td>None (routing). TPSP for staffing</td>
+          <td>HCOM (routing case); TPSP (staffing)</td>
+          <td>Separate the routing capability from the staffing model in the ask</td>
+        </tr>
+        <tr>
+          <td class="num">3</td>
+          <td><span class="req">Differentiated / personalized compensation in self-service</span> (incl. OKC empowerment)</td>
+          <td><span class="badge partial">Partial</span></td>
+          <td><span class="theme-tag a">Theme A</span></td>
+          <td>Scaled version not captured. OKC vs Cash TnL (TPSP)</td>
+          <td>HCOM to define; platform TBD</td>
+          <td>Define as the graduation path for the Platinum pilot. Use $22M net-GP sizing</td>
+        </tr>
+        <tr>
+          <td class="num">4</td>
+          <td><span class="req">Platinum change/cancel waivers</span> ("Say Yes to Platinum")</td>
+          <td><span class="badge captured">Captured (pilot)</span></td>
+          <td><span class="theme-tag a">Theme A</span> (scaled rules)</td>
+          <td><a class="jira" href="https://expediagroup.atlassian.net/browse/TPSPGOVS-2586">TPSPGOVS-2586</a>, <a class="jira" href="https://expediagroup.atlassian.net/browse/AEPIT-5099">AEPIT-5099</a></td>
+          <td>Hemani / TPSP</td>
+          <td>Name the scaled self-service capability the pilot graduates into</td>
+        </tr>
+        <tr>
+          <td class="num">5</td>
+          <td><span class="req">Brand-specific waiver rules / personalized comp in self-service</span> (Q2'27)</td>
+          <td><span class="badge gap">Gap</span></td>
+          <td><span class="theme-tag a">Theme A</span> (future use case)</td>
+          <td>None</td>
+          <td>HCOM to define</td>
+          <td>Fold into Theme A use cases by segment</td>
+        </tr>
+        <tr>
+          <td class="num">6</td>
+          <td><span class="req">Supplier change/cancel waiver capability</span> (match BCOM / pre-approved waivers)</td>
+          <td><span class="badge captured">Captured</span></td>
+          <td><span class="theme-tag shared">Captured: waivers workstream</span></td>
+          <td>Captured under Rachel Nichols' waivers workstream. <a class="jira" href="https://expediagroup.atlassian.net/browse/PRODPLAN1-25306">PRODPLAN1-25306</a> (Ready), parent <a class="jira" href="https://expediagroup.atlassian.net/browse/MLSTN1-5637">MLSTN1-5637</a></td>
+          <td>Rachel Nichols</td>
+          <td>Monitor; validate coverage with Rachel's workstream (confirmed in 2026-06-04 session)</td>
+        </tr>
+        <tr>
+          <td class="num">7</td>
+          <td><span class="req">Improve agent effectiveness</span> / agent context / BSA parity</td>
+          <td><span class="badge partial">Partial</span></td>
+          <td><span class="theme-tag shared">Shared: Agent effectiveness</span></td>
+          <td><a class="jira" href="https://expediagroup.atlassian.net/browse/MLSTN1-5684">MLSTN1-5684</a> Agent Assist MLP; supporting <a class="jira" href="https://expediagroup.atlassian.net/browse/MLSTN1-5148">MLSTN1-5148</a>, <a class="jira" href="https://expediagroup.atlassian.net/browse/MLSTN1-5297">MLSTN1-5297</a>, <a class="jira" href="https://expediagroup.atlassian.net/browse/MLSTN1-3923">MLSTN1-3923</a>, <a class="jira" href="https://expediagroup.atlassian.net/browse/PRODPLAN1-28726">PRODPLAN1-28726</a>, <a class="jira" href="https://expediagroup.atlassian.net/browse/TCP-16757">TCP-16757</a></td>
+          <td>Suneil Bhambri</td>
+          <td>Feed Steph G. key-journey mapping as requirements. Confirm HCOM delta beyond AIHC</td>
+        </tr>
+        <tr>
+          <td class="num">8</td>
+          <td><span class="req">Enhance accessibility of human agents</span> (Help Center, VA, Trips, Account entry points)</td>
+          <td><span class="badge captured">Captured</span></td>
+          <td><span class="theme-tag shared">Shared: in AIHC</span></td>
+          <td>AIHC entry points (<a class="jira" href="https://expediagroup.atlassian.net/browse/MLSTN1-5525">MLSTN1-5525</a>)</td>
+          <td>Barb Johnson / Lindsey</td>
+          <td>Monitor; entry points are in the AIHC build</td>
+        </tr>
+        <tr>
+          <td class="num">9</td>
+          <td><span class="req">Lodging conditions: content &amp; review accuracy</span></td>
+          <td><span class="badge partial">Partial</span></td>
+          <td><span class="theme-tag shared">Shared: Lodging conditions</span></td>
+          <td>Content accuracy <a class="jira" href="https://expediagroup.atlassian.net/browse/USC-3296">USC-3296</a>/<a class="jira" href="https://expediagroup.atlassian.net/browse/USC-3318">3318</a>/<a class="jira" href="https://expediagroup.atlassian.net/browse/USC-3330">3330</a>; Loved by Guests <a class="jira" href="https://expediagroup.atlassian.net/browse/COIN-6003">COIN-6003</a></td>
+          <td>USC / supply</td>
+          <td>Feed HCOM properties driving complaints</td>
+        </tr>
+        <tr>
+          <td class="num">10</td>
+          <td><span class="req">Lodging conditions: complaint feedback loop &amp; supplier accountability</span></td>
+          <td><span class="badge gap">Gap</span></td>
+          <td><span class="theme-tag shared">Shared: Lodging conditions</span></td>
+          <td><a class="jira" href="https://expediagroup.atlassian.net/browse/MLSTN1-5823">MLSTN1-5823</a> supply-quality coaching</td>
+          <td>Alessandro Camm</td>
+          <td>Provide HCOM property/segment signal</td>
+        </tr>
+        <tr>
+          <td class="num">11</td>
+          <td><span class="req">Reduce relocations / overbooking / missing reservations</span> (cost driver)</td>
+          <td><span class="badge captured">Captured</span></td>
+          <td><span class="theme-tag shared">Shared: Lodging conditions</span></td>
+          <td><a class="jira" href="https://expediagroup.atlassian.net/browse/MLSTN1-6346">MLSTN1-6346</a>, <a class="jira" href="https://expediagroup.atlassian.net/browse/MLSTN1-627">MLSTN1-627</a>, <a class="jira" href="https://expediagroup.atlassian.net/browse/MLSTN1-3726">MLSTN1-3726</a>; proactive <a class="jira" href="https://expediagroup.atlassian.net/browse/MLSTN1-2010">MLSTN1-2010</a></td>
+          <td>Eva Aguilar / Lindsey</td>
+          <td>Monitor; supply HCOM relocation data</td>
+        </tr>
+        <tr>
+          <td class="num">12</td>
+          <td><span class="req">Agentic / AI Help Center</span> (best-in-class self-service, remove dead-ends)</td>
+          <td><span class="badge captured">Captured</span></td>
+          <td><span class="theme-tag shared">In flight — HCOM launch brand (July)</span></td>
+          <td><a class="jira" href="https://expediagroup.atlassian.net/browse/MLSTN1-5650">MLSTN1-5650</a>, <a class="jira" href="https://expediagroup.atlassian.net/browse/MLSTN1-5525">MLSTN1-5525</a>, <a class="jira" href="https://expediagroup.atlassian.net/browse/MLSTN1-5148">MLSTN1-5148</a>, <a class="jira" href="https://expediagroup.atlassian.net/browse/PRODPLAN1-31040">PRODPLAN1-31040</a>/<a class="jira" href="https://expediagroup.atlassian.net/browse/PRODPLAN1-26852">26852</a>/<a class="jira" href="https://expediagroup.atlassian.net/browse/PRODPLAN1-31192">31192</a></td>
+          <td>Barb Johnson / Mohit Gupta / Lindsey</td>
+          <td>Monitor; HCOM is the launch brand</td>
+        </tr>
+        <tr>
+          <td class="num">13</td>
+          <td><span class="req">True Change</span> (change without cancel/rebook)</td>
+          <td><span class="badge captured">Captured</span></td>
+          <td><span class="theme-tag shared">In flight</span></td>
+          <td><a class="jira" href="https://expediagroup.atlassian.net/browse/MLSTN1-5692">MLSTN1-5692</a>, <a class="jira" href="https://expediagroup.atlassian.net/browse/MLSTN1-5693">MLSTN1-5693</a></td>
+          <td>Arjun Gopalakrishnan</td>
+          <td>Monitor</td>
+        </tr>
+        <tr>
+          <td class="num">14</td>
+          <td><span class="req">Billing / refund status live tracking</span></td>
+          <td><span class="badge captured">Captured</span></td>
+          <td><span class="theme-tag shared">In flight (web self-service June)</span></td>
+          <td><a class="jira" href="https://expediagroup.atlassian.net/browse/MLSTN1-2007">MLSTN1-2007</a>, <a class="jira" href="https://expediagroup.atlassian.net/browse/AMIN-12008">AMIN-12008</a>, <a class="jira" href="https://expediagroup.atlassian.net/browse/PRODPLAN1-26852">PRODPLAN1-26852</a>/<a class="jira" href="https://expediagroup.atlassian.net/browse/PRODPLAN1-31040">31040</a></td>
+          <td>Lindsey / Barb</td>
+          <td>Monitor</td>
+        </tr>
+        <tr>
+          <td class="num">15</td>
+          <td><span class="req">Change/cancel waivers in self-service</span> (crisis waivers)</td>
+          <td><span class="badge captured">Captured</span></td>
+          <td><span class="theme-tag shared">In flight (Q2)</span></td>
+          <td><a class="jira" href="https://expediagroup.atlassian.net/browse/PRODPLAN1-30986">PRODPLAN1-30986</a>, <a class="jira" href="https://expediagroup.atlassian.net/browse/MLSTN1-779">MLSTN1-779</a>/<a class="jira" href="https://expediagroup.atlassian.net/browse/MLSTN1-780">780</a></td>
+          <td>Rachel N. / platform</td>
+          <td>Monitor</td>
+        </tr>
+        <tr>
+          <td class="num">16</td>
+          <td><span class="req">Non-English / ROW localization</span> (VA, IVR quality)</td>
+          <td><span class="badge partial">Partial</span></td>
+          <td><span class="theme-tag shared">Shared: Servicing foundation</span> + TPSP ops</td>
+          <td><a class="jira" href="https://expediagroup.atlassian.net/browse/MLSTN1-1590">MLSTN1-1590</a> Non-English foundation; <a class="jira" href="https://expediagroup.atlassian.net/browse/SPLAN24-3421">SPLAN24-3421</a>. ROW audit (Rebecca)</td>
+          <td>Suneil Bhambri / TPSP</td>
+          <td>Feed ROW audit findings; IVR quality stays ops</td>
+        </tr>
+        <tr>
+          <td class="num">17</td>
+          <td><span class="req">Communicate service benefits</span> (reassurance, close the perception gap)</td>
+          <td><span class="badge gap">Gap</span></td>
+          <td><span class="theme-tag c">Theme C</span> (joint product + marketing)</td>
+          <td>None yet. Delivered via product surfaces and CRM, not traditional marketing</td>
+          <td>HCOM + Product + Marketing</td>
+          <td>Named as a gap in the 2026-06-04 session. Build the case for on-surface and CRM messaging; define joint ownership</td>
+        </tr>
+        <tr>
+          <td class="num">18</td>
+          <td><span class="req">HCOM Care / Service Guarantee</span></td>
+          <td><span class="badge gap">Gap</span></td>
+          <td><span class="theme-tag out">Not a product ask</span> (policy + marketing)</td>
+          <td>None. SteerCo slides 30-35</td>
+          <td>Katie / TPSP policy</td>
+          <td>Business-case and policy decision first (eligibility logic may become product later)</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="footer">
+      Source of truth: <em>HCOM Servicing Strategy: Working-Model Analysis and Jira Coverage Audit</em> (research doc under Strategies &rarr; Make Hotels.com the Most Rewarding Way to Book a Hotel &rarr; Create Stickiness Through Flexibility &rarr; Provide Dedicated Service Solutions). Jira coverage reconstructed via the Atlassian MCP on 2026-06-04; dashboards/Structure boards are not API-readable, so edge cases may shift if the dashboard JQL is exported.
+    </div>
+  </div>
+</body>
+</html>

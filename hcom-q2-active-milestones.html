@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HCOM Q2 2026 Active Milestones</title>
+<style>
+  :root {
+    --navy: #171c38;
+    --teal: #00a3b5;
+    --blue: #3d78f2;
+    --purple: #784cc7;
+    --amber: #d99e14;
+    --green: #2ea673;
+    --coral: #e56152;
+    --dark: #1e2129;
+    --subtle: #808899;
+    --bg: #f5f7fa;
+    --white: #ffffff;
+    --border: #dce0e8;
+    --shadow: 0 2px 8px rgba(0,0,0,0.06);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--dark); line-height: 1.5; }
+  .container { max-width: 1600px; margin: 0 auto; }
+  a { color: var(--blue); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  .top-bar { background: var(--navy); padding: 14px 40px; display: flex; align-items: center; justify-content: space-between; }
+  .top-bar h1 { color: #fff; font-size: 22px; font-weight: 700; }
+  .top-bar .sub { color: #9a9fb8; font-size: 12px; margin-top: 2px; }
+  .top-bar .back-link { color: #9a9fb8; font-size: 12px; text-decoration: none; }
+  .top-bar .back-link:hover { color: #fff; }
+
+  .hero { background: linear-gradient(135deg, #171c38 0%, #252d55 50%, #1e2848 100%); padding: 40px 48px 32px; color: #fff; position: relative; overflow: hidden; }
+  .hero::before { content: ''; position: absolute; top: -60px; right: -60px; width: 300px; height: 300px; background: radial-gradient(circle, rgba(0,163,181,0.12) 0%, transparent 70%); pointer-events: none; }
+  .hero h2 { font-size: 24px; font-weight: 700; margin-bottom: 4px; position: relative; }
+  .hero .hero-sub { font-size: 13px; opacity: 0.65; margin-bottom: 20px; position: relative; }
+
+  .stat-row { display: flex; gap: 12px; flex-wrap: wrap; position: relative; }
+  .stat-box { background: rgba(255,255,255,0.08); border-radius: 8px; padding: 10px 18px; min-width: 120px; text-align: center; }
+  .stat-num { font-size: 22px; font-weight: 700; }
+  .stat-label { font-size: 9px; opacity: 0.6; text-transform: uppercase; letter-spacing: 0.5px; }
+
+  .section { padding: 24px 40px 0; }
+  .section-title { font-size: 18px; font-weight: 700; color: var(--dark); margin-bottom: 4px; }
+  .section-desc { font-size: 12px; color: var(--subtle); margin-bottom: 16px; }
+  .divider { height: 2px; background: var(--navy); opacity: 0.12; margin: 24px 0; }
+
+  .card { background: var(--white); border-radius: 12px; box-shadow: var(--shadow); overflow: hidden; }
+  .card-header { padding: 10px 16px; color: #fff; font-weight: 700; font-size: 13px; display: flex; align-items: center; justify-content: space-between; }
+  .card-body { padding: 0; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  thead th { text-align: left; padding: 10px 14px; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--subtle); border-bottom: 2px solid var(--border); background: #fafbfc; }
+  tbody td { padding: 10px 14px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+  tbody tr:last-child td { border-bottom: none; }
+  tbody tr:hover { background: rgba(61,120,242,0.02); }
+
+  .jira-link { font-family: 'SF Mono', 'Fira Code', monospace; font-size: 11px; color: var(--blue); font-weight: 500; white-space: nowrap; }
+  .status-badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: 600; white-space: nowrap; }
+  .status-in-progress { background: rgba(0,163,181,0.12); color: #00838f; }
+  .status-backlog { background: rgba(128,136,153,0.12); color: #606878; }
+  .status-draft { background: rgba(120,76,199,0.10); color: #6a3daa; }
+
+  .date-cell { font-family: 'SF Mono', 'Fira Code', monospace; font-size: 11px; color: var(--dark); white-space: nowrap; }
+  .lead-cell { font-size: 11px; color: var(--dark); }
+
+  .footer { padding: 12px 40px 32px; font-size: 10px; color: var(--subtle); }
+
+  @media (max-width: 900px) {
+    .section { padding: 16px 16px 0; }
+    .hero { padding: 24px 16px; }
+    .top-bar { padding: 14px 16px; }
+    table { font-size: 11px; }
+    thead th, tbody td { padding: 8px 10px; }
+    .footer { padding: 12px 16px 24px; }
+  }
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+
+  <div class="top-bar">
+    <div>
+      <h1>HCOM Q2 2026 Active Milestones</h1>
+      <div class="sub">Make Hotels.com the Most Rewarding Way to Book a Hotel &middot; STRAT1-1346</div>
+    </div>
+    <a href="index.html" class="back-link">&larr; Back to Portfolio</a>
+  </div>
+
+  <div class="hero">
+    <h2>Active &amp; Starting Q2 Milestones</h2>
+    <div class="hero-sub">In Progress or starting April 1, 2026 &middot; Synced from Jira on April 16, 2026</div>
+    <div class="stat-row">
+      <div class="stat-box"><div class="stat-num" style="color:var(--teal)">18</div><div class="stat-label">In Progress</div></div>
+      <div class="stat-box"><div class="stat-num" style="color:var(--green)">14</div><div class="stat-label">Pre-Q2 Start</div></div>
+      <div class="stat-box"><div class="stat-num" style="color:var(--blue)">3</div><div class="stat-label">April 1 Start</div></div>
+      <div class="stat-box"><div class="stat-num" style="color:var(--subtle)">1</div><div class="stat-label">Future Start</div></div>
+      <div class="stat-box"><div class="stat-num" style="color:var(--purple)">2</div><div class="stat-label">April 1 (Not Started)</div></div>
+    </div>
+  </div>
+
+  <!-- Pre-Q2 In Progress -->
+  <div class="section">
+    <h3 class="section-title">Started Before Q2 and Still In Progress</h3>
+    <p class="section-desc">Milestones with a start date before April 1, 2026 that remain in progress. Ordered by start date.</p>
+    <div class="card" style="margin-bottom: 16px">
+      <div class="card-header" style="background: var(--green)">Continuing from Pre-Q2 &middot; 14 milestones</div>
+      <div class="card-body">
+        <table>
+          <thead><tr><th>Milestone</th><th>Jira</th><th>Status</th><th>Start</th><th>Due</th><th>Product Lead(s)</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><strong>Deliver for flexibility and stickiness</strong></td>
+              <td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-5682" class="jira-link" target="_blank">MLSTN1-5682</a></td>
+              <td><span class="status-badge status-in-progress">in-progress</span></td>
+              <td class="date-cell">2025-09-01</td>
+              <td class="date-cell">2027-12-31</td>
+              <td class="lead-cell">Avantika Argolo</td>
+            </tr>
+            <tr>
+              <td><strong>Launch CFAR Pilot on Hcom</strong></td>
+              <td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-3593" class="jira-link" target="_blank">MLSTN1-3593</a></td>
+              <td><span class="status-badge status-in-progress">in-progress</span></td>
+              <td class="date-cell">2025-10-01</td>
+              <td class="date-cell">2026-09-25</td>
+              <td class="lead-cell">Avantika Argolo</td>
+            </tr>
+            <tr>
+              <td><strong>Mitigate price inconsistencies across marketing and site/app</strong></td>
+              <td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-2567" class="jira-link" target="_blank">MLSTN1-2567</a></td>
+              <td><span class="status-badge status-in-progress">in-progress</span></td>
+              <td class="date-cell">2025-10-01</td>
+              <td class="date-cell">2026-06-30</td>
+              <td class="lead-cell">Roxana Turcitu</td>
+            </tr>
+            <tr>
+              <td><strong>Hcom 10:100 UK</strong></td>
+              <td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-4025" class="jira-link" target="_blank">MLSTN1-4025</a></td>
+              <td><span class="status-badge status-in-progress">in-progress</span></td>
+              <td class="date-cell">2025-10-20</td>
+              <td class="date-cell">2026-06-30</td>
+              <td class="lead-cell">Akshat Khanna</td>
+            </tr>
+            <tr>
+              <td><strong>HCOM Home Improvements [Phase 1]</strong></td>
+              <td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-5679" class="jira-link" target="_blank">MLSTN1-5679</a></td>
+              <td><span class="status-badge status-in-progress">in-progress</span></td>
+              <td class="date-cell">2026-01-01</td>
+              <td class="date-cell">2026-12-31</td>
+              <td class="lead-cell">Ali Lakhanpal, Ice Peterman</td>
+            </tr>
+            <tr>
+              <td><strong>Build HBT Self Booker MLP</strong></td>
+              <td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-5676" class="jira-link" target="_blank">MLSTN1-5676</a></td>
+              <td><span class="status-badge status-in-progress">in-progress</span></td>
+              <td class="date-cell">2026-01-01</td>
+              <td class="date-cell">2026-09-30</td>
+              <td class="lead-cell">Ashish Sahasrabuddhe</td>
+            </tr>
+            <tr>
+              <td><strong>Strengthen Hotels.com brand recognition and journey consistency</strong></td>
+              <td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-3572" class="jira-link" target="_blank">MLSTN1-3572</a></td>
+              <td><span class="status-badge status-in-progress">in-progress</span></td>
+              <td class="date-cell">2026-01-01</td>
+              <td class="date-cell">2026-06-30</td>
+              <td class="lead-cell">Lucy Meadow</td>
+            </tr>
+            <tr>
+              <td><strong>Launch Pay Later to EG option for ETP travelers</strong></td>
+              <td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-3515" class="jira-link" target="_blank">MLSTN1-3515</a></td>
+              <td><span class="status-badge status-in-progress">in-progress</span></td>
+              <td class="date-cell">2026-01-01</td>
+              <td class="date-cell">2026-12-31</td>
+              <td class="lead-cell">Sangya Kalia, Yogesh Bedwal</td>
+            </tr>
+            <tr>
+              <td><strong>HBT: Identify business travelers and capture their preferences</strong></td>
+              <td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-3067" class="jira-link" target="_blank">MLSTN1-3067</a></td>
+              <td><span class="status-badge status-in-progress">in-progress</span></td>
+              <td class="date-cell">2026-01-01</td>
+              <td class="date-cell">2026-12-31</td>
+              <td class="lead-cell">Ashish Sahasrabuddhe</td>
+            </tr>
+            <tr>
+              <td><strong>Partners Autopay Scale-Up &amp; Increase EVC Transparency</strong></td>
+              <td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-3516" class="jira-link" target="_blank">MLSTN1-3516</a></td>
+              <td><span class="status-badge status-in-progress">in-progress</span></td>
+              <td class="date-cell">2026-02-05</td>
+              <td class="date-cell">2027-03-31</td>
+              <td class="lead-cell">Yogesh Bedwal</td>
+            </tr>
+            <tr>
+              <td><strong>Save Your Way 2026: Increase Usage &amp; Adoption</strong></td>
+              <td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-5476" class="jira-link" target="_blank">MLSTN1-5476</a></td>
+              <td><span class="status-badge status-in-progress">in-progress</span></td>
+              <td class="date-cell">2026-03-02</td>
+              <td class="date-cell">2026-12-31</td>
+              <td class="lead-cell">Sandra Jefferies, Tsahy Lasry</td>
+            </tr>
+            <tr>
+              <td><strong>Comms Thin Slice: HBT Expensing &amp; Comms Suppression</strong></td>
+              <td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-5694" class="jira-link" target="_blank">MLSTN1-5694</a></td>
+              <td><span class="status-badge status-in-progress">in-progress</span></td>
+              <td class="date-cell">2026-03-13</td>
+              <td class="date-cell">2026-05-29</td>
+              <td class="lead-cell">Aisha Ahmed, Arushi Mishra</td>
+            </tr>
+            <tr>
+              <td><strong>[HCOM] Optimization of Hotels.com Rewards program on remaining markets 10:1</strong></td>
+              <td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-608" class="jira-link" target="_blank">MLSTN1-608</a></td>
+              <td><span class="status-badge status-in-progress">in-progress</span></td>
+              <td class="date-cell">2026-03-23</td>
+              <td class="date-cell">2026-12-31</td>
+              <td class="lead-cell">Oliver Mills, Tsahy Lasry</td>
+            </tr>
+            <tr>
+              <td><strong>Save Your Way &amp; Loyalty: HBT Experience Evolution</strong></td>
+              <td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-5478" class="jira-link" target="_blank">MLSTN1-5478</a></td>
+              <td><span class="status-badge status-in-progress">in-progress</span></td>
+              <td class="date-cell">2026-03-30</td>
+              <td class="date-cell">2026-12-31</td>
+              <td class="lead-cell">Sandra Jefferies, Tsahy Lasry</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- April 1 Start, In Progress -->
+  <div class="section">
+    <div class="divider"></div>
+    <h3 class="section-title">Starting April 1, 2026 &mdash; In Progress</h3>
+    <p class="section-desc">Milestones that kicked off at the start of Q2 and are actively being worked.</p>
+    <div class="card" style="margin-bottom: 16px">
+      <div class="card-header" style="background: var(--blue)">Q2 Kickoffs &middot; 3 milestones</div>
+      <div class="card-body">
+        <table>
+          <thead><tr><th>Milestone</th><th>Jira</th><th>Status</th><th>Start</th><th>Due</th><th>Product Lead(s)</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><strong>Integrate relevant add on services for Hotels.com</strong></td>
+              <td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-5680" class="jira-link" target="_blank">MLSTN1-5680</a></td>
+              <td><span class="status-badge status-in-progress">in-progress</span></td>
+              <td class="date-cell">2026-04-01</td>
+              <td class="date-cell">2027-06-30</td>
+              <td class="lead-cell">Ashish Sahasrabuddhe</td>
+            </tr>
+            <tr>
+              <td><strong>Differentiate VR on HCOM</strong></td>
+              <td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-5432" class="jira-link" target="_blank">MLSTN1-5432</a></td>
+              <td><span class="status-badge status-in-progress">in-progress</span></td>
+              <td class="date-cell">2026-04-01</td>
+              <td class="date-cell">2026-06-30</td>
+              <td class="lead-cell">Lucy Meadow</td>
+            </tr>
+            <tr>
+              <td><strong>H+H Enable multi-hotel shopping capability on Hotels.com</strong></td>
+              <td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-5332" class="jira-link" target="_blank">MLSTN1-5332</a></td>
+              <td><span class="status-badge status-in-progress">in-progress</span></td>
+              <td class="date-cell">2026-04-01</td>
+              <td class="date-cell">2027-06-30</td>
+              <td class="lead-cell">Lucy Meadow</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- In Progress, Future Start -->
+  <div class="section">
+    <div class="divider"></div>
+    <h3 class="section-title">In Progress with Future Start Date</h3>
+    <p class="section-desc">Milestones marked in progress in Jira but with a start date after Q2.</p>
+    <div class="card" style="margin-bottom: 16px">
+      <div class="card-header" style="background: var(--amber)">Early Activity &middot; 1 milestone</div>
+      <div class="card-body">
+        <table>
+          <thead><tr><th>Milestone</th><th>Jira</th><th>Status</th><th>Start</th><th>Due</th><th>Product Lead(s)</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><strong>Provide dedicated service solutions for HBT</strong></td>
+              <td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-5883" class="jira-link" target="_blank">MLSTN1-5883</a></td>
+              <td><span class="status-badge status-in-progress">in-progress</span></td>
+              <td class="date-cell">2026-07-01</td>
+              <td class="date-cell">&mdash;</td>
+              <td class="lead-cell">Ashish Sahasrabuddhe</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- April 1, Not Yet Started -->
+  <div class="section">
+    <div class="divider"></div>
+    <h3 class="section-title">April 1 Start Date &mdash; Not Yet In Progress</h3>
+    <p class="section-desc">Milestones scheduled to start April 1 that haven't transitioned to in-progress status.</p>
+    <div class="card" style="margin-bottom: 16px">
+      <div class="card-header" style="background: var(--purple)">Awaiting Kickoff &middot; 2 milestones</div>
+      <div class="card-body">
+        <table>
+          <thead><tr><th>Milestone</th><th>Jira</th><th>Status</th><th>Start</th><th>Due</th><th>Product Lead(s)</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><strong>Redesign Hotels.comCash Loyalty Program</strong></td>
+              <td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-5686" class="jira-link" target="_blank">MLSTN1-5686</a></td>
+              <td><span class="status-badge status-draft">draft</span></td>
+              <td class="date-cell">2026-04-01</td>
+              <td class="date-cell">2027-12-31</td>
+              <td class="lead-cell">Tsahy Lasry</td>
+            </tr>
+            <tr>
+              <td><strong>Hotels.com Partnerships</strong></td>
+              <td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-5683" class="jira-link" target="_blank">MLSTN1-5683</a></td>
+              <td><span class="status-badge status-backlog">backlog</span></td>
+              <td class="date-cell">2026-04-01</td>
+              <td class="date-cell">2028-06-30</td>
+              <td class="lead-cell">Tsahy Lasry</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    Product Portfolio &middot; HCOM Strategy: STRAT1-1346 &middot; Data synced from Jira on April 16, 2026 &middot;
+    <a href="https://expediagroup.atlassian.net/browse/STRAT1-1346" target="_blank">View in Jira</a>
+  </div>
+
+</div>
+</body>
+</html>

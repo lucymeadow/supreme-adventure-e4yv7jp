@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Price Risk Engine — Partnership Briefing for InsurTech</title>
+<meta name="description" content="A partnership proposal for HCOM and InsurTech to co-drive the Price Risk Engine and the two consumer products that ride it.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #171c38;
+    --navy-deep: #0d1024;
+    --teal: #00a3b5;
+    --blue: #3d78f2;
+    --purple: #784cc7;
+    --amber: #d99e14;
+    --green: #2ea673;
+    --coral: #e56152;
+    --dark: #1e2129;
+    --subtle: #6d748a;
+    --bg: #f4f6fb;
+    --white: #ffffff;
+    --border: #e1e4ed;
+    --shadow-sm: 0 1px 3px rgba(23,28,56,0.05);
+    --shadow: 0 4px 14px rgba(23,28,56,0.06);
+    --shadow-lg: 0 12px 40px rgba(23,28,56,0.10);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; scroll-snap-type: y proximity; }
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--bg);
+    color: var(--dark);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+  a { color: var(--blue); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  strong { font-weight: 700; }
+
+  .top-bar {
+    background: rgba(13, 16, 36, 0.92);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    padding: 12px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+  .top-bar .brand { color: #fff; font-size: 13px; font-weight: 600; letter-spacing: 0.02em; display: flex; gap: 10px; align-items: center; }
+  .top-bar .brand .dot { width: 6px; height: 6px; background: var(--teal); border-radius: 50%; box-shadow: 0 0 8px rgba(0,163,181,0.6); }
+  .top-bar .brand .sub { color: #a3a9c5; font-weight: 400; margin-left: 4px; }
+  .top-bar .actions { display: flex; gap: 16px; align-items: center; }
+  .top-bar .counter { color: #a3a9c5; font-size: 12px; font-variant-numeric: tabular-nums; font-weight: 500; }
+  .top-bar .counter strong { color: #fff; font-weight: 700; }
+  .top-bar .nav-hint { color: #6d748a; font-size: 11px; font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase; }
+  .top-bar .nav-hint kbd { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); padding: 1px 6px; border-radius: 3px; font-family: inherit; font-size: 10px; color: #c5cae0; margin: 0 1px; }
+  .print-btn { background: var(--teal); color: #fff; border: none; padding: 7px 14px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; font-family: inherit; letter-spacing: 0.02em; }
+  .print-btn:hover { background: #008a99; }
+
+  .slide {
+    min-height: 100vh;
+    padding: 96px 56px 80px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    scroll-snap-align: start;
+  }
+  .slide.dark { background: linear-gradient(135deg, var(--navy-deep) 0%, var(--navy) 100%); color: #fff; }
+  .slide.light { background: var(--white); }
+  .slide.tint { background: var(--bg); }
+  .slide-inner { max-width: 1180px; margin: 0 auto; width: 100%; }
+
+  .eyebrow {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--teal);
+    margin-bottom: 26px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .eyebrow .num { background: var(--teal); color: #fff; padding: 3px 9px; border-radius: 4px; font-size: 11px; letter-spacing: 0.08em; }
+
+  .slide-title {
+    font-size: 56px;
+    font-weight: 800;
+    line-height: 1.05;
+    color: var(--navy);
+    margin-bottom: 18px;
+    letter-spacing: -0.025em;
+    max-width: 1050px;
+  }
+  .slide-title em { font-style: normal; color: var(--teal); }
+  .slide-deck {
+    font-size: 21px;
+    color: var(--subtle);
+    font-weight: 400;
+    max-width: 900px;
+    line-height: 1.4;
+    margin-bottom: 36px;
+  }
+
+  /* Title slide */
+  .title-slide { background: radial-gradient(ellipse at top right, #2c3478 0%, var(--navy) 40%, var(--navy-deep) 100%); color: #fff; }
+  .title-slide .badge-row { display: flex; gap: 10px; margin-bottom: 40px; flex-wrap: wrap; }
+  .title-slide .badge { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.18); padding: 6px 14px; border-radius: 24px; font-size: 12px; font-weight: 600; letter-spacing: 0.04em; color: #d5dbef; }
+  .title-slide .badge.accent { background: var(--teal); border-color: var(--teal); color: #fff; }
+  .title-slide h1 { font-size: 92px; font-weight: 900; line-height: 0.98; letter-spacing: -0.035em; margin-bottom: 24px; color: #fff; }
+  .title-slide .sub { font-size: 24px; color: #c1c7e0; max-width: 880px; line-height: 1.4; font-weight: 400; margin-bottom: 60px; }
+  .title-slide .meta-strip { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border-top: 1px solid rgba(255,255,255,0.15); padding-top: 28px; max-width: 1100px; }
+  .title-slide .meta-strip .item { padding-right: 16px; }
+  .title-slide .meta-strip .item .label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.12em; color: #8a93b8; margin-bottom: 8px; font-weight: 600; }
+  .title-slide .meta-strip .item .val { font-size: 15px; color: #fff; font-weight: 600; }
+
+  /* Pitch slide */
+  .pitch-slide .quote-mark { font-size: 120px; line-height: 0.5; color: var(--teal); font-weight: 900; font-family: 'Inter', serif; margin-bottom: 28px; }
+  .pitch-slide .pitch-text { font-size: 30px; line-height: 1.32; color: var(--navy); font-weight: 500; max-width: 1080px; letter-spacing: -0.012em; }
+  .pitch-slide .pitch-text strong { color: var(--navy); font-weight: 700; background: linear-gradient(180deg, transparent 64%, #cdedf1 64%); padding: 0 2px; }
+
+  /* Two-up split */
+  .split-two { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; margin-top: 36px; }
+  .split-panel { background: var(--white); border-radius: 14px; padding: 36px 32px 32px; box-shadow: var(--shadow); border-top: 5px solid var(--navy); position: relative; }
+  .split-panel.problem-a { border-top-color: var(--coral); }
+  .split-panel.problem-b { border-top-color: var(--purple); }
+  .split-panel .sp-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--subtle); margin-bottom: 10px; }
+  .split-panel .sp-title { font-size: 22px; font-weight: 800; color: var(--navy); margin-bottom: 24px; line-height: 1.25; letter-spacing: -0.01em; }
+  .split-panel .sp-stat { font-size: 88px; font-weight: 900; line-height: 0.95; letter-spacing: -0.045em; margin-bottom: 8px; font-variant-numeric: tabular-nums; }
+  .split-panel.problem-a .sp-stat { color: var(--coral); }
+  .split-panel.problem-b .sp-stat { color: var(--purple); }
+  .split-panel .sp-stat-label { font-size: 14px; color: var(--dark); font-weight: 500; line-height: 1.45; margin-bottom: 22px; }
+  .split-panel .sp-body { font-size: 15px; color: var(--dark); line-height: 1.55; }
+  .split-panel .sp-body strong { color: var(--navy); }
+  .split-panel .sp-quote { font-size: 18px; line-height: 1.45; color: var(--navy); font-style: italic; padding: 16px 0 4px 20px; border-left: 3px solid var(--purple); margin-top: 18px; font-weight: 500; }
+  .split-panel .sp-cite { font-size: 12px; color: var(--subtle); margin-top: 8px; padding-left: 20px; font-style: normal; }
+
+  /* Big stat grid */
+  .stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; margin-top: 36px; }
+  .stat-card { background: var(--white); border-radius: 14px; padding: 28px 22px 24px; box-shadow: var(--shadow); border-bottom: 4px solid var(--teal); }
+  .stat-card.alt1 { border-bottom-color: var(--blue); }
+  .stat-card.alt2 { border-bottom-color: var(--purple); }
+  .stat-card.alt3 { border-bottom-color: var(--amber); }
+  .stat-card.alt4 { border-bottom-color: var(--green); }
+  .stat-card .stat-num { font-size: 48px; font-weight: 900; line-height: 1.0; color: var(--navy); letter-spacing: -0.03em; margin-bottom: 10px; }
+  .stat-card .stat-num .unit { font-size: 22px; font-weight: 800; color: var(--subtle); margin-left: 2px; letter-spacing: 0; }
+  .stat-card .stat-name { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--navy); margin-bottom: 8px; }
+  .stat-card .stat-detail { font-size: 13px; color: var(--subtle); line-height: 1.45; }
+
+  /* Slide footer note */
+  .slide-footer-note {
+    margin-top: 36px;
+    padding: 20px 26px;
+    background: rgba(0,163,181,0.07);
+    border-left: 4px solid var(--teal);
+    border-radius: 0 10px 10px 0;
+    font-size: 17px;
+    line-height: 1.5;
+    color: var(--navy);
+    max-width: 1100px;
+  }
+  .slide-footer-note strong { color: var(--navy); }
+
+  /* Three numbered reasons */
+  .reasons-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; margin-top: 36px; }
+  .reason-card { background: var(--white); border-radius: 14px; padding: 32px 28px 28px; box-shadow: var(--shadow); border: 1px solid var(--border); }
+  .reason-card .r-num { font-size: 64px; font-weight: 900; color: var(--teal); line-height: 1; letter-spacing: -0.04em; margin-bottom: 12px; font-variant-numeric: tabular-nums; }
+  .reason-card.r2 .r-num { color: var(--blue); }
+  .reason-card.r3 .r-num { color: var(--purple); }
+  .reason-card .r-title { font-size: 20px; font-weight: 800; color: var(--navy); margin-bottom: 14px; line-height: 1.25; letter-spacing: -0.01em; }
+  .reason-card .r-body { font-size: 14.5px; color: var(--dark); line-height: 1.6; }
+  .reason-card .r-body strong { color: var(--navy); font-weight: 700; }
+
+  /* Three milestones row */
+  .milestone-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; margin-top: 36px; }
+  .ms-slide-card { background: var(--white); border-radius: 14px; padding: 32px 28px 28px; box-shadow: var(--shadow); border-top: 5px solid var(--navy); }
+  .ms-slide-card.c1 { border-top-color: var(--blue); }
+  .ms-slide-card.c2 { border-top-color: var(--purple); }
+  .ms-slide-card .ms-role { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--subtle); margin-bottom: 12px; }
+  .ms-slide-card .ms-name { font-size: 26px; font-weight: 800; color: var(--navy); margin-bottom: 8px; letter-spacing: -0.015em; line-height: 1.15; }
+  .ms-slide-card .ms-jira { font-size: 12px; margin-bottom: 16px; }
+  .ms-slide-card .ms-jira a { color: var(--blue); font-weight: 700; }
+  .ms-slide-card .ms-desc { font-size: 15px; color: var(--dark); line-height: 1.55; }
+  .ms-slide-card .ms-desc strong { color: var(--navy); }
+
+  /* Appendix divider — dark slide announcing back-pocket detail */
+  .appendix-divider { min-height: 60vh; background: linear-gradient(135deg, var(--navy-deep) 0%, var(--navy) 100%); color: #fff; padding: 80px 56px; display: flex; flex-direction: column; justify-content: center; scroll-snap-align: start; }
+  .appendix-divider .slide-inner { max-width: 1180px; margin: 0 auto; }
+  .appendix-divider .ad-eyebrow { font-size: 12px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--teal); margin-bottom: 18px; display: flex; align-items: center; gap: 10px; }
+  .appendix-divider .ad-eyebrow .num { background: var(--teal); color: #fff; padding: 3px 9px; border-radius: 4px; font-size: 11px; }
+  .appendix-divider .ad-title { font-size: 64px; font-weight: 800; letter-spacing: -0.03em; line-height: 1.05; margin-bottom: 18px; }
+  .appendix-divider .ad-sub { font-size: 20px; color: #b8c0db; max-width: 820px; line-height: 1.45; }
+
+  /* Appendix sections */
+  .appendix { padding: 90px 56px; scroll-snap-align: start; }
+  .appendix.tint { background: var(--bg); }
+  .appendix.light { background: var(--white); }
+  .appendix .slide-inner { max-width: 1180px; margin: 0 auto; }
+  .appendix h2 { font-size: 38px; font-weight: 800; color: var(--navy); margin-bottom: 14px; letter-spacing: -0.022em; line-height: 1.1; max-width: 980px; }
+  .appendix .sec-deck { font-size: 17px; color: var(--subtle); margin-bottom: 36px; max-width: 820px; line-height: 1.45; }
+  .appendix h3 { font-size: 22px; font-weight: 800; color: var(--navy); margin: 40px 0 14px; letter-spacing: -0.01em; }
+
+  /* Wave strip */
+  .wave-strip { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
+  .wave-cell { background: var(--white); border-radius: 12px; padding: 22px 18px; box-shadow: var(--shadow); border-top: 5px solid var(--teal); }
+  .wave-cell.w1 { border-top-color: var(--coral); }
+  .wave-cell.w2 { border-top-color: var(--amber); }
+  .wave-cell.w3 { border-top-color: var(--teal); }
+  .wave-cell.w4 { border-top-color: var(--blue); }
+  .wave-cell.w5 { border-top-color: var(--purple); }
+  .wave-cell .w-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--subtle); }
+  .wave-cell .w-name { font-size: 16px; font-weight: 700; color: var(--navy); margin: 8px 0; line-height: 1.3; }
+  .wave-cell .w-when { font-size: 12px; color: var(--subtle); margin-bottom: 12px; }
+  .wave-cell .w-detail { font-size: 13px; color: var(--dark); line-height: 1.5; margin-bottom: 16px; }
+  .wave-cell .w-phase { display: inline-block; padding: 3px 10px; border-radius: 10px; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
+  .wave-cell .w-phase.explore { background: #fee2e2; color: #991b1b; }
+  .wave-cell .w-phase.expand { background: #dcfce7; color: #166534; }
+  .wave-cell .w-phase.extract { background: #f0e7ff; color: #5b21b6; }
+
+  /* Gates grid */
+  .gates-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .gate-card { background: var(--white); border-radius: 12px; padding: 28px 24px; box-shadow: var(--shadow); border-top: 4px solid var(--teal); }
+  .gate-card.g2 { border-top-color: var(--amber); }
+  .gate-card.g3 { border-top-color: var(--coral); }
+  .gate-card .g-num { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--subtle); margin-bottom: 8px; }
+  .gate-card .g-title { font-size: 22px; font-weight: 800; color: var(--navy); margin-bottom: 6px; letter-spacing: -0.01em; }
+  .gate-card .g-q { font-size: 13px; color: var(--subtle); font-style: italic; margin-bottom: 16px; }
+  .gate-card .g-body { font-size: 14px; color: var(--dark); line-height: 1.55; }
+  .gate-card .g-body strong { color: var(--navy); }
+  .gate-card .g-body em { color: var(--navy); font-weight: 500; }
+
+  .callout { background: rgba(217,158,20,0.08); border-left: 4px solid var(--amber); padding: 22px 26px; margin: 32px 0 0; border-radius: 0 10px 10px 0; max-width: 1100px; }
+  .callout .ct-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #92400e; margin-bottom: 8px; }
+  .callout p { font-size: 16px; line-height: 1.5; color: var(--navy); margin: 0; }
+  .callout strong { color: var(--navy); }
+
+  /* Ask grid */
+  .ask-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  .ask-card { background: var(--white); border-radius: 12px; padding: 26px 24px; box-shadow: var(--shadow); border-top: 4px solid var(--teal); }
+  .ask-card .a-num { font-size: 11px; font-weight: 700; color: var(--teal); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; }
+  .ask-card h4 { font-size: 19px; font-weight: 800; color: var(--navy); margin-bottom: 10px; letter-spacing: -0.01em; }
+  .ask-card p { font-size: 14px; color: var(--dark); line-height: 1.55; margin: 0; }
+
+  /* Tables */
+  table { width: 100%; border-collapse: collapse; margin: 0 0 16px; font-size: 14px; background: var(--white); border-radius: 10px; overflow: hidden; box-shadow: var(--shadow); }
+  th { background: var(--navy); color: #fff; text-align: left; padding: 14px 16px; font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; }
+  td { padding: 14px 16px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: #f8fafc; }
+  .raci-table td.role { font-weight: 600; color: var(--navy); width: 36%; }
+  .raci-table td.org { width: 22%; color: var(--subtle); font-size: 13px; }
+  .raci-table .empty { font-style: italic; color: var(--coral); font-weight: 600; }
+  .appendix p.note { font-size: 13px; color: var(--subtle); margin: 12px 0; }
+
+  /* Q&A */
+  .qa-list { margin-top: 12px; }
+  .qa-item { background: var(--white); border-radius: 10px; box-shadow: var(--shadow-sm); margin-bottom: 10px; overflow: hidden; border: 1px solid var(--border); }
+  .qa-q { padding: 18px 24px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 14px; font-weight: 700; font-size: 15px; color: var(--navy); user-select: none; }
+  .qa-q:hover { background: #f8fafc; }
+  .qa-q .qa-icon { width: 28px; height: 28px; border-radius: 50%; background: #eef2f8; color: var(--navy); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 17px; flex-shrink: 0; transition: transform 0.15s; }
+  .qa-item.open .qa-icon { transform: rotate(45deg); background: var(--teal); color: #fff; }
+  .qa-a { padding: 0 24px 22px; font-size: 14.5px; color: var(--dark); display: none; line-height: 1.65; }
+  .qa-item.open .qa-a { display: block; }
+
+  /* Footer */
+  .footer { background: var(--navy-deep); color: #9aa3c4; padding: 60px 56px 40px; font-size: 13px; }
+  .footer a { color: #b8c0db; }
+  .footer p { margin-bottom: 6px; }
+  .footer .ft-title { color: #fff; font-weight: 700; font-size: 14px; margin-bottom: 12px; }
+  .footer-cols { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 36px; max-width: 1180px; margin: 0 auto; }
+
+  /* Stack architecture (what-this-is slide) */
+  .stack-arch { margin-top: 32px; max-width: 1100px; }
+  .stack-products { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+  .stack-product { background: var(--white); border-radius: 14px; padding: 28px 28px 24px; box-shadow: var(--shadow); border-top: 5px solid var(--blue); }
+  .stack-product.upgrades { border-top-color: var(--purple); }
+  .stack-product .sp-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--subtle); margin-bottom: 8px; }
+  .stack-product .sp-name { font-size: 22px; font-weight: 800; color: var(--navy); margin-bottom: 12px; letter-spacing: -0.01em; }
+  .stack-product .sp-desc { font-size: 14.5px; color: var(--dark); line-height: 1.55; }
+  .stack-product .sp-desc strong { color: var(--navy); }
+  .stack-product .sp-engine-role { margin-top: 14px; padding-top: 12px; border-top: 1px dashed var(--border); font-size: 13px; color: var(--subtle); line-height: 1.55; }
+  .stack-product .sp-engine-role .sp-engine-label { display: block; font-size: 10.5px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--teal); margin-bottom: 5px; }
+  .stack-product .sp-engine-role strong { color: var(--navy); font-weight: 700; }
+  .stack-connector { display: flex; align-items: center; justify-content: center; padding: 22px 0; position: relative; }
+  .stack-connector::before { content: ''; position: absolute; top: 0; bottom: 0; left: 25%; width: 2px; background: linear-gradient(to bottom, var(--border) 0%, var(--navy) 100%); }
+  .stack-connector::after { content: ''; position: absolute; top: 0; bottom: 0; right: 25%; width: 2px; background: linear-gradient(to bottom, var(--border) 0%, var(--navy) 100%); }
+  .stack-connector .conn-label { background: var(--white); border: 1px solid var(--border); padding: 10px 22px; border-radius: 24px; font-size: 13px; font-weight: 600; color: var(--subtle); letter-spacing: 0.01em; z-index: 1; box-shadow: var(--shadow-sm); }
+  .stack-connector .conn-label strong { color: var(--navy); font-weight: 700; }
+  .stack-engine { background: linear-gradient(135deg, var(--navy) 0%, #232a52 100%); color: #fff; border-radius: 14px; padding: 30px 30px 28px; box-shadow: var(--shadow-lg); }
+  .stack-engine .se-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--teal); margin-bottom: 10px; }
+  .stack-engine .se-name { font-size: 26px; font-weight: 800; margin-bottom: 6px; letter-spacing: -0.015em; }
+  .stack-engine .se-tag { font-size: 15px; color: #c1c7e0; margin-bottom: 22px; }
+  .stack-engine .se-components { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+  .stack-engine .se-comp { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.10); border-radius: 8px; padding: 16px 16px 14px; }
+  .stack-engine .se-comp .ec-name { font-size: 14px; font-weight: 700; color: #fff; margin-bottom: 5px; }
+  .stack-engine .se-comp .ec-desc { font-size: 12.5px; color: #b8c0db; line-height: 1.5; }
+  .stack-flow { margin-top: 26px; display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  .stack-flow .flow-card { background: var(--white); border: 1px solid var(--border); border-left: 4px solid var(--blue); border-radius: 10px; padding: 18px 20px 16px; box-shadow: var(--shadow-sm); }
+  .stack-flow .flow-card.upgrades { border-left-color: var(--purple); }
+  .stack-flow .flow-card .fc-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--subtle); margin-bottom: 8px; }
+  .stack-flow .flow-card .fc-text { font-size: 13.5px; color: var(--dark); line-height: 1.55; }
+  .stack-flow .flow-card .fc-text strong { color: var(--navy); }
+
+  /* Slide-nav arrows (subtle, bottom-right of each slide) */
+  .slide-num-badge { position: absolute; bottom: 28px; right: 32px; font-size: 11px; font-weight: 700; letter-spacing: 0.18em; color: var(--subtle); text-transform: uppercase; font-variant-numeric: tabular-nums; }
+  .slide.dark .slide-num-badge, .title-slide .slide-num-badge, .appendix-divider .slide-num-badge { color: rgba(255,255,255,0.4); }
+
+  @media (max-width: 980px) {
+    .slide { padding: 72px 28px 56px; }
+    .appendix { padding: 60px 28px; }
+    .appendix-divider { padding: 60px 28px; }
+    .footer { padding: 40px 28px; }
+    .top-bar { padding: 12px 18px; }
+    .top-bar .nav-hint { display: none; }
+    .title-slide h1 { font-size: 56px; }
+    .title-slide .sub { font-size: 18px; }
+    .title-slide .meta-strip { grid-template-columns: 1fr 1fr; gap: 24px; }
+    .slide-title { font-size: 36px; }
+    .slide-deck { font-size: 17px; }
+    .pitch-slide .pitch-text { font-size: 20px; }
+    .pitch-slide .quote-mark { font-size: 80px; }
+    .split-two { grid-template-columns: 1fr; }
+    .stat-grid { grid-template-columns: 1fr 1fr; }
+    .reasons-grid { grid-template-columns: 1fr; }
+    .milestone-row { grid-template-columns: 1fr; }
+    .wave-strip { grid-template-columns: 1fr 1fr; }
+    .gates-grid { grid-template-columns: 1fr; }
+    .ask-grid { grid-template-columns: 1fr; }
+    .footer-cols { grid-template-columns: 1fr; gap: 24px; }
+    .appendix-divider .ad-title { font-size: 40px; }
+    .appendix h2 { font-size: 28px; }
+    .slide-num-badge { display: none; }
+    .stack-products { grid-template-columns: 1fr; }
+    .stack-connector::before, .stack-connector::after { display: none; }
+    .stack-engine .se-components { grid-template-columns: 1fr 1fr; }
+    .stack-flow { grid-template-columns: 1fr; }
+  }
+
+  @media print {
+    html, body { scroll-snap-type: none; background: #fff; }
+    .top-bar, .footer, .print-btn { display: none; }
+    .slide, .appendix, .appendix-divider {
+      min-height: auto;
+      padding: 24px 0;
+      page-break-inside: avoid;
+      background: #fff !important;
+      color: var(--dark) !important;
+    }
+    .slide.dark, .title-slide, .appendix-divider { border-bottom: 2px solid var(--navy); }
+    .stack-engine { background: #fff !important; color: var(--dark) !important; border: 1px solid var(--navy); }
+    .stack-engine .se-label { color: var(--teal) !important; }
+    .stack-engine .se-name, .stack-engine .se-comp .ec-name { color: var(--navy) !important; }
+    .stack-engine .se-tag { color: var(--subtle) !important; }
+    .stack-engine .se-comp { background: #f8fafc !important; border: 1px solid var(--border) !important; }
+    .stack-engine .se-comp .ec-desc { color: var(--dark) !important; }
+    .title-slide h1 { color: var(--navy) !important; font-size: 48px; }
+    .title-slide .sub, .title-slide .meta-strip .item .val { color: var(--dark) !important; }
+    .title-slide .badge { color: var(--navy) !important; border-color: var(--navy) !important; background: #fff !important; }
+    .title-slide .meta-strip { border-top-color: var(--navy); }
+    .title-slide .meta-strip .item .label { color: var(--subtle) !important; }
+    .appendix-divider .ad-title, .appendix-divider .ad-sub { color: var(--dark) !important; }
+    .appendix-divider .ad-eyebrow { color: var(--teal) !important; }
+    .slide-title { font-size: 32px; }
+    .pitch-slide .pitch-text { font-size: 18px; }
+    .pitch-slide .pitch-text strong { background: transparent; }
+    .pitch-slide .quote-mark { font-size: 60px; }
+    .split-panel, .stat-card, .reason-card, .ms-slide-card, .gate-card, .wave-cell, .ask-card, .qa-item, .callout {
+      box-shadow: none;
+      border: 1px solid var(--border);
+      page-break-inside: avoid;
+    }
+    .qa-item .qa-a { display: block !important; }
+    .qa-item .qa-icon { display: none; }
+    table { box-shadow: none; border: 1px solid var(--border); }
+    a { color: var(--dark); }
+    .appendix-divider { page-break-before: always; }
+    .slide-num-badge { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <div class="brand"><span class="dot"></span>EG Product Portfolio<span class="sub">· Partnership Briefing for Jonathan Finch</span></div>
+  <div class="actions">
+    <span class="counter">Slide <strong id="slide-current">1</strong> / <strong id="slide-total">12</strong></span>
+    <span class="nav-hint"><kbd>↓</kbd><kbd>↑</kbd> to navigate</span>
+    <button class="print-btn" onclick="window.print()">Print as PDF</button>
+  </div>
+</div>
+
+<!-- ==================== 01 · TITLE ==================== -->
+<section class="slide title-slide" data-slide="1">
+  <div class="slide-inner">
+    <div class="badge-row">
+      <span class="badge accent">Partnership Briefing</span>
+      <span class="badge">HCOM × InsurTech</span>
+      <span class="badge">PRDs · Draft</span>
+    </div>
+    <h1>Price Risk Engine</h1>
+    <p class="sub">A partnership opportunity: HCOM and InsurTech co-drive the platform that lets EG take calibrated travel-pricing risk onto its own balance sheet &mdash; and the two consumer products that ride it. Two HCOM customer problems converge on the same solution: travelers walking away from non-refundable rates because flexibility costs too much, and gold and platinum loyalty members shopping, booking, and staying without ever feeling their tier mattered. A shared <strong>ML pricing-and-risk engine</strong> solves both at scale by predicting when EG can profitably hold the risk on its own balance sheet &mdash; surfaced through <strong>EG-Funded Flex Rates</strong> (flex offers on otherwise non-refundable hotel rates) and <strong>Predictive Elite Upgrades</strong> (auto-confirmed room upgrades at booking for gold and platinum loyalty members).</p>
+    <div class="meta-strip">
+      <div class="item">
+        <div class="label">For</div>
+        <div class="val">Jonathan Finch<br><span style="font-weight:400;color:#9aa3c4;">VP, InsurTech</span></div>
+      </div>
+      <div class="item">
+        <div class="label">With</div>
+        <div class="val">Josh Templin<br><span style="font-weight:400;color:#9aa3c4;">VP Product, HCOM</span></div>
+      </div>
+      <div class="item">
+        <div class="label">From</div>
+        <div class="val">Lucy Meadow<br><span style="font-weight:400;color:#9aa3c4;">Principal PM</span></div>
+      </div>
+      <div class="item">
+        <div class="label">Status</div>
+        <div class="val">PRDs drafted<br><span style="font-weight:400;color:#9aa3c4;">partnership pending</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-num-badge">01 / 12</div>
+</section>
+
+<!-- ==================== 02 · THE SHORT VERSION ==================== -->
+<section class="slide light pitch-slide" data-slide="2">
+  <div class="slide-inner">
+    <div class="eyebrow"><span class="num">02</span>The short version</div>
+    <div class="quote-mark">&ldquo;</div>
+    <p class="pitch-text">Two customer problems converge on the same solution. Hotels.com loses <strong>4-6% of competitive comparisons</strong> to Booking.com at the cancellation policy screen — and <strong>6.4%</strong> in the 0-3 day window where business travelers cluster. Separately, our gold and platinum loyalty members shop, book, and stay <strong>without ever feeling their status mattered</strong>. We've drafted PRDs for an ML system that solves both: it predicts when EG can profitably hold flexibility and upgrade risk on <strong>its own balance sheet</strong> instead of paying an insurer's margin. We think it could land naturally inside <strong>InsurTech as a partnership with HCOM</strong> — built on the captive subsidiary you already operate. We'd like your read.</p>
+  </div>
+  <div class="slide-num-badge">02 / 12</div>
+</section>
+
+<!-- ==================== 03 · THE CUSTOMER PROBLEM ==================== -->
+<section class="slide tint" data-slide="3">
+  <div class="slide-inner">
+    <div class="eyebrow"><span class="num">03</span>The customer problem</div>
+    <h2 class="slide-title">We lose at the cancellation screen. Our elites can't <em>feel</em> their status.</h2>
+    <p class="slide-deck">Two specific, quantified customer problems we don't currently have a good answer for.</p>
+    <div class="split-two">
+      <div class="split-panel problem-a">
+        <div class="sp-label">Problem 01 · Flexibility</div>
+        <div class="sp-title">Hotels.com loses the cancellation policy screen.</div>
+        <div class="sp-stat">6.4<span style="font-size:48px;">%</span></div>
+        <div class="sp-stat-label">Cancellation-policy lose rate vs Booking.com in the 0-3 day window where business travelers cluster. 4-6% across all regions.</div>
+        <div class="sp-body">Roughly <strong>half of Hotels.com rates are non-refundable</strong>. The refundable alternative costs 15-30% more, so travelers pick the cheaper option and stress about it. Booking.com's free cancellation badge is <strong>the single most influential conversion driver in their A/B history</strong>. We're paying that gap every day.</div>
+      </div>
+      <div class="split-panel problem-b">
+        <div class="sp-label">Problem 02 · Loyalty</div>
+        <div class="sp-title">Gold and platinum members can't tell their status matters.</div>
+        <div class="sp-stat">0</div>
+        <div class="sp-stat-label">Number of OTAs in the industry that offer guaranteed upgrades at booking time. Hotel chains depend on at-check-in availability. The whitespace is open.</div>
+        <div class="sp-quote">Tier status benefits do not feel meaningful, clearly differentiated, nor reliably delivered.</div>
+        <p class="sp-cite">Hotels.com Priority Story · loyalty problem statement</p>
+      </div>
+    </div>
+  </div>
+  <div class="slide-num-badge">03 / 12</div>
+</section>
+
+<!-- ==================== 04 · WHAT IT COULD BE WORTH ==================== -->
+<section class="slide light" data-slide="4">
+  <div class="slide-inner">
+    <div class="eyebrow"><span class="num">04</span>What it could be worth</div>
+    <h2 class="slide-title">A new EG-owned revenue line. Measurable lift on both problems.</h2>
+    <p class="slide-deck">Targets pulled directly from the three PRDs. Conservative on conversion, ambitious on attach because the model selects only high-confidence offers.</p>
+    <div class="stat-grid">
+      <div class="stat-card">
+        <div class="stat-num">3-8<span class="unit">%</span></div>
+        <div class="stat-name">Flex attach rate</div>
+        <div class="stat-detail">vs Booking.com Smart Flex at 0.02-0.79%. Selects on high-confidence predictions only.</div>
+      </div>
+      <div class="stat-card alt1">
+        <div class="stat-num">+5</div>
+        <div class="stat-name">NPS lift</div>
+        <div class="stat-detail">on upgraded stays vs matched non-upgraded elite stays</div>
+      </div>
+      <div class="stat-card alt2">
+        <div class="stat-num">+10<span class="unit">%</span></div>
+        <div class="stat-name">Repeat booking</div>
+        <div class="stat-detail">within 90 days for upgraded members vs matched control</div>
+      </div>
+      <div class="stat-card alt3">
+        <div class="stat-num">&lt;$2.50</div>
+        <div class="stat-name">Net cost / room night</div>
+        <div class="stat-detail">on flex. Budget envelope set with Finance; tracked separately per product.</div>
+      </div>
+    </div>
+    <div class="slide-footer-note">
+      <strong>Beyond unit economics:</strong> the spread that today flows to Cover Genius's margin instead gets captured on EG's captive subsidiary as <strong>net new underwriting margin</strong>. New revenue line, not a cost center.
+    </div>
+  </div>
+  <div class="slide-num-badge">04 / 12</div>
+</section>
+
+<!-- ==================== 05 · WHAT THIS IS ==================== -->
+<section class="slide tint" data-slide="5">
+  <div class="slide-inner">
+    <div class="eyebrow"><span class="num">05</span>What this is</div>
+    <h2 class="slide-title">What we'd actually be building.</h2>
+    <p class="slide-deck">A shared engine that prices travel-risk decisions, plus two consumer products that ask it questions. Each piece has its own draft PRD.</p>
+    <div class="stack-arch">
+      <div class="stack-products">
+        <div class="stack-product">
+          <div class="sp-label">Consumer Product · HCOM</div>
+          <div class="sp-name">EG-Funded Flex Rates</div>
+          <div class="sp-desc">The customer-facing offer that <strong>changes how Hotels.com sells flexibility</strong>. It <strong>converts non-refundable rates into flexible offers</strong> priced by EG's own model, not by an insurer's margin stack.</div>
+          <div class="sp-engine-role"><span class="sp-engine-label">How the engine feeds it</span>The Price Risk Engine <strong>predicts the future refundable price</strong> for the property, dates, and lead time. The flex offer surfaces only when the engine returns a profitable decision.</div>
+        </div>
+        <div class="stack-product upgrades">
+          <div class="sp-label">Consumer Product · HCOM</div>
+          <div class="sp-name">Predictive Elite Upgrades</div>
+          <div class="sp-desc">The customer-facing product that <strong>makes loyalty status tangible</strong>. It auto-confirms a room upgrade for gold and platinum members at the <strong>moment of booking</strong>, instead of leaving it to whatever the hotel front desk has open at check-in.</div>
+          <div class="sp-engine-role"><span class="sp-engine-label">How the engine feeds it</span>The Price Risk Engine <strong>models price convergence between room types</strong>. The upgrade auto-confirms only when the model predicts the premium room will trade near the base rate before the stay.</div>
+        </div>
+      </div>
+      <div class="stack-connector">
+        <div class="conn-label">Both ask the engine: <strong>&ldquo;Should we offer this, and at what price?&rdquo;</strong></div>
+      </div>
+      <div class="stack-engine">
+        <div class="se-label">Shared Platform · Co-driven</div>
+        <div class="se-name">Price Risk Engine</div>
+        <div class="se-tag">The system that decides — and lets EG safely hold the risk on its own books.</div>
+        <div class="se-components">
+          <div class="se-comp">
+            <div class="ec-name">ML prediction</div>
+            <div class="ec-desc">Models future hotel pricing, resale probability, and room-type spread.</div>
+          </div>
+          <div class="se-comp">
+            <div class="ec-name">Risk engine</div>
+            <div class="ec-desc">Returns an offer-or-decline decision per booking, with portfolio limits enforced.</div>
+          </div>
+          <div class="se-comp">
+            <div class="ec-name">Kill-switches</div>
+            <div class="ec-desc">Suppress offers in &lt;60 seconds if exposure or losses trip a threshold.</div>
+          </div>
+          <div class="se-comp">
+            <div class="ec-name">Captive integration</div>
+            <div class="ec-desc">Settles the spread on EG's captive subsidiary's books with full audit trail.</div>
+          </div>
+        </div>
+      </div>
+      <div class="stack-flow">
+        <div class="flow-card">
+          <div class="fc-label">How a flex transaction settles</div>
+          <div class="fc-text">When the <strong>Price Risk Engine</strong> predicts the future refundable price will fall <strong>at or below the current NR price plus a risk margin</strong>, EG <strong>surfaces the flex offer</strong>, <strong>remits the NR amount to the hotel</strong>, and <strong>absorbs the spread risk through its captive subsidiary</strong> &mdash; an EG-owned insurance entity that holds and manages the risk.</div>
+        </div>
+        <div class="flow-card upgrades">
+          <div class="fc-label">How an upgrade transaction settles</div>
+          <div class="fc-text">When the engine predicts a <strong>premium room will trade near the base rate before the stay</strong>, EG <strong>buys the base room</strong>, <strong>auto-confirms the upgrade at booking</strong> for an eligible loyalty member, and <strong>absorbs the spread risk through the same captive subsidiary</strong>.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-num-badge">05 / 12</div>
+</section>
+
+<!-- ==================== 06 · WHY THIS MATTERS FOR INSURTECH ==================== -->
+<section class="slide tint" data-slide="6">
+  <div class="slide-inner">
+    <div class="eyebrow"><span class="num">06</span>Why this could matter for InsurTech</div>
+    <h2 class="slide-title">The captive needs deal flow. This is the chapter that turns InsurTech into <em>EG's risk-pricing platform</em>.</h2>
+    <div class="reasons-grid">
+      <div class="reason-card r1">
+        <div class="r-num">01</div>
+        <div class="r-title">Activates the captive subsidiary.</div>
+        <div class="r-body">The captive just stood up under your org but has limited utility without consumer products feeding it risk. The engine gives it <strong>real economic activity to manage</strong> — not a balance-sheet entity sitting idle.</div>
+      </div>
+      <div class="reason-card r2">
+        <div class="r-num">02</div>
+        <div class="r-title">Converges with work already in your backlog.</div>
+        <div class="r-body"><strong>InsurTech Pricing Service (MLSTN1-3728)</strong> overlaps significantly with the engine's model and risk layer. We'd rather make these <strong>one effort</strong> than build them in parallel and reconcile later.</div>
+      </div>
+      <div class="reason-card r3">
+        <div class="r-num">03</div>
+        <div class="r-title">Positions InsurTech for what's next.</div>
+        <div class="r-body">The same engine and captive infrastructure extends naturally to <strong>flights, cars, and packages</strong> once proven on hotels. The wedge from CFAR distribution channel to <strong>EG-wide risk-pricing platform</strong>.</div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-num-badge">06 / 12</div>
+</section>
+
+<!-- ==================== 07 · THE THREE MILESTONES ==================== -->
+<section class="slide light" data-slide="7">
+  <div class="slide-inner">
+    <div class="eyebrow"><span class="num">07</span>What we'd be building together</div>
+    <h2 class="slide-title">One platform. Two consumer products.</h2>
+    <p class="slide-deck">Sequenced so the engine clears its existential gates before either consumer product enters Expand. Full PRDs linked in the appendix.</p>
+    <div class="milestone-row">
+      <div class="ms-slide-card">
+        <div class="ms-role">Platform · Co-driven</div>
+        <div class="ms-name">Price Risk Engine</div>
+        <div class="ms-jira"><a href="https://expediagroup.atlassian.net/browse/MLSTN1-6046" target="_blank">MLSTN1-6046 →</a></div>
+        <div class="ms-desc">ML prediction model, risk engine, kill-switch, captive-subsidiary integration. <strong>The shared platform.</strong> Exposes a single decision interface any consumer product can call.</div>
+      </div>
+      <div class="ms-slide-card c1">
+        <div class="ms-role">Consumer · Ships first</div>
+        <div class="ms-name">EG-Funded Flex Rates</div>
+        <div class="ms-jira"><a href="https://expediagroup.atlassian.net/browse/MLSTN1-6047" target="_blank">MLSTN1-6047 →</a></div>
+        <div class="ms-desc">Converts non-refundable rates into flex offers priced by EG, not by Cover Genius. <strong>Proves the engine's unit economics.</strong> Complements CFAR Wave 1 rather than replacing it.</div>
+      </div>
+      <div class="ms-slide-card c2">
+        <div class="ms-role">Consumer · Ships second</div>
+        <div class="ms-name">Predictive Elite Upgrades</div>
+        <div class="ms-jira"><a href="https://expediagroup.atlassian.net/browse/MLSTN1-6048" target="_blank">MLSTN1-6048 →</a></div>
+        <div class="ms-desc">At-booking upgrades for gold/platinum members. <strong>Proves the engine is a platform</strong>, not a feature. No OTA in the industry offers guaranteed at-booking upgrades today.</div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-num-badge">07 / 12</div>
+</section>
+
+<!-- ==================== APPENDIX DIVIDER ==================== -->
+<section class="appendix-divider" data-slide="8">
+  <div class="slide-inner">
+    <div class="ad-eyebrow"><span class="num">A</span>For the conversation that follows</div>
+    <h2 class="ad-title">Reference detail</h2>
+  </div>
+  <div class="slide-num-badge">08 / 12</div>
+</section>
+
+<!-- ==================== A1 · WHY INSURTECH (GATES) ==================== -->
+<section class="appendix tint" id="why-insurtech" data-slide="9">
+  <div class="slide-inner">
+    <div class="eyebrow"><span class="num">A1</span>The engine's three existential gates</div>
+    <h2>All three are InsurTech-native problems.</h2>
+    <p class="sec-deck">The engine PRD is structured around three gates. Wrong call on any of them and the engine doesn't ship in that market.</p>
+    <div class="gates-grid">
+      <div class="gate-card">
+        <div class="g-num">Gate 01</div>
+        <div class="g-title">Legal classification</div>
+        <div class="g-q">Is engine output balance-sheet risk or insurance?</div>
+        <div class="g-body">InsurTech already runs this analysis per jurisdiction for CFAR. <strong>Nobody else in EG knows this terrain.</strong> Wrong call here means the engine can't operate in that market.</div>
+      </div>
+      <div class="gate-card g2">
+        <div class="g-num">Gate 02</div>
+        <div class="g-title">Captive subsidiary GL &amp; settlement</div>
+        <div class="g-q">How does decision-to-money actually work?</div>
+        <div class="g-body">The captive sits in InsurTech's perimeter. <strong>The engine is what makes it produce revenue</strong>, not just hold liability. Wave 1 spike defines feasibility.</div>
+      </div>
+      <div class="gate-card g3">
+        <div class="g-num">Gate 03</div>
+        <div class="g-title">Risk pricing models</div>
+        <div class="g-q">Where does this DS/ML capability come from?</div>
+        <div class="g-body">Extends InsurTech's existing CFAR DS/ML work (<a href="https://expediagroup.atlassian.net/browse/MLSTN1-3593" target="_blank">MLSTN1-3593</a>). The engine <em>is</em> the next-gen <a href="https://expediagroup.atlassian.net/browse/MLSTN1-3728" target="_blank">InsurTech Pricing Service</a> — they should converge.</div>
+      </div>
+    </div>
+    <div class="callout">
+      <div class="ct-label">The partnership logic</div>
+      <p>Each side brings something the other amplifies. HCOM brings the consumer surfaces, the merchandising muscle, and the CFAR program shipping H1 2026 &mdash; real demand the engine can ride from day one. InsurTech brings the captive subsidiary, the regulatory posture to operate it, and the actuarial capability to underwrite at portfolio scale. <strong>Co-driving turns this from a single HCOM product into EG's first risk-pricing platform.</strong></p>
+    </div>
+  </div>
+  <div class="slide-num-badge">09 / 12</div>
+</section>
+
+<!-- ==================== A2 · WAVE MODEL ==================== -->
+<section class="appendix light" id="wave-model" data-slide="10">
+  <div class="slide-inner">
+    <div class="eyebrow"><span class="num">A2</span>How the work sequences</div>
+    <h2>Engine wave model.</h2>
+    <p class="sec-deck">By Theory of Constraints. No Expand-phase work starts until Legal and Captive both clear in at least one launch market.</p>
+    <div class="wave-strip">
+      <div class="wave-cell w1">
+        <div class="w-label">Wave 1</div>
+        <div class="w-name">Legal + Captive + Offline Validation</div>
+        <div class="w-when">H1 2027</div>
+        <div class="w-detail">Three parallel tracks, all binary gates. XGBoost backtest. RACI fill.</div>
+        <div class="w-phase explore">Explore</div>
+      </div>
+      <div class="wave-cell w2">
+        <div class="w-label">Wave 2</div>
+        <div class="w-name">Shadow Scoring + Decision Interface</div>
+        <div class="w-when">H2 2027</div>
+        <div class="w-detail">Score live checkout traffic in shadow mode. Decision interface v0.</div>
+        <div class="w-phase explore">Explore</div>
+      </div>
+      <div class="wave-cell w3">
+        <div class="w-label">Wave 3</div>
+        <div class="w-name">Live Decisions for Flex + Production Risk Controls</div>
+        <div class="w-when">H1 2028</div>
+        <div class="w-detail">Production-grade kill-switch, exposure controls, captive GL.</div>
+        <div class="w-phase expand">Expand</div>
+      </div>
+      <div class="wave-cell w4">
+        <div class="w-label">Wave 4</div>
+        <div class="w-name">Second Consumer Onboarding + Multi-Tenancy</div>
+        <div class="w-when">H2 2028</div>
+        <div class="w-detail">Room-type-spread model head. Per-product exposure isolation.</div>
+        <div class="w-phase expand">Expand</div>
+      </div>
+      <div class="wave-cell w5">
+        <div class="w-label">Wave 5</div>
+        <div class="w-name">Time-Series + Multi-Market Optimization</div>
+        <div class="w-when">H1 2029+</div>
+        <div class="w-detail">Only after single-market unit economics are proven for both consumer products.</div>
+        <div class="w-phase extract">Extract</div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-num-badge">10 / 12</div>
+</section>
+
+<!-- ==================== A3 · THE ASK ==================== -->
+<section class="appendix tint" id="the-ask" data-slide="11">
+  <div class="slide-inner">
+    <div class="eyebrow"><span class="num">A3</span>If this resonates</div>
+    <h2>What good engagement could look like.</h2>
+    <p class="sec-deck">Not a checklist of demands. Four things that would be useful to align on if a partnership shape feels right. The last is what matters most for tomorrow.</p>
+    <div class="ask-grid">
+      <div class="ask-card">
+        <div class="a-num">Topic 1</div>
+        <h4>Explore co-driving the engine</h4>
+        <p>If partnership feels right, what could joint executive sponsorship with Josh look like? Who on your side might be a fit to lead the captive integration track, the legal classification track, and the actuarial capability check?</p>
+      </div>
+      <div class="ask-card">
+        <div class="a-num">Topic 2</div>
+        <h4>Possible convergence with Pricing Service</h4>
+        <p>The engine and the InsurTech Pricing Service work in your backlog (MLSTN1-3728) overlap heavily. We'd rather not build two of the same thing. Worth a look at whether they can become one effort.</p>
+      </div>
+      <div class="ask-card">
+        <div class="a-num">Topic 3</div>
+        <h4>What the early ownership could look like</h4>
+        <p>The six roles below are what the engine work would need filled to exit discovery. Mostly InsurTech-native. Doesn't need to be solved tomorrow — just whether the shape feels feasible.</p>
+      </div>
+      <div class="ask-card">
+        <div class="a-num">Topic 4</div>
+        <h4>Your read, and a sense of next steps</h4>
+        <p>Whether this lands well, lands poorly, or needs reshaping. If it feels worth pursuing, what good next steps would look like from your side.</p>
+      </div>
+    </div>
+
+    <h3>If we did partner — possible RACI shape for Wave 1</h3>
+    <p class="note">The six roles the engine work would need filled to exit early discovery. Sharing in case the shape is helpful framing — not asking to fill them tonight.</p>
+    <table class="raci-table">
+      <thead>
+        <tr><th>Role</th><th>Most likely home</th><th>Notes</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="role">Legal classification decision <span class="empty">(TBD)</span></td>
+          <td class="org">InsurTech Legal</td>
+          <td>Owns the balance-sheet-vs-insurance call per launch market. Must render an opinion before any consumer product ships in that market.</td>
+        </tr>
+        <tr>
+          <td class="role">Captive subsidiary GL integration lead <span class="empty">(TBD)</span></td>
+          <td class="org">InsurTech Finance / Captive ops</td>
+          <td>Owns production GL integration, settlement timing, regulatory-reporting hooks. Engine team pairs an engineering counterpart with this role.</td>
+        </tr>
+        <tr>
+          <td class="role">Kill-switch authority during a loss spike <span class="empty">(TBD)</span></td>
+          <td class="org">Central Risk on-call</td>
+          <td>Unilateral authority to flip kill-switches by POS, Point of Supply, partner, or lead-time band. No approval queue. Backup named for off-hours.</td>
+        </tr>
+        <tr>
+          <td class="role">Exposure-cap allocation between consumer products <span class="empty">(TBD)</span></td>
+          <td class="org">Central Risk + Engine PM</td>
+          <td>Arbitrates when flex and upgrades portfolios compete for cap. Default cadence: monthly review.</td>
+        </tr>
+        <tr>
+          <td class="role">VaR model capacity for new asset class <span class="empty">(TBD)</span></td>
+          <td class="org">Central Risk team lead</td>
+          <td>Confirms central risk has staffing to build and maintain the engine's VaR models. If understaffed, escalates to exec sponsor before Wave 2.</td>
+        </tr>
+        <tr>
+          <td class="role">Actuarial talent for balance-sheet risk pricing <span class="empty">(TBD)</span></td>
+          <td class="org">Captive Head + Talent</td>
+          <td>Confirms whether existing actuarial capability is sufficient or hiring is required. Hiring lead-time risk is the engine's, not Talent's.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="slide-num-badge">11 / 12</div>
+</section>
+
+<!-- ==================== A4 · Q&A + SOURCES ==================== -->
+<section class="appendix light" id="qa" data-slide="12">
+  <div class="slide-inner">
+    <div class="eyebrow"><span class="num">A4</span>Back-pocket answers</div>
+    <h2>Likely follow-ups from Jonathan.</h2>
+    <p class="sec-deck">Click to expand. All open when printed.</p>
+    <div class="qa-list">
+      <div class="qa-item">
+        <div class="qa-q">Why HCOM and not InsurTech writing this PRD in the first place?<span class="qa-icon">+</span></div>
+        <div class="qa-a">Because the consumer pain (flex, loyalty perception) lives on HCOM and the merchandising surfaces are HCOM's. The capability (captive, pricing, legal posture) lives in InsurTech. Either org could have owned the engine on paper. The right answer is shared ownership, and we'd rather propose that now than fight about org charts later.</div>
+      </div>
+      <div class="qa-item">
+        <div class="qa-q">How does this relate to CFAR Wave 1?<span class="qa-icon">+</span></div>
+        <div class="qa-a">Complements, doesn't replace. CFAR is third-party insurance underwritten by Cover Genius — broad coverage by design. The engine takes balance-sheet risk on a high-confidence subset. Portfolio of two products on a shared merchandising surface, deconflicted by the Flex Rates PRD.</div>
+      </div>
+      <div class="qa-item">
+        <div class="qa-q">What's the regulatory risk?<span class="qa-icon">+</span></div>
+        <div class="qa-a">Legal classification is the existential gate. Wave 1 deliverable. If Legal classifies engine output as insurance in a target market, the engine doesn't operate there. That's a hard fail in the PRD, not a sticky note. We sequenced it first deliberately so we don't build a model and a captive integration that then can't ship.</div>
+      </div>
+      <div class="qa-item">
+        <div class="qa-q">What's the captive subsidiary actually ready for?<span class="qa-icon">+</span></div>
+        <div class="qa-a">Entity is stood up. GL integration is the Wave 1 spike — throwaway code that records a simulated offer-to-settlement flow end-to-end. Production-grade GL flows land in Wave 3. We're not pretending the captive is ready today; we're naming the work to make it ready.</div>
+      </div>
+      <div class="qa-item">
+        <div class="qa-q">What's the size of the prize?<span class="qa-icon">+</span></div>
+        <div class="qa-a">On flex: target &gt;3% attach in 90 days, &gt;8% steady-state, vs Booking's Smart Flex at 0.02-0.79% &mdash; the gap comes from selectivity, since the engine only surfaces an offer on high-confidence predictions. Net cost per room night targets &lt;$2.50 in year one. CVR lift is deliberately left as a backtest-sized range with sensitivity bounds rather than a stated number &mdash; no validated industry benchmark anchors a magnitude, and a target we can't ground is worse than no target. The engine-economics floor is "outperform insured-flex on the eligible cohort." On the engine: each new consumer offer onboards in weeks once the platform exists, instead of standing up from zero. The dollar figure on incremental NBV is what the Wave 1 backtest produces. We don't pretend to know it yet, and we shouldn't.</div>
+      </div>
+      <div class="qa-item">
+        <div class="qa-q">Why two consumer products on day one? Isn't that scope creep?<span class="qa-icon">+</span></div>
+        <div class="qa-a">The opposite. One consumer product doesn't justify a platform investment. Two does, because it forces the decision interface and multi-tenancy to be real, not theoretical. And the second product (upgrades) is on a different demand surface with different unit economics — if both work, the platform thesis is proven and the next consumer offer is cheap.</div>
+      </div>
+      <div class="qa-item">
+        <div class="qa-q">What if the model can't hit 75% precision on resale?<span class="qa-icon">+</span></div>
+        <div class="qa-a">The engine doesn't enter Wave 2. Flex doesn't ship in that market. That's the kill threshold. We'd either widen data, redesign features, or scope down geography. The PRD has the pivot triggers written down.</div>
+      </div>
+      <div class="qa-item">
+        <div class="qa-q">Who's on the hook if a loss spike happens?<span class="qa-icon">+</span></div>
+        <div class="qa-a">Central Risk on-call has unilateral kill-switch authority by POS, Point of Supply, partner, or lead-time band. No deploy, no approval queue, &lt;60-second propagation. That's a hard Wave 3 requirement. Naming the on-call owner is part of the Wave 1 RACI fill.</div>
+      </div>
+      <div class="qa-item">
+        <div class="qa-q">What's the difference between this and Hopper?<span class="qa-icon">+</span></div>
+        <div class="qa-a">Hopper takes price risk on flights mostly, funded by accuracy. We're taking room-pricing and room-type risk on hotels, funded by EG's captive instead of Hopper's venture capital. Same logic, different asset class — and we have the merchant inventory they don't.</div>
+      </div>
+      <div class="qa-item">
+        <div class="qa-q">What does HCOM commit to if InsurTech says yes?<span class="qa-icon">+</span></div>
+        <div class="qa-a">Consumer-product PMs and engineers on both Flex Rates and Predictive Upgrades. The discovery work (manual demand probes, copy tests, partner reaction tests). Merchandising surfaces. Partner Central opt-out controls. The captive funding plan from the HCOM P&amp;L view.</div>
+      </div>
+      <div class="qa-item">
+        <div class="qa-q">What does InsurTech commit to if you say yes?<span class="qa-icon">+</span></div>
+        <div class="qa-a">Captive operations and GL integration ownership. Central-Risk staffing for the new asset class VaR work. Legal classification track lead. Actuarial capability check. DS/ML pairing on the engine team.</div>
+      </div>
+      <div class="qa-item">
+        <div class="qa-q">Why now?<span class="qa-icon">+</span></div>
+        <div class="qa-a">Three exogenous events converged in the last 12 months. CFAR pilot is shipping H1 2026 — InsurTech has the operational muscle. The captive subsidiary was recently created — the legal entity exists. Booking's Smart Flex badging change in Sept 2025 made flexibility a visible competitive surface for the first time. The wedge is open. If we wait a year, Booking or Hopper closes it.</div>
+      </div>
+    </div>
+
+    <h3 id="sources">Source documents</h3>
+    <p class="note">The full PRDs live in the Product Portfolio repo. Each milestone description in Jira links back to its PRD.</p>
+    <table>
+      <thead>
+        <tr><th>Document</th><th>Type</th><th>Status</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><a href="https://github.com/eg-internal/product-portfolio/blob/main/Strategies/Make%20Hotels.com%20the%20Most%20Rewarding%20Way%20to%20Book%20a%20Hotel/Objectives/Create%20Stickiness%20Through%20Flexibility/EG%20ML%20Pricing%20%26%20Risk/Price%20Risk%20Engine/prd.md" target="_blank">Price Risk Engine PRD</a></td>
+          <td>PRD (platform)</td>
+          <td>Draft</td>
+        </tr>
+        <tr>
+          <td><a href="https://github.com/eg-internal/product-portfolio/blob/main/Strategies/Make%20Hotels.com%20the%20Most%20Rewarding%20Way%20to%20Book%20a%20Hotel/Objectives/Create%20Stickiness%20Through%20Flexibility/EG%20ML%20Pricing%20%26%20Risk/EG-Funded%20Flex%20Rates/prd.md" target="_blank">EG-Funded Flex Rates PRD</a></td>
+          <td>PRD (consumer)</td>
+          <td>Draft</td>
+        </tr>
+        <tr>
+          <td><a href="https://github.com/eg-internal/product-portfolio/blob/main/Strategies/Make%20Hotels.com%20the%20Most%20Rewarding%20Way%20to%20Book%20a%20Hotel/Objectives/Create%20Stickiness%20Through%20Flexibility/EG%20ML%20Pricing%20%26%20Risk/Predictive%20Elite%20Upgrades/prd.md" target="_blank">Predictive Elite Upgrades PRD</a></td>
+          <td>PRD (consumer)</td>
+          <td>Draft</td>
+        </tr>
+        <tr>
+          <td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-3593" target="_blank">CFAR Wave 1 (MLSTN1-3593)</a></td>
+          <td>Milestone (InsurTech)</td>
+          <td>In flight, H1 2026 launch</td>
+        </tr>
+        <tr>
+          <td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-3728" target="_blank">InsurTech Pricing Service (MLSTN1-3728)</a></td>
+          <td>Milestone (InsurTech)</td>
+          <td>Backlog — convergence candidate</td>
+        </tr>
+        <tr>
+          <td><a href="https://expediagroup.atlassian.net/wiki/spaces/PT/pages/950808144" target="_blank">Hotels.com App Strategy — Priority 7</a></td>
+          <td>Strategy doc</td>
+          <td>Source for "more flexibility than anywhere"</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="slide-num-badge">12 / 12</div>
+</section>
+
+<footer class="footer">
+  <div class="footer-cols">
+    <div>
+      <div class="ft-title">Briefing</div>
+      <p>Price Risk Engine — Partnership Briefing for InsurTech</p>
+      <p>Prepared by Lucy Meadow, Principal PM, HCOM</p>
+      <p>Hotels.com Strategy: Make Hotels.com the Most Rewarding Way to Book a Hotel</p>
+    </div>
+    <div>
+      <div class="ft-title">Milestones</div>
+      <p><a href="https://expediagroup.atlassian.net/browse/MLSTN1-6046" target="_blank">MLSTN1-6046 — Price Risk Engine</a></p>
+      <p><a href="https://expediagroup.atlassian.net/browse/MLSTN1-6047" target="_blank">MLSTN1-6047 — EG-Funded Flex Rates</a></p>
+      <p><a href="https://expediagroup.atlassian.net/browse/MLSTN1-6048" target="_blank">MLSTN1-6048 — Predictive Elite Upgrades</a></p>
+    </div>
+    <div>
+      <div class="ft-title">Related InsurTech work</div>
+      <p><a href="https://expediagroup.atlassian.net/browse/MLSTN1-3593" target="_blank">CFAR Wave 1 — MLSTN1-3593</a></p>
+      <p><a href="https://expediagroup.atlassian.net/browse/MLSTN1-3728" target="_blank">InsurTech Pricing Service — MLSTN1-3728</a></p>
+      <p><a href="https://expediagroup.atlassian.net/browse/STRAT1-1392" target="_blank">Launch Value-Added Insurance Products — STRAT1-1392</a></p>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Q&A toggles
+  document.querySelectorAll('.qa-q').forEach(function (q) {
+    q.addEventListener('click', function () {
+      q.parentElement.classList.toggle('open');
+    });
+  });
+
+  // Slide navigation
+  var slides = document.querySelectorAll('[data-slide]');
+  var current = 0;
+
+  function scrollToSlide(idx) {
+    if (idx < 0 || idx >= slides.length) return;
+    current = idx;
+    slides[idx].scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  document.addEventListener('keydown', function (e) {
+    // Don't intercept if user is typing in a form field
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key === 'ArrowDown' || e.key === 'PageDown' || e.key === ' ') {
+      e.preventDefault();
+      scrollToSlide(Math.min(current + 1, slides.length - 1));
+    } else if (e.key === 'ArrowUp' || e.key === 'PageUp') {
+      e.preventDefault();
+      scrollToSlide(Math.max(current - 1, 0));
+    } else if (e.key === 'Home') {
+      e.preventDefault();
+      scrollToSlide(0);
+    } else if (e.key === 'End') {
+      e.preventDefault();
+      scrollToSlide(slides.length - 1);
+    }
+  });
+
+  // Update slide counter via IntersectionObserver
+  var counterEl = document.getElementById('slide-current');
+  if (counterEl && 'IntersectionObserver' in window) {
+    var observer = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting && entry.intersectionRatio > 0.4) {
+          var idx = Array.prototype.indexOf.call(slides, entry.target);
+          if (idx !== -1) {
+            current = idx;
+            counterEl.textContent = idx + 1;
+          }
+        }
+      });
+    }, { threshold: [0.4, 0.6] });
+    slides.forEach(function (s) { observer.observe(s); });
+  }
+</script>
+
+</body>
+</html>

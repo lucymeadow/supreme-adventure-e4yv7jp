@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Milestone Quality Scores — STRAT1-1346</title>
+<style>
+  :root {
+    --navy: #171c38;
+    --teal: #00a3b5;
+    --blue: #3d78f2;
+    --purple: #784cc7;
+    --amber: #d99e14;
+    --green: #2ea673;
+    --coral: #e56152;
+    --dark: #1e2129;
+    --subtle: #808899;
+    --bg: #f5f7fa;
+    --white: #ffffff;
+    --border: #dce0e8;
+    --shadow: 0 2px 8px rgba(0,0,0,0.06);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--dark); line-height: 1.6; }
+
+  .top-bar { background: var(--navy); padding: 14px 40px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
+  .top-bar h1 { color: #fff; font-size: 20px; font-weight: 700; }
+  .top-bar .sub { color: #9a9fb8; font-size: 12px; margin-top: 2px; }
+  .top-bar a { color: #9a9fb8; text-decoration: none; font-size: 13px; }
+  .top-bar a:hover { color: #fff; }
+
+  .layout { display: flex; max-width: 1400px; margin: 0 auto; }
+  .sidebar { width: 260px; min-width: 260px; background: var(--white); border-right: 1px solid var(--border); padding: 24px 0; position: sticky; top: 52px; height: calc(100vh - 52px); overflow-y: auto; }
+  .sidebar .nav-section { padding: 0 20px; margin-bottom: 20px; }
+  .sidebar .nav-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--subtle); margin-bottom: 8px; }
+  .sidebar a { display: block; padding: 5px 20px; font-size: 13px; color: var(--dark); text-decoration: none; border-left: 3px solid transparent; }
+  .sidebar a:hover { background: var(--bg); border-left-color: var(--teal); }
+
+  .main { flex: 1; padding: 32px 48px; min-width: 0; }
+  .main h1 { font-size: 28px; font-weight: 800; margin-bottom: 8px; color: var(--navy); }
+  .main .subtitle { font-size: 15px; color: var(--subtle); margin-bottom: 32px; }
+  .main h2 { font-size: 20px; font-weight: 700; margin: 40px 0 16px; padding-bottom: 8px; border-bottom: 2px solid var(--border); color: var(--navy); }
+  .main p { margin-bottom: 12px; font-size: 14px; }
+
+  .scorecard { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin: 24px 0; }
+  .score-card { background: var(--white); border: 1px solid var(--border); border-radius: 10px; padding: 20px; box-shadow: var(--shadow); }
+  .score-card .label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--subtle); margin-bottom: 6px; }
+  .score-card .value { font-size: 28px; font-weight: 800; color: var(--navy); }
+  .score-card .detail { font-size: 12px; color: var(--subtle); margin-top: 4px; }
+  .score-card.green { border-left: 4px solid var(--green); }
+  .score-card.amber { border-left: 4px solid var(--amber); }
+  .score-card.coral { border-left: 4px solid var(--coral); }
+  .score-card.blue { border-left: 4px solid var(--blue); }
+  .score-card.purple { border-left: 4px solid var(--purple); }
+
+  table { width: 100%; border-collapse: collapse; margin: 12px 0 24px; font-size: 13px; background: var(--white); border-radius: 8px; overflow: hidden; box-shadow: var(--shadow); }
+  th { background: var(--navy); color: #fff; text-align: left; padding: 10px 14px; font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; }
+  td { padding: 10px 14px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: #f8fafc; }
+  td a { color: var(--blue); text-decoration: none; }
+  td a:hover { text-decoration: underline; }
+
+  .score-badge { display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 50%; font-size: 14px; font-weight: 800; color: #fff; }
+  .score-10 { background: var(--green); }
+  .score-9 { background: #3bb87a; }
+  .score-8 { background: var(--amber); }
+  .score-7 { background: #e08a30; }
+  .score-6 { background: var(--coral); }
+
+  .obj-banner { background: var(--white); border: 1px solid var(--border); border-radius: 10px; padding: 20px 24px; margin: 24px 0 16px; box-shadow: var(--shadow); display: flex; align-items: center; gap: 20px; }
+  .obj-avg { width: 56px; height: 56px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 22px; font-weight: 800; flex-shrink: 0; }
+  .obj-info .obj-title { font-size: 18px; font-weight: 800; color: var(--navy); }
+  .obj-info .obj-meta { font-size: 12px; color: var(--subtle); margin-top: 2px; }
+
+  .callout { background: var(--white); border-left: 4px solid var(--coral); padding: 16px 20px; margin: 24px 0; border-radius: 0 8px 8px 0; box-shadow: var(--shadow); }
+  .callout .callout-title { font-weight: 700; font-size: 14px; margin-bottom: 4px; }
+  .callout p { margin-bottom: 4px; font-size: 13px; }
+
+  .callout.info { border-left-color: var(--blue); }
+
+  .lead-table { margin-top: 8px; }
+  .lead-table td:first-child { font-weight: 600; }
+  .unassigned { color: var(--coral); font-style: italic; }
+
+  .filter-bar { display: flex; gap: 8px; margin: 16px 0; flex-wrap: wrap; }
+  .filter-btn { padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 600; border: 1px solid var(--border); background: var(--white); cursor: pointer; transition: all 0.15s; }
+  .filter-btn:hover { border-color: var(--blue); color: var(--blue); }
+  .filter-btn.active { background: var(--navy); color: #fff; border-color: var(--navy); }
+
+  @media (max-width: 900px) {
+    .sidebar { display: none; }
+    .main { padding: 24px 20px; }
+    .scorecard { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<div class="top-bar">
+  <div>
+    <h1>Milestone Quality Scores</h1>
+    <div class="sub">Make Hotels.com the Most Rewarding Way to Book a Hotel &middot; STRAT1-1346</div>
+  </div>
+  <a href="index.html">&larr; Portfolio Home</a>
+</div>
+
+<div class="layout">
+  <nav class="sidebar">
+    <div class="nav-section">
+      <div class="nav-label">Overview</div>
+      <a href="#summary">Summary</a>
+      <a href="#score-distribution">Score Distribution</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-label">By Objective</div>
+      <a href="#obj1">Obj 1: Best Place for Business Trips</a>
+      <a href="#obj2">Obj 2: Stickiness Through Flexibility</a>
+      <a href="#obj3">Obj 3: Rewards Bridge B&amp;L</a>
+      <a href="#foundations">Foundations / Cross-Cutting</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-label">Analysis</div>
+      <a href="#ownership">Ownership Summary</a>
+      <a href="#coverage">Jira Coverage</a>
+    </div>
+  </nav>
+
+  <div class="main">
+    <h1>Milestone Quality Scores</h1>
+    <p class="subtitle">Quality coach scores for all 30 active milestones, organized by objective. Scored 0-10. Jira cross-referenced 2026-04-16.</p>
+
+    <div class="scorecard" id="summary">
+      <div class="score-card green">
+        <div class="label">Portfolio Average</div>
+        <div class="value">9.0</div>
+        <div class="detail">Across 30 milestones</div>
+      </div>
+      <div class="score-card green">
+        <div class="label">Obj 1: Business Trips</div>
+        <div class="value">9.9</div>
+        <div class="detail">10 milestones</div>
+      </div>
+      <div class="score-card green">
+        <div class="label">Obj 2: Flexibility</div>
+        <div class="value">9.5</div>
+        <div class="detail">6 milestones</div>
+      </div>
+      <div class="score-card amber">
+        <div class="label">Obj 3: Rewards</div>
+        <div class="value">8.1</div>
+        <div class="detail">12 milestones</div>
+      </div>
+      <div class="score-card amber">
+        <div class="label">Foundations</div>
+        <div class="value">8.5</div>
+        <div class="detail">2 milestones</div>
+      </div>
+    </div>
+
+    <div class="scorecard" id="score-distribution">
+      <div class="score-card green">
+        <div class="label">Score 10</div>
+        <div class="value">18</div>
+        <div class="detail">60% of milestones</div>
+      </div>
+      <div class="score-card green">
+        <div class="label">Score 9</div>
+        <div class="value">6</div>
+        <div class="detail">20% of milestones</div>
+      </div>
+      <div class="score-card amber">
+        <div class="label">Score 8</div>
+        <div class="value">3</div>
+        <div class="detail">10% of milestones</div>
+      </div>
+      <div class="score-card coral">
+        <div class="label">Score 6-7</div>
+        <div class="value">3</div>
+        <div class="detail">10% need work</div>
+      </div>
+      <div class="score-card coral">
+        <div class="label">Unassigned</div>
+        <div class="value">20</div>
+        <div class="detail">67% no product lead</div>
+      </div>
+    </div>
+
+    <!-- Objective 1 -->
+    <div id="obj1">
+      <div class="obj-banner">
+        <div class="obj-avg" style="background: var(--green)">9.9</div>
+        <div class="obj-info">
+          <div class="obj-title">Objective 1: Be the Best Place for Business Trips</div>
+          <div class="obj-meta"><a href="https://expediagroup.atlassian.net/browse/MLSTN1-5603">MLSTN1-5603</a> &middot; 10 milestones &middot; 9 scored 10, 1 scored 9</div>
+        </div>
+      </div>
+      <table>
+        <thead><tr><th>Key</th><th>Summary</th><th>Product Lead</th><th>Score</th><th>Rationale</th></tr></thead>
+        <tbody>
+          <tr><td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-3572">MLSTN1-3572</a></td><td>Strengthen Hotels.com brand recognition and journey consistency</td><td class="unassigned">Unassigned</td><td><span class="score-badge score-10">10</span></td><td>Exceptionally strong across all criteria</td></tr>
+          <tr><td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-5332">MLSTN1-5332</a></td><td>H+H Enable multi-hotel shopping capability</td><td class="unassigned">Unassigned</td><td><span class="score-badge score-10">10</span></td><td>Outstanding detail and clarity</td></tr>
+          <tr><td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-3516">MLSTN1-3516</a></td><td>Partners Autopay Scale-Up &amp; Increase EVC Transparency</td><td>Yogesh Bedwal</td><td><span class="score-badge score-10">10</span></td><td>Excellent articulation across all criteria</td></tr>
+          <tr><td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-5676">MLSTN1-5676</a></td><td>Build HBT Self Booker MLP</td><td class="unassigned">Unassigned</td><td><span class="score-badge score-10">10</span></td><td>Clear, detailed, and outcome-focused</td></tr>
+          <tr><td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-5678">MLSTN1-5678</a></td><td>Create distinct Travel Arranger Persona MLP</td><td class="unassigned">Unassigned</td><td><span class="score-badge score-10">10</span></td><td>Discovery milestone, still covers all criteria</td></tr>
+          <tr><td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-3515">MLSTN1-3515</a></td><td>Launch Pay Later to EG option for ETP travelers</td><td>Sangya Kalia</td><td><span class="score-badge score-10">10</span></td><td>Very strong across all criteria</td></tr>
+          <tr><td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-3067">MLSTN1-3067</a></td><td>HBT: Identify business travelers and capture their preferences</td><td class="unassigned">Unassigned</td><td><span class="score-badge score-10">10</span></td><td>Excellent across all criteria</td></tr>
+          <tr><td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-5679">MLSTN1-5679</a></td><td>HCOM Home Improvements [Phase 1]</td><td class="unassigned">Unassigned</td><td><span class="score-badge score-10">10</span></td><td>Very strong, covers all criteria</td></tr>
+          <tr><td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-5694">MLSTN1-5694</a></td><td>Comms Thin Slice: HBT Expensing &amp; Comms Suppression</td><td class="unassigned">Unassigned</td><td><span class="score-badge score-10">10</span></td><td>Excellent across all criteria</td></tr>
+          <tr><td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-5677">MLSTN1-5677</a></td><td>Build Self booker extended experience (post MLP)</td><td class="unassigned">Unassigned</td><td><span class="score-badge score-9">9</span></td><td>Slightly less explicit on definition of done</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Objective 2 -->
+    <div id="obj2">
+      <div class="obj-banner">
+        <div class="obj-avg" style="background: var(--green)">9.5</div>
+        <div class="obj-info">
+          <div class="obj-title">Objective 2: Create Stickiness Through Flexibility</div>
+          <div class="obj-meta"><a href="https://expediagroup.atlassian.net/browse/MLSTN1-5604">MLSTN1-5604</a> &middot; 6 milestones &middot; Range: 8-10</div>
+        </div>
+      </div>
+      <table>
+        <thead><tr><th>Key</th><th>Summary</th><th>Product Lead</th><th>Score</th><th>Rationale</th></tr></thead>
+        <tbody>
+          <tr><td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-5682">MLSTN1-5682</a></td><td>Deliver for flexibility and stickiness</td><td class="unassigned">Unassigned</td><td><span class="score-badge score-10">10</span></td><td>Outstanding, covers all criteria in detail</td></tr>
+          <tr><td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-5432">MLSTN1-5432</a></td><td>Differentiate VR on HCOM</td><td class="unassigned">Unassigned</td><td><span class="score-badge score-10">10</span></td><td>Excellent across all criteria</td></tr>
+          <tr><td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-5680">MLSTN1-5680</a></td><td>Integrate relevant add on services for Hotels.com</td><td class="unassigned">Unassigned</td><td><span class="score-badge score-10">10</span></td><td>Very strong, covers all criteria</td></tr>
+          <tr><td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-3593">MLSTN1-3593</a></td><td>Launch CFAR Pilot on Hcom</td><td>Avantika Argolo</td><td><span class="score-badge score-10">10</span></td><td>Excellent across all criteria</td></tr>
+          <tr><td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-2887">MLSTN1-2887</a></td><td>Pilot VAS Products on Hcom</td><td>Avantika Argolo</td><td><span class="score-badge score-9">9</span></td><td>Slightly less explicit on definition of done</td></tr>
+          <tr><td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-5883">MLSTN1-5883</a></td><td>Provide dedicated service solutions for HBT</td><td class="unassigned">Unassigned</td><td><span class="score-badge score-8">8</span></td><td>Missing explicit summary/outcome and some detail</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Objective 3 -->
+    <div id="obj3">
+      <div class="obj-banner">
+        <div class="obj-avg" style="background: var(--amber)">8.1</div>
+        <div class="obj-info">
+          <div class="obj-title">Objective 3: Use Rewards to Bridge Business and Leisure</div>
+          <div class="obj-meta"><a href="https://expediagroup.atlassian.net/browse/MLSTN1-5605">MLSTN1-5605</a> &middot; 12 milestones &middot; Range: 6-10 &middot; Lowest scoring objective</div>
+        </div>
+      </div>
+      <table>
+        <thead><tr><th>Key</th><th>Summary</th><th>Product Lead</th><th>Score</th><th>Rationale</th></tr></thead>
+        <tbody>
+          <tr><td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-3527">MLSTN1-3527</a></td><td>Member-Led Messaging Improvements</td><td class="unassigned">Unassigned</td><td><span class="score-badge score-10">10</span></td><td>Excellent, covers all criteria</td></tr>
+          <tr><td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-608">MLSTN1-608</a></td><td>[HCOM] Optimization of Hotels.com Rewards program 10:1</td><td>Oliver Mills</td><td><span class="score-badge score-10">10</span></td><td>Excellent, covers all criteria</td></tr>
+          <tr><td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-5686">MLSTN1-5686</a></td><td>Redesign Hotels.comCash Loyalty Program</td><td class="unassigned">Unassigned</td><td><span class="score-badge score-9">9</span></td><td>Slightly less explicit on definition of done and measurement</td></tr>
+          <tr><td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-5683">MLSTN1-5683</a></td><td>Hotels.com Partnerships</td><td class="unassigned">Unassigned</td><td><span class="score-badge score-9">9</span></td><td>Slightly less explicit on definition of done</td></tr>
+          <tr><td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-5672">MLSTN1-5672</a></td><td>Hcom Gift Cards</td><td>Avishi Rathore</td><td><span class="score-badge score-9">9</span></td><td>Slightly less explicit on definition of done</td></tr>
+          <tr><td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-4025">MLSTN1-4025</a></td><td>Hcom 10:100 UK</td><td>Akshat Khanna</td><td><span class="score-badge score-9">9</span></td><td>Slightly less explicit on definition of done</td></tr>
+          <tr><td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-5476">MLSTN1-5476</a></td><td>Save Your Way 2026: Increase Usage &amp; Adoption</td><td>Sandra Jefferies</td><td><span class="score-badge score-8">8</span></td><td>Lacks explicit definition of done and measurement</td></tr>
+          <tr><td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-5657">MLSTN1-5657</a></td><td>VIPa 2.0</td><td>Craig Burnell</td><td><span class="score-badge score-8">8</span></td><td>Lacks explicit definition of done and measurement</td></tr>
+          <tr><td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-5767">MLSTN1-5767</a></td><td>VIPa 2.0 Phase 2</td><td>Craig Burnell</td><td><span class="score-badge score-7">7</span></td><td>Missing explicit summary/outcome, requirements, measurement</td></tr>
+          <tr><td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-5478">MLSTN1-5478</a></td><td>Save Your Way &amp; Loyalty: HBT Experience Evolution</td><td class="unassigned">Unassigned</td><td><span class="score-badge score-7">7</span></td><td>Missing explicit summary/outcome, requirements, measurement</td></tr>
+          <tr><td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-5674">MLSTN1-5674</a></td><td>Loyalty Vault - Save Now, Travel Later</td><td class="unassigned">Unassigned</td><td><span class="score-badge score-6">6</span></td><td>Needs significant improvement across multiple criteria</td></tr>
+          <tr><td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-5675">MLSTN1-5675</a></td><td>Loyalty Premium - Paid version of Hcom Loyalty</td><td class="unassigned">Unassigned</td><td><span class="score-badge score-6">6</span></td><td>Needs significant improvement across multiple criteria</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Foundations -->
+    <div id="foundations">
+      <div class="obj-banner">
+        <div class="obj-avg" style="background: var(--amber)">8.5</div>
+        <div class="obj-info">
+          <div class="obj-title">Foundations / Cross-Cutting</div>
+          <div class="obj-meta">Direct children of STRAT1-1346 not mapped to a single objective &middot; 2 milestones</div>
+        </div>
+      </div>
+      <table>
+        <thead><tr><th>Key</th><th>Summary</th><th>Product Lead</th><th>Score</th><th>Rationale</th></tr></thead>
+        <tbody>
+          <tr><td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-2567">MLSTN1-2567</a></td><td>Mitigate price inconsistencies across marketing and site/app</td><td class="unassigned">Unassigned</td><td><span class="score-badge score-9">9</span></td><td>Strong but slightly less explicit on definition of done</td></tr>
+          <tr><td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-2349">MLSTN1-2349</a></td><td>Yield Management: Optimize Room &amp; Rates Display</td><td>Abhishek Chauhan</td><td><span class="score-badge score-8">8</span></td><td>Lacks explicit definition of done and measurement</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Ownership -->
+    <h2 id="ownership">Ownership Summary</h2>
+
+    <div class="callout">
+      <div class="callout-title">20 of 30 milestones (67%) have no assignee in Jira</div>
+      <p>Milestones with assigned product leads score higher on average. Every assigned milestone scores 8+.</p>
+    </div>
+
+    <table class="lead-table">
+      <thead><tr><th>Product Lead</th><th>Milestones</th><th>Avg Score</th></tr></thead>
+      <tbody>
+        <tr><td>Yogesh Bedwal</td><td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-3516">MLSTN1-3516</a></td><td><span class="score-badge score-10">10</span></td></tr>
+        <tr><td>Sangya Kalia</td><td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-3515">MLSTN1-3515</a></td><td><span class="score-badge score-10">10</span></td></tr>
+        <tr><td>Oliver Mills</td><td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-608">MLSTN1-608</a></td><td><span class="score-badge score-10">10</span></td></tr>
+        <tr><td>Avantika Argolo</td><td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-3593">MLSTN1-3593</a>, <a href="https://expediagroup.atlassian.net/browse/MLSTN1-2887">MLSTN1-2887</a></td><td><span class="score-badge score-9">9.5</span></td></tr>
+        <tr><td>Akshat Khanna</td><td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-4025">MLSTN1-4025</a></td><td><span class="score-badge score-9">9</span></td></tr>
+        <tr><td>Avishi Rathore</td><td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-5672">MLSTN1-5672</a></td><td><span class="score-badge score-9">9</span></td></tr>
+        <tr><td>Sandra Jefferies</td><td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-5476">MLSTN1-5476</a></td><td><span class="score-badge score-8">8</span></td></tr>
+        <tr><td>Abhishek Chauhan</td><td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-2349">MLSTN1-2349</a></td><td><span class="score-badge score-8">8</span></td></tr>
+        <tr><td>Craig Burnell</td><td><a href="https://expediagroup.atlassian.net/browse/MLSTN1-5657">MLSTN1-5657</a>, <a href="https://expediagroup.atlassian.net/browse/MLSTN1-5767">MLSTN1-5767</a></td><td><span class="score-badge score-7">7.5</span></td></tr>
+      </tbody>
+    </table>
+
+    <!-- Coverage -->
+    <h2 id="coverage">Jira Coverage</h2>
+
+    <div class="callout info">
+      <div class="callout-title">Active coverage is 100%</div>
+      <p>Cross-referenced against <code>parent = STRAT1-1346 AND status != Cancelled</code> on 2026-04-16. Every non-completed, non-cancelled milestone is accounted for in this table.</p>
+    </div>
+
+    <div class="scorecard">
+      <div class="score-card green">
+        <div class="label">Active &amp; Scored</div>
+        <div class="value">30</div>
+        <div class="detail">All active milestones covered</div>
+      </div>
+      <div class="score-card blue">
+        <div class="label">Completed (not scored)</div>
+        <div class="value">9</div>
+        <div class="detail">Prior cycle, already done</div>
+      </div>
+      <div class="score-card purple">
+        <div class="label">Parented elsewhere</div>
+        <div class="value">2</div>
+        <div class="detail">MLSTN1-2349, MLSTN1-3527</div>
+      </div>
+    </div>
+
+    <p style="font-size: 12px; color: var(--subtle); margin-top: 32px;">Product Portfolio &middot; Expedia Group &middot; Generated 2026-04-16</p>
+  </div>
+</div>
+
+</body>
+</html>
